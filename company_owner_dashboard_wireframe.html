@@ -1906,6 +1906,96 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+/* ── FORECAST CHART ─────────────────────────── */
+function drawForecastChart() {
+  var el = document.getElementById('rev-chart-container');
+  if (!el) return;
+  var months = [
+    {mo:'Jun',o:120,f:80,s:45,r:30,e:15,peak:0,tip:'June 2025 — 290 sessions\n🔵 Online: 120  🟦 Offline: 80\n🟢 New staff: 45  🟡 Renewals: 30  🟣 EDS: 15',key:'month-jun'},
+    {mo:'Jul',o:130,f:90,s:50,r:35,e:15,peak:0,tip:'July 2025 — 320 sessions\n🔵 Online: 130  🟦 Offline: 90\n🟢 New staff: 50  🟡 Renewals: 35  🟣 EDS: 15',key:'month-jul'},
+    {mo:'Aug',o:140,f:110,s:55,r:40,e:20,peak:0,tip:'August 2025 — 365 sessions\nGrowth: summer intake\n🔵 Online: 140  🟦 Offline: 110\n🟢 New staff: 55  🟡 Renewals: 40  🟣 EDS: 20',key:'month-aug'},
+    {mo:'Sep',o:150,f:120,s:60,r:45,e:20,peak:1,tip:'⚠ PEAK — September 2025 — 395 sessions\nQ3 mass staff intake\n🔵 Online: 150  🟦 Offline: 120\n🟢 New staff: 60  🟡 Renewals: 45  🟣 EDS: 20\nAction: +2 instructors, open 6 extra online slots',key:'month-sep'},
+    {mo:'Oct',o:120,f:80,s:40,r:55,e:15,peak:0,tip:'October 2025 — 310 sessions\n🔵 Online: 120  🟦 Offline: 80\n🟢 New staff: 40  🟡 Renewals: 55  🟣 EDS: 15',key:'month-oct'},
+    {mo:'Nov',o:110,f:70,s:35,r:60,e:15,peak:0,tip:'November 2025 — 290 sessions\n🔵 Online: 110  🟦 Offline: 70\n🟢 New staff: 35  🟡 Renewals: 60  🟣 EDS: 15',key:'month-nov'},
+    {mo:'Dec',o:90,f:50,s:25,r:70,e:10,peak:0,tip:'December 2025 — 245 sessions (low)\nHoliday period — use for audits & planning\n🔵 Online: 90  🟦 Offline: 50\n🟢 New staff: 25  🟡 Renewals: 70  🟣 EDS: 10',key:'month-dec'},
+    {mo:'Jan',o:130,f:100,s:60,r:80,e:20,peak:1,tip:'⚠ PEAK — January 2026 — 390 sessions\nAnnual renewal cycle begins\n🔵 Online: 130  🟦 Offline: 100\n🟢 New staff: 60  🟡 Renewals: 80  🟣 EDS: 20\nAction: group sessions + automate Dec reminders',key:'month-jan'},
+    {mo:'Feb',o:160,f:130,s:70,r:85,e:25,peak:2,tip:'🔴 MAX PEAK — February 2026 — 470 sessions\nAll categories peak simultaneously!\n🔵 Online: 160  🟦 Offline: 130\n🟢 New staff: 70  🟡 Renewals: 85  🟣 EDS: 25\nCRITICAL: +3 instructors, expand LMS capacity in Jan',key:'month-feb'},
+    {mo:'Mar',o:155,f:125,s:65,r:75,e:22,peak:0,tip:'March 2026 — 442 sessions (post-peak decline)\n🔵 Online: 155  🟦 Offline: 125\n🟢 New staff: 65  🟡 Renewals: 75  🟣 EDS: 22',key:'month-mar'},
+    {mo:'Apr',o:140,f:110,s:55,r:65,e:20,peak:0,tip:'April 2026 — 390 sessions\n🔵 Online: 140  🟦 Offline: 110\n🟢 New staff: 55  🟡 Renewals: 65  🟣 EDS: 20',key:'month-apr'},
+    {mo:'May',o:120,f:90,s:45,r:55,e:18,peak:0,tip:'May 2026 — 328 sessions\n🔵 Online: 120  🟦 Offline: 90\n🟢 New staff: 45  🟡 Renewals: 55  🟣 EDS: 18',key:'month-may'}
+  ];
+  var cols = ['#3b82c4','#1e40af','#059669','#d97706','#7c3aed'];
+  var H = 140, PAD = 20, maxTotal = 470;
+  var W = el.offsetWidth || 660;
+  var bw = Math.floor((W - PAD*2 - (months.length-1)*4) / months.length);
+  var html = '<svg width="100%" height="'+(H+32)+'" viewBox="0 0 '+W+' '+(H+32)+'" style="overflow:visible">';
+
+  // Grid lines + y labels
+  [0,100,200,300,400].forEach(function(v) {
+    var y = H - (v/maxTotal)*H + 4;
+    html += '<line x1="'+PAD+'" y1="'+y+'" x2="'+(W-PAD)+'" y2="'+y+'" stroke="#e2e8f0" stroke-width="'+(v===0?'1.5':'0.8')+'"/>';
+    if (v>0) html += '<text x="'+(PAD-4)+'" y="'+(y+3)+'" text-anchor="end" font-size="8" fill="#94a3b8">'+v+'</text>';
+  });
+
+  months.forEach(function(m, i) {
+    var total = m.o+m.f+m.s+m.r+m.e;
+    var x = PAD + i*(bw+4);
+    var segs = [m.o,m.f,m.s,m.r,m.e];
+    var cumY = H + 4;
+
+    // Peak bg
+    if (m.peak) {
+      var bgCol = m.peak===2 ? 'rgba(153,27,27,0.08)' : 'rgba(220,38,38,0.06)';
+      html += '<rect x="'+(x-1)+'" y="4" width="'+(bw+2)+'" height="'+H+'" fill="'+bgCol+'" rx="3"/>';
+    }
+
+    // Segments from bottom
+    segs.forEach(function(v, si) {
+      var sh = (v/maxTotal)*H;
+      cumY -= sh;
+      html += '<rect x="'+x+'" y="'+cumY.toFixed(1)+'" width="'+bw+'" height="'+sh.toFixed(1)+'" fill="'+cols[si]+'" rx="'+(si===0?'0 0 2 2':'0')+'"/>';
+    });
+
+    // Total label
+    var barTop = H + 4 - (total/maxTotal)*H;
+    html += '<text x="'+(x+bw/2)+'" y="'+(barTop-3).toFixed(1)+'" text-anchor="middle" font-size="8" fill="'+(m.peak?'#991b1b':'#475569')+'" font-weight="'+(m.peak?'700':'500')+'">'+total+'</text>';
+
+    // Peak badge
+    if (m.peak===2) html += '<text x="'+(x+bw/2)+'" y="'+(barTop-12).toFixed(1)+'" text-anchor="middle" font-size="9">🔴</text>';
+    else if (m.peak===1) html += '<text x="'+(x+bw/2)+'" y="'+(barTop-12).toFixed(1)+'" text-anchor="middle" font-size="8" fill="#dc2626">⚠</text>';
+
+    // Month label
+    var mColor = m.peak ? '#dc2626' : '#94a3b8';
+    var mWeight = m.peak ? '700' : '400';
+    html += '<text x="'+(x+bw/2)+'" y="'+(H+18)+'" text-anchor="middle" font-size="9" fill="'+mColor+'" font-weight="'+mWeight+'">'+m.mo+'</text>';
+
+    // Invisible click rect
+    html += '<rect x="'+x+'" y="4" width="'+bw+'" height="'+(H+12)+'" fill="transparent" style="cursor:pointer" onclick="showListModal(\''+m.mo+' 2025/26\',\''+m.key+'\')" onmouseenter="showTip(this,\''+m.tip.replace(/'/g,'&apos;').replace(/\n/g,'\\n')+'\')" onmouseleave="hideTip()"/>';
+  });
+
+  html += '</svg>';
+  el.innerHTML = html;
+}
+
+/* ── EDS NOTIFY ──────────────────────────────── */
+function notifySignatory(role, company, docId) {
+  var btn = event.target;
+  var orig = btn.innerHTML;
+  btn.innerHTML = '✓ Sent!';
+  btn.style.background = '#7c3aed';
+  btn.style.color = '#fff';
+  btn.style.borderColor = '#7c3aed';
+  setTimeout(function() { btn.innerHTML = orig; btn.style.background=''; btn.style.color=''; btn.style.borderColor=''; }, 2500);
+}
+
+function notifyAllSignatories() {
+  var btn = event.target;
+  var orig = btn.innerHTML;
+  btn.innerHTML = '✓ All notified!';
+  btn.disabled = true;
+  setTimeout(function() { btn.innerHTML = orig; btn.disabled = false; }, 3000);
+}
+
 /* close on Escape */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeEP(); closeCR(); closeDoc(); closeList(); closeModal(); }
