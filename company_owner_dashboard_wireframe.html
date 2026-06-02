@@ -1754,7 +1754,7 @@ function showEmployeeProfile(id) {
   }).join('');
   document.getElementById('ep-body').innerHTML =
     '<div class="ep-row"><span class="ep-lbl">Компания</span><span class="ep-val"><span class="co-link" onclick="closeEP();setTimeout(function(){showCompanyReport(\''+
-    (['ArcelorMittal'=>'arcelormittal','TOO MashStroy'=>'mashstroy','Kazatomprom LLP'=>'kazatomprom'][d.company]||'arcelormittal')+'\')},200)">'+d.company+'</span></span></div>'+
+    ({'ArcelorMittal':'arcelormittal','TOO MashStroy':'mashstroy','Kazatomprom LLP':'kazatomprom'}[d.company]||'arcelormittal')+'\')},200)">'+d.company+'</span></span></div>'+
     '<div class="ep-row"><span class="ep-lbl">Отдел / Локация</span><span class="ep-val">'+d.dept+' · '+d.loc+'</span></div>'+
     '<div class="ep-row"><span class="ep-lbl">Должность</span><span class="ep-val">'+d.pos+'</span></div>'+
     '<div class="ep-row"><span class="ep-lbl">Дата найма</span><span class="ep-val">'+d.hired+'</span></div>'+
