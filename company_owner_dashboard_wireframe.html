@@ -505,14 +505,21 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <!-- DRILL: Expiring -->
   <div class="drill-panel" id="d-exp30">
     <div class="drill-title">Expiring &lt;30 days — named employee list <span class="drill-close" onclick="closeDrill('d-exp30')">×</span></div>
-    <div class="drill-sub">All employees whose document expires within 30 calendar days · Sorted ascending (most urgent first)</div>
+    <div class="drill-sub">All employees whose document expires within 30 calendar days · Sorted ascending (most urgent first) · Click employee name → profile</div>
     <table class="drill-table">
-      <thead><tr><th>Employee</th><th>Company</th><th>Course</th><th>Doc type</th><th>Days left</th><th></th></tr></thead>
+      <thead><tr>
+        <th onmouseenter="showTip(this,'Click name to open full employee profile: documents, training progress, contact details.')" onmouseleave="hideTip()">Employee <span class="ti">ⓘ</span></th>
+        <th>Company</th>
+        <th onmouseenter="showTip(this,'Click course name to see course details: duration, pass rate, recertification interval.')" onmouseleave="hideTip()">Course <span class="ti">ⓘ</span></th>
+        <th onmouseenter="showTip(this,'Certificate: issued after passing assessment.\nProtocol: internal briefing record.\nLicense: official state-issued permit.')" onmouseleave="hideTip()">Doc type <span class="ti">ⓘ</span></th>
+        <th onmouseenter="showTip(this,'Days until document expires.\nRed = expires in ≤7 days — urgent.\nAmber = expires in 8–30 days — schedule now.')" onmouseleave="hideTip()">Days left <span class="ti">ⓘ</span></th>
+        <th></th>
+      </tr></thead>
       <tbody>
-        <tr><td>Akhmetov A.K.</td><td>TOO MashStroy</td><td>Fire Safety L1</td><td>Certificate</td><td style="color:#dc2626;font-weight:700">4d</td><td><button class="action-btn">Schedule</button></td></tr>
-        <tr><td>Bekova D.S.</td><td>ArcelorMittal</td><td>Chemical Handling</td><td>Protocol</td><td style="color:#dc2626;font-weight:700">11d</td><td><button class="action-btn">Schedule</button></td></tr>
-        <tr><td>Muratov T.A.</td><td>TOO MashStroy</td><td>Working at Heights</td><td>License</td><td style="color:#d97706;font-weight:700">14d</td><td><button class="action-btn">Schedule</button></td></tr>
-        <tr><td>Seitkali R.M.</td><td>Kazatomprom</td><td>Electrical Safety</td><td>Certificate</td><td style="color:#d97706;font-weight:700">27d</td><td><button class="action-btn">Schedule</button></td></tr>
+        <tr><td><span class="emp-link" onclick="showEmployeeProfile('akhmetov')">Akhmetov A.K.</span></td><td><span class="co-link" onclick="showCompanyReport('mashstroy')">TOO MashStroy</span></td><td><span class="course-link" onclick="showCourseInfo('firesafety')">Fire Safety L1</span></td><td>Certificate</td><td style="color:#dc2626;font-weight:700">4d</td><td><button class="action-btn urgent" onclick="sendReminder('Akhmetov A.K.')">Send Reminder</button></td></tr>
+        <tr><td><span class="emp-link" onclick="showEmployeeProfile('bekova')">Bekova D.S.</span></td><td><span class="co-link" onclick="showCompanyReport('arcelormittal')">ArcelorMittal</span></td><td><span class="course-link" onclick="showCourseInfo('chemical')">Chemical Handling</span></td><td>Protocol</td><td style="color:#dc2626;font-weight:700">11d</td><td><button class="action-btn" onclick="sendReminder('Bekova D.S.')">Send Reminder</button></td></tr>
+        <tr><td><span class="emp-link" onclick="showEmployeeProfile('muratov')">Muratov T.A.</span></td><td><span class="co-link" onclick="showCompanyReport('mashstroy')">TOO MashStroy</span></td><td><span class="course-link" onclick="showCourseInfo('heights')">Working at Heights</span></td><td>License</td><td style="color:#d97706;font-weight:700">14d</td><td><button class="action-btn" onclick="sendReminder('Muratov T.A.')">Send Reminder</button></td></tr>
+        <tr><td><span class="emp-link" onclick="showEmployeeProfile('seitkali')">Seitkali R.M.</span></td><td><span class="co-link" onclick="showCompanyReport('kazatomprom')">Kazatomprom</span></td><td><span class="course-link" onclick="showCourseInfo('electrical')">Electrical Safety</span></td><td>Certificate</td><td style="color:#d97706;font-weight:700">27d</td><td><button class="action-btn" onclick="sendReminder('Seitkali R.M.')">Send Reminder</button></td></tr>
       </tbody>
     </table>
   </div>
