@@ -1417,6 +1417,54 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 </div>
 
+<!-- GLOBAL TOOLTIP -->
+<div id="gtip"></div>
+
+<!-- EMPLOYEE PROFILE MODAL -->
+<div class="epmodal hidden" id="ep-modal" onclick="if(event.target===this)closeEP()">
+  <div class="epmodal-box">
+    <div class="ephdr">
+      <div class="epav" id="ep-av">NT</div>
+      <div><div class="epname" id="ep-name">Nurgali T.B.</div><div class="eprole" id="ep-role">Operator · Workers</div></div>
+      <button class="epclose" onclick="closeEP()">×</button>
+    </div>
+    <div class="epbody" id="ep-body"></div>
+  </div>
+</div>
+
+<!-- COURSE INFO MODAL -->
+<div class="crmodal hidden" id="cr-modal" onclick="if(event.target===this)closeCR()">
+  <div class="crmodal-box">
+    <div class="crhdr">
+      <div class="crtitle" id="cr-title">Course Info</div>
+      <button class="crclose" onclick="closeCR()">×</button>
+    </div>
+    <div class="crbody" id="cr-body"></div>
+  </div>
+</div>
+
+<!-- DOC PREVIEW MODAL -->
+<div class="dmodal hidden" id="doc-modal" onclick="if(event.target===this)closeDoc()">
+  <div class="dmodal-box">
+    <div class="dmhdr">
+      <div class="dmtitle" id="doc-modal-title">Document Preview</div>
+      <button class="dmclose" onclick="closeDoc()">×</button>
+    </div>
+    <div id="doc-modal-body"></div>
+  </div>
+</div>
+
+<!-- LIST MODAL -->
+<div class="lmodal hidden" id="list-modal" onclick="if(event.target===this)closeList()">
+  <div class="lmodal-box">
+    <div class="lhdr">
+      <div class="lhdr-title" id="list-modal-title">List</div>
+      <button class="lclose" onclick="closeList()">×</button>
+    </div>
+    <div class="lbody" id="list-modal-body"></div>
+  </div>
+</div>
+
 <!-- COMPANY REPORT MODAL -->
 <div class="modal-overlay hidden" id="company-modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-box">
