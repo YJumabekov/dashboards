@@ -450,12 +450,42 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="drill-title">Total active users — company aggregate <span class="drill-close" onclick="closeDrill('d-users','d-users-kpi')">×</span></div>
     <div class="drill-sub">Count of active users (deleted=0, suspended=0) grouped by IOMAD tenant · No individual names</div>
     <table class="drill-table">
-      <thead><tr><th>Company</th><th>Active users</th><th>Compliance %</th><th>Status</th><th></th></tr></thead>
+      <thead><tr>
+        <th>Company</th>
+        <th onmouseenter="showTip(this,'Количество аккаунтов со статусом Active в IOMAD-тенанте.\nИсключает удалённые и приостановленные аккаунты.\nНажмите на число → список активных пользователей.')" onmouseleave="hideTip()">Active users <span class="ti">ⓘ</span></th>
+        <th onmouseenter="showTip(this,'% активных пользователей, имеющих хотя бы один действующий документ.\nФормула: valid_docs ÷ active_users × 100\n🟢 ≥80% — соответствует норме\n🟡 70–79% — под контролем\n🔴 <70% — нарушение')" onmouseleave="hideTip()">Compliance % <span class="ti">ⓘ</span></th>
+        <th onmouseenter="showTip(this,'RAG-статус по порогу соответствия:\n🟢 Green — ≥80%\n🟡 Amber — 70–79%\n🔴 Red — <70%\n🔵 Blue — идёт онбординг, данных пока нет')" onmouseleave="hideTip()">Status <span class="ti">ⓘ</span></th>
+        <th></th>
+      </tr></thead>
       <tbody>
-        <tr><td><span class="co-link" onclick="showCompanyReport('kazatomprom')">Kazatomprom LLP</span></td><td>415</td><td>89%</td><td><span class="badge green">Green</span></td><td><button class="action-btn" onclick="showCompanyReport('kazatomprom')">View full report</button></td></tr>
-        <tr><td><span class="co-link" onclick="showCompanyReport('arcelormittal')">ArcelorMittal</span></td><td>562</td><td>63%</td><td><span class="badge red">Red</span></td><td><button class="action-btn" onclick="showCompanyReport('arcelormittal')">View full report</button></td></tr>
-        <tr><td><span class="co-link" onclick="showCompanyReport('mashstroy')">TOO MashStroy</span></td><td>270</td><td>72%</td><td><span class="badge amber">Amber</span></td><td><button class="action-btn" onclick="showCompanyReport('mashstroy')">View full report</button></td></tr>
-        <tr><td><span class="co-link" onclick="showCompanyReport('kazmunaygas')">KazMunayGas</span></td><td>—</td><td>—</td><td><span class="badge blue">Onboarding</span></td><td><button class="action-btn" onclick="showCompanyReport('kazmunaygas')">View full report</button></td></tr>
+        <tr>
+          <td><span class="co-link" onclick="showCompanyReport('kazatomprom')">Kazatomprom LLP</span></td>
+          <td><span class="val-link" onmouseenter="showTip(this,'415 активных аккаунтов (Kazatomprom)\n↑ +18 новых этом месяце\n↓ −5 деактивировано\nНажмите → список сотрудников')" onmouseleave="hideTip()" onclick="showListModal('Активные пользователи — Kazatomprom LLP','users-kaz')">415</span></td>
+          <td><span class="val-link" style="color:#059669" onmouseenter="showTip(this,'89% соответствие — Kazatomprom LLP\n370 из 415 имеют действующие документы\n32 — истекают в течение 30 дней\n13 — уже просрочены')" onmouseleave="hideTip()" onclick="showListModal('Нарушения — Kazatomprom LLP','comp-kaz')">89%</span></td>
+          <td><span class="badge green" onmouseenter="showTip(this,'Статус GREEN: ≥80% соответствия.\nKazatomprom выполняет целевой показатель платформы.\nРекомендация: поддерживать регулярное переобучение.')" onmouseleave="hideTip()">Green</span></td>
+          <td><button class="action-btn" onclick="showCompanyReport('kazatomprom')">View full report</button></td>
+        </tr>
+        <tr>
+          <td><span class="co-link" onclick="showCompanyReport('arcelormittal')">ArcelorMittal</span></td>
+          <td><span class="val-link" onmouseenter="showTip(this,'562 активных аккаунтов (ArcelorMittal)\n↑ +31 новых этом месяце\n↓ −22 деактивировано\nВысокая текучесть 18%!')" onmouseleave="hideTip()" onclick="showListModal('Активные пользователи — ArcelorMittal','users-arc')">562</span></td>
+          <td><span class="val-link" style="color:#dc2626" onmouseenter="showTip(this,'63% соответствие — ArcelorMittal 🔴 КРИТИЧНО\n355 из 562 имеют документы\n207 без действующих документов\nТребуется немедленное вмешательство!')" onmouseleave="hideTip()" onclick="showListModal('Нарушения — ArcelorMittal','comp-arc')">63%</span></td>
+          <td><span class="badge red" onmouseenter="showTip(this,'Статус RED: <70% соответствия.\nArcelorMittal ниже минимального порога.\nДействие: уведомить HR-менеджера, запустить план переобучения.')" onmouseleave="hideTip()">Red</span></td>
+          <td><button class="action-btn" onclick="showCompanyReport('arcelormittal')">View full report</button></td>
+        </tr>
+        <tr>
+          <td><span class="co-link" onclick="showCompanyReport('mashstroy')">TOO MashStroy</span></td>
+          <td><span class="val-link" onmouseenter="showTip(this,'270 активных аккаунтов (TOO MashStroy)\n↑ +14 новых этом месяце\n↓ −9 деактивировано')" onmouseleave="hideTip()" onclick="showListModal('Активные пользователи — TOO MashStroy','users-mash')">270</span></td>
+          <td><span class="val-link" style="color:#d97706" onmouseenter="showTip(this,'72% соответствие — TOO MashStroy 🟡\n194 из 270 имеют документы\n76 без действующих документов\nНеобходимо достичь 80% в течение 60 дней')" onmouseleave="hideTip()" onclick="showListModal('Нарушения — TOO MashStroy','comp-mash')">72%</span></td>
+          <td><span class="badge amber" onmouseenter="showTip(this,'Статус AMBER: 70–79% соответствия.\nTOO MashStroy близко к целевому показателю, но ниже нормы.\nДействие: приоритизировать записи на курсы в этом месяце.')" onmouseleave="hideTip()">Amber</span></td>
+          <td><button class="action-btn" onclick="showCompanyReport('mashstroy')">View full report</button></td>
+        </tr>
+        <tr>
+          <td><span class="co-link" onclick="showCompanyReport('kazmunaygas')">KazMunayGas</span></td>
+          <td><span class="val-link" onmouseenter="showTip(this,'KazMunayGas в процессе онбординга.\nАккаунты ещё не активированы.\nОжидаемый старт: Q3 2025')" onmouseleave="hideTip()">—</span></td>
+          <td><span class="val-link" onmouseenter="showTip(this,'Данных о соответствии пока нет.\nБазовая линия будет установлена после завершения онбординга.')" onmouseleave="hideTip()">—</span></td>
+          <td><span class="badge blue" onmouseenter="showTip(this,'Статус BLUE: онбординг в процессе.\nТенант создан, пользователи ещё не импортированы.\nКонтакт: Koordinator Seitkali R.')" onmouseleave="hideTip()">Onboarding</span></td>
+          <td><button class="action-btn" onclick="showCompanyReport('kazmunaygas')">View full report</button></td>
+        </tr>
       </tbody>
     </table>
   </div>
