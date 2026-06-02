@@ -1218,8 +1218,20 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         </div>
       </div>
 
+      <!-- Chart filters -->
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <span style="font-size:11px;font-weight:600;color:var(--muted)">View by:</span>
+        <button class="fchip active" id="fcf-all"    onclick="setForecastFilter('all')"          style="font-size:10px">All companies</button>
+        <button class="fchip"        id="fcf-kaz"    onclick="setForecastFilter('kaz')"          style="font-size:10px">Kazatomprom</button>
+        <button class="fchip"        id="fcf-arc"    onclick="setForecastFilter('arc')"          style="font-size:10px">ArcelorMittal</button>
+        <button class="fchip"        id="fcf-mash"   onclick="setForecastFilter('mash')"         style="font-size:10px">TOO MashStroy</button>
+        <span style="margin-left:8px;font-size:11px;font-weight:600;color:var(--muted)">Show:</span>
+        <button class="fchip active" id="fct-online" onclick="toggleForecastCat('online',this)"  style="font-size:10px">🔵 Online</button>
+        <button class="fchip active" id="fct-offline"onclick="toggleForecastCat('offline',this)" style="font-size:10px">🟦 Offline</button>
+        <button class="fchip active" id="fct-staff"  onclick="toggleForecastCat('staff',this)"   style="font-size:10px">🟢 New Staff</button>
+      </div>
       <!-- Stacked bar chart — rendered by JS -->
-      <div id="rev-chart-container" style="background:#f8fafc;border-radius:8px;padding:16px 12px 8px;margin-bottom:8px;cursor:pointer"></div>
+      <div id="rev-chart-container" style="background:#f8fafc;border-radius:8px;padding:16px 12px 8px;margin-bottom:8px"></div>
 
       <!-- Legend -->
       <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 6px;font-size:10px">
