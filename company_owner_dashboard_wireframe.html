@@ -1858,11 +1858,11 @@ function closeCR() { document.getElementById('cr-modal').classList.add('hidden')
 
 /* ── DOCUMENT PREVIEW ────────────────────────── */
 var docPreviews = {
-  'nurgali-license':  { title:'УДОСТОВЕРЕНИЕ', type:'Удостоверение о допуске к работам на высоте', num:'Уд-0841', issued:'10.01.2024', expiry:'10.01.2025', holder:'Nurgali Timur Bakytbekovich', org:'ТОО «МАШ-Стандарт»', course:'Работы на высоте (Working at Heights)', status:'red'},
-  'omarov-cert':      { title:'СЕРТИФИКАТ',    type:'Сертификат о прохождении пожарной безопасности', num:'Серт-1124', issued:'14.04.2023', expiry:'14.04.2025', holder:'Omarov Kairat Dauletbekovich', org:'Учебный центр «SafetyPro»', course:'Пожарная безопасность Уровень 1', status:'red'},
-  'akhmetov-cert':    { title:'СЕРТИФИКАТ',    type:'Сертификат об аттестации по пожарной безопасности', num:'Серт-0987', issued:'06.06.2022', expiry:'06.06.2025', holder:'Akhmetov Aibek Kenzhebekovich', org:'Учебный центр «FireSafe KZ»', course:'Пожарная безопасность Уровень 1', status:'amber'},
-  'bekova-proto':     { title:'ПРОТОКОЛ',      type:'Протокол инструктажа по химической безопасности', num:'Прот-0456', issued:'15.05.2024', expiry:'15.05.2025', holder:'Bekova Dinara Sakenovna', org:'HSE отдел АО «ArcelorMittal Temirtau»', course:'Безопасное обращение с химическими веществами', status:'amber'},
-  'muratov-license':  { title:'УДОСТОВЕРЕНИЕ', type:'Удостоверение стропальщика 2-го разряда', num:'Уд-0762', issued:'30.05.2024', expiry:'30.05.2025', holder:'Muratov Talgat Askarovich', org:'ТОО «ПромСертификация»', course:'Работы на высоте + Стропальные работы', status:'amber'}
+  'nurgali-license':  { title:'LICENSE', type:'Permit to work at heights', num:'Lic-0841', issued:'10.01.2024', expiry:'10.01.2025', holder:'Nurgali Timur Bakytbekovich', org:'LLP «MASH-Standard»', course:'Working at Heights', status:'red'},
+  'omarov-cert':      { title:'CERTIFICATE', type:'Fire safety training certificate', num:'Cert-1124', issued:'14.04.2023', expiry:'14.04.2025', holder:'Omarov Kairat Dauletbekovich', org:'Training Centre «SafetyPro»', course:'Fire Safety Level 1', status:'red'},
+  'akhmetov-cert':    { title:'CERTIFICATE', type:'Fire safety assessment certificate', num:'Cert-0987', issued:'06.06.2022', expiry:'06.06.2025', holder:'Akhmetov Aibek Kenzhebekovich', org:'Training Centre «FireSafe KZ»', course:'Fire Safety Level 1', status:'amber'},
+  'bekova-proto':     { title:'PROTOCOL', type:'Chemical safety briefing record', num:'Prot-0456', issued:'15.05.2024', expiry:'15.05.2025', holder:'Bekova Dinara Sakenovna', org:'HSE Dept — ArcelorMittal Temirtau JSC', course:'Chemical Handling', status:'amber'},
+  'muratov-license':  { title:'LICENSE', type:'Rigger grade 2 competency permit', num:'Lic-0762', issued:'30.05.2024', expiry:'30.05.2025', holder:'Muratov Talgat Askarovich', org:'LLP «PromCertification»', course:'Working at Heights + Rigging Operations', status:'amber'}
 };
 
 function showDocPreview(emp, type) {
