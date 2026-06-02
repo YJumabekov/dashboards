@@ -739,18 +739,80 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <input type="text" placeholder="Search name or course..." style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--text);flex:1;min-width:140px">
       </div>
       <div style="overflow-x:auto">
-        <table class="drill-table" style="min-width:600px">
-          <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Position</th><th>Course</th><th>Doc type</th><th>Expiry</th><th>Days</th><th>Status</th><th>Action</th></tr></thead>
+        <table class="drill-table" style="min-width:860px">
+          <thead><tr>
+            <th onmouseenter="showTip(this,'Имя сотрудника. Нажмите → профиль сотрудника: должность, отдел, история документов, прогресс обучения.')" onmouseleave="hideTip()">Employee <span class="ti">ⓘ</span></th>
+            <th>Dept</th>
+            <th>Location</th>
+            <th>Position</th>
+            <th onmouseenter="showTip(this,'Название курса. Нажмите → карточка курса: длительность, процент сдачи, частота переобучения, описание.')" onmouseleave="hideTip()">Course <span class="ti">ⓘ</span></th>
+            <th onmouseenter="showTip(this,'Сертификат — документ об успешной сдаче квалификационного экзамена, выданный учебной организацией. Нажмите → просмотр копии документа.')" onmouseleave="hideTip()">Сертификат <span class="ti">ⓘ</span></th>
+            <th onmouseenter="showTip(this,'Протокол — внутренний документ, подтверждающий факт прохождения инструктажа или обучения. Нажмите → просмотр.')" onmouseleave="hideTip()">Протокол <span class="ti">ⓘ</span></th>
+            <th onmouseenter="showTip(this,'Удостоверение — официальная лицензия или допуск, часто государственного образца. Нажмите → просмотр.')" onmouseleave="hideTip()">Удостоверение <span class="ti">ⓘ</span></th>
+            <th onmouseenter="showTip(this,'Срок действия документа и остаток дней.\nОтрицательное значение = уже просрочен (дней прошло).\nПоложительное = дней до истечения.')" onmouseleave="hideTip()">Days <span class="ti">ⓘ</span></th>
+            <th onmouseenter="showTip(this,'Статус документа:\n🔴 Expired — просрочен\n🟡 Expiring — истекает в течение 30 дней\n🟢 Valid — действующий')" onmouseleave="hideTip()">Status <span class="ti">ⓘ</span></th>
+            <th>Action</th>
+          </tr></thead>
           <tbody>
-            <tr style="cursor:pointer" onclick="sendPrompt('Show full certificate history for Nurgali T.B. on Working at Heights')"><td>Nurgali T.B.</td><td>Workers</td><td><span class="badge blue">Karaganda</span></td><td>Operator</td><td>Working at Heights</td><td>License</td><td>2026...</td><td style="color:#dc2626;font-weight:700">−62d</td><td><span class="badge red">Expired</span></td><td><button class="action-btn urgent" onclick="event.stopPropagation()">Urgent</button></td></tr>
-            <tr style="cursor:pointer" onclick="sendPrompt('Show full certificate history for Omarov K.D. on Fire Safety L1')"><td>Omarov K.D.</td><td>Workers</td><td><span class="badge blue">Almaty HQ</span></td><td>Mechanic</td><td>Fire Safety L1</td><td>Certif.</td><td>2026...</td><td style="color:#dc2626;font-weight:700">−38d</td><td><span class="badge red">Expired</span></td><td><button class="action-btn urgent" onclick="event.stopPropagation()">Urgent</button></td></tr>
-            <tr style="cursor:pointer" onclick="sendPrompt('Show certificate history for Akhmetov A.K.')"><td>Akhmetov A.K.</td><td>ITR</td><td><span class="badge blue">Almaty HQ</span></td><td>Inspector</td><td>Fire Safety L1</td><td>Certif.</td><td>2026...</td><td style="color:#dc2626;font-weight:700">3d</td><td><span class="badge amber">Expiring</span></td><td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td></tr>
-            <tr style="cursor:pointer"><td>Bekova D.S.</td><td>Workers</td><td><span class="badge blue">Atyrau Dep.</span></td><td>Welder</td><td>Chemical Handling</td><td>Protocol</td><td>2026...</td><td style="color:#d97706;font-weight:700">11d</td><td><span class="badge amber">Expiring</span></td><td><button class="action-btn">Schedule</button></td></tr>
-            <tr style="cursor:pointer"><td>Muratov T.A.</td><td>Workers</td><td><span class="badge blue">Karaganda</span></td><td>Rigger</td><td>Working at Heights</td><td>License</td><td>2026...</td><td style="color:#d97706;font-weight:700">14d</td><td><span class="badge amber">Expiring</span></td><td><button class="action-btn">Schedule</button></td></tr>
+            <tr>
+              <td><span class="emp-link" onclick="showEmployeeProfile('nurgali')">Nurgali T.B.</span></td>
+              <td>Workers</td><td><span class="badge blue">Karaganda</span></td><td>Operator</td>
+              <td><span class="course-link" onclick="showCourseInfo('heights')">Working at Heights</span></td>
+              <td class="doc-empty">—</td>
+              <td class="doc-empty">—</td>
+              <td><span class="doc-cell" onclick="showDocPreview('nurgali','license')">Уд-0841</span></td>
+              <td style="color:#dc2626;font-weight:700">−62d</td>
+              <td><span class="badge red">Expired</span></td>
+              <td><button class="action-btn urgent" onclick="sendReminder('Nurgali T.B.')">Send Reminder</button></td>
+            </tr>
+            <tr>
+              <td><span class="emp-link" onclick="showEmployeeProfile('omarov')">Omarov K.D.</span></td>
+              <td>Workers</td><td><span class="badge blue">Almaty HQ</span></td><td>Mechanic</td>
+              <td><span class="course-link" onclick="showCourseInfo('firesafety')">Fire Safety L1</span></td>
+              <td><span class="doc-cell" onclick="showDocPreview('omarov','cert')">Серт-1124</span></td>
+              <td class="doc-empty">—</td>
+              <td class="doc-empty">—</td>
+              <td style="color:#dc2626;font-weight:700">−38d</td>
+              <td><span class="badge red">Expired</span></td>
+              <td><button class="action-btn urgent" onclick="sendReminder('Omarov K.D.')">Send Reminder</button></td>
+            </tr>
+            <tr>
+              <td><span class="emp-link" onclick="showEmployeeProfile('akhmetov')">Akhmetov A.K.</span></td>
+              <td>ITR</td><td><span class="badge blue">Almaty HQ</span></td><td>Inspector</td>
+              <td><span class="course-link" onclick="showCourseInfo('firesafety')">Fire Safety L1</span></td>
+              <td><span class="doc-cell" onclick="showDocPreview('akhmetov','cert')">Серт-0987</span></td>
+              <td class="doc-empty">—</td>
+              <td class="doc-empty">—</td>
+              <td style="color:#d97706;font-weight:700">3d</td>
+              <td><span class="badge amber">Expiring</span></td>
+              <td><button class="action-btn" onclick="sendReminder('Akhmetov A.K.')">Send Reminder</button></td>
+            </tr>
+            <tr>
+              <td><span class="emp-link" onclick="showEmployeeProfile('bekova')">Bekova D.S.</span></td>
+              <td>Workers</td><td><span class="badge blue">Atyrau Dep.</span></td><td>Welder</td>
+              <td><span class="course-link" onclick="showCourseInfo('chemical')">Chemical Handling</span></td>
+              <td class="doc-empty">—</td>
+              <td><span class="doc-cell" onclick="showDocPreview('bekova','proto')">Прот-0456</span></td>
+              <td class="doc-empty">—</td>
+              <td style="color:#d97706;font-weight:700">11d</td>
+              <td><span class="badge amber">Expiring</span></td>
+              <td><button class="action-btn" onclick="sendReminder('Bekova D.S.')">Send Reminder</button></td>
+            </tr>
+            <tr>
+              <td><span class="emp-link" onclick="showEmployeeProfile('muratov')">Muratov T.A.</span></td>
+              <td>Workers</td><td><span class="badge blue">Karaganda</span></td><td>Rigger</td>
+              <td><span class="course-link" onclick="showCourseInfo('heights')">Working at Heights</span></td>
+              <td class="doc-empty">—</td>
+              <td class="doc-empty">—</td>
+              <td><span class="doc-cell" onclick="showDocPreview('muratov','license')">Уд-0762</span></td>
+              <td style="color:#d97706;font-weight:700">14d</td>
+              <td><span class="badge amber">Expiring</span></td>
+              <td><button class="action-btn" onclick="sendReminder('Muratov T.A.')">Send Reminder</button></td>
+            </tr>
           </tbody>
         </table>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click any row → certificate history dialogue · Showing 5 of 74 violations</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Нажмите имя → профиль · курс → детали · номер документа → просмотр копии · Showing 5 of 74 violations</div>
     </div>
   </div>
 </div>
