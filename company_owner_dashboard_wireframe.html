@@ -527,13 +527,37 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <!-- DRILL: Expired -->
   <div class="drill-panel" id="d-expnow">
     <div class="drill-title">Expired now — sorted by most overdue first <span class="drill-close" onclick="closeDrill('d-expnow')">×</span></div>
-    <div class="drill-sub">expiry_date &lt; NOW() AND is_current=1. Negative = days overdue. "Urgent" triggers email to employee + line manager + logs action in audit trail.</div>
+    <div class="drill-sub">expiry_date &lt; NOW(). Negative = days overdue. Click name → profile · company → report · course → details.</div>
     <table class="drill-table">
-      <thead><tr><th>Employee</th><th>Company</th><th>Course</th><th>Overdue</th><th></th></tr></thead>
+      <thead><tr>
+        <th onmouseenter="showTip(this,'Click name → open employee profile with full document history.')" onmouseleave="hideTip()">Employee <span class="ti">ⓘ</span></th>
+        <th onmouseenter="showTip(this,'Click company → full compliance report for that organisation.')" onmouseleave="hideTip()">Company <span class="ti">ⓘ</span></th>
+        <th onmouseenter="showTip(this,'Click course → course details: duration, pass rate, recertification cycle.')" onmouseleave="hideTip()">Course <span class="ti">ⓘ</span></th>
+        <th onmouseenter="showTip(this,'Days overdue. The longer the number, the higher the liability risk.\nEmployees with expired docs must not perform certified tasks.')" onmouseleave="hideTip()">Overdue <span class="ti">ⓘ</span></th>
+        <th></th>
+      </tr></thead>
       <tbody>
-        <tr><td>Nurgali T.B.</td><td>ArcelorMittal</td><td>Working at Heights</td><td style="color:#dc2626;font-weight:700">−62d</td><td><button class="action-btn urgent">Urgent</button></td></tr>
-        <tr><td>Omarov K.D.</td><td>TOO MashStroy</td><td>Fire Safety L1</td><td style="color:#dc2626;font-weight:700">−38d</td><td><button class="action-btn urgent">Urgent</button></td></tr>
-        <tr><td>Zhumagali A.</td><td>Kazatomprom</td><td>Radiation Safety</td><td style="color:#dc2626;font-weight:700">−14d</td><td><button class="action-btn urgent">Urgent</button></td></tr>
+        <tr>
+          <td><span class="emp-link" onclick="showEmployeeProfile('nurgali')">Nurgali T.B.</span></td>
+          <td><span class="co-link" onclick="showCompanyReport('arcelormittal')">ArcelorMittal</span></td>
+          <td><span class="course-link" onclick="showCourseInfo('heights')">Working at Heights</span></td>
+          <td style="color:#dc2626;font-weight:700" onmouseenter="showTip(this,'62 days overdue — highest liability risk.\nEmployee must not work at heights until recertified.')" onmouseleave="hideTip()">−62d</td>
+          <td><button class="action-btn urgent" onclick="sendReminder('Nurgali T.B.')">Send Reminder</button></td>
+        </tr>
+        <tr>
+          <td><span class="emp-link" onclick="showEmployeeProfile('omarov')">Omarov K.D.</span></td>
+          <td><span class="co-link" onclick="showCompanyReport('mashstroy')">TOO MashStroy</span></td>
+          <td><span class="course-link" onclick="showCourseInfo('firesafety')">Fire Safety L1</span></td>
+          <td style="color:#dc2626;font-weight:700" onmouseenter="showTip(this,'38 days overdue.\nSchedule Fire Safety retraining immediately.')" onmouseleave="hideTip()">−38d</td>
+          <td><button class="action-btn urgent" onclick="sendReminder('Omarov K.D.')">Send Reminder</button></td>
+        </tr>
+        <tr>
+          <td><span class="emp-link" onclick="showEmployeeProfile('seitkali')">Zhumagali A.</span></td>
+          <td><span class="co-link" onclick="showCompanyReport('kazatomprom')">Kazatomprom</span></td>
+          <td><span class="course-link" onclick="showCourseInfo('electrical')">Radiation Safety</span></td>
+          <td style="color:#dc2626;font-weight:700" onmouseenter="showTip(this,'14 days overdue.\nKazatomprom compliance score is affected.')" onmouseleave="hideTip()">−14d</td>
+          <td><button class="action-btn urgent" onclick="sendReminder('Zhumagali A.')">Send Reminder</button></td>
+        </tr>
       </tbody>
     </table>
   </div>
