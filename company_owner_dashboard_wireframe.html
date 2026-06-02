@@ -452,9 +452,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <table class="drill-table">
       <thead><tr>
         <th>Company</th>
-        <th onmouseenter="showTip(this,'Количество аккаунтов со статусом Active в IOMAD-тенанте.\nИсключает удалённые и приостановленные аккаунты.\nНажмите на число → список активных пользователей.')" onmouseleave="hideTip()">Active users <span class="ti">ⓘ</span></th>
-        <th onmouseenter="showTip(this,'% активных пользователей, имеющих хотя бы один действующий документ.\nФормула: valid_docs ÷ active_users × 100\n🟢 ≥80% — соответствует норме\n🟡 70–79% — под контролем\n🔴 <70% — нарушение')" onmouseleave="hideTip()">Compliance % <span class="ti">ⓘ</span></th>
-        <th onmouseenter="showTip(this,'RAG-статус по порогу соответствия:\n🟢 Green — ≥80%\n🟡 Amber — 70–79%\n🔴 Red — <70%\n🔵 Blue — идёт онбординг, данных пока нет')" onmouseleave="hideTip()">Status <span class="ti">ⓘ</span></th>
+        <th onmouseenter="showTip(this,'Number of accounts with Active status in the IOMAD tenant.\nExcludes deleted and suspended accounts.\nClick a number → view active user list.')" onmouseleave="hideTip()">Active users <span class="ti">ⓘ</span></th>
+        <th onmouseenter="showTip(this,'% of active users who have at least one valid non-expired document.\nFormula: valid_docs ÷ active_users × 100\n🟢 ≥80% Compliant · 🟡 70–79% At risk · 🔴 <70% Non-compliant\nClick a value → see breakdown.')" onmouseleave="hideTip()">Compliance % <span class="ti">ⓘ</span></th>
+        <th onmouseenter="showTip(this,'RAG status based on compliance threshold:\n🟢 Green — ≥80% meets target\n🟡 Amber — 70–79% needs attention\n🔴 Red — <70% non-compliant, urgent action\n🔵 Blue — onboarding in progress')" onmouseleave="hideTip()">Status <span class="ti">ⓘ</span></th>
         <th></th>
       </tr></thead>
       <tbody>
