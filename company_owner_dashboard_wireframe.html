@@ -1746,11 +1746,11 @@ function showEmployeeProfile(id) {
       '<td><span class="badge '+doc.status+'">'+{red:'Expired',amber:'Expiring',green:'Valid'}[doc.status]+'</span></td></tr>';
   }).join('');
   var compHtml = d.completions.map(function(c){
-    var col = c.course.length > 0 ? (c.completions>=80?'#059669':c.completions>=60?'#d97706':'#dc2626') : '#94a3b8';
-    col = c.course ? (c.completions>=80?'#059669':c.completions>=60?'#d97706':'#dc2626') : '#94a3b8';
+    var col = c.course.length > 0 ? (c.pct>=80?'#059669':c.pct>=60?'#d97706':'#dc2626') : '#94a3b8';
+    col = c.course ? (c.pct>=80?'#059669':c.pct>=60?'#d97706':'#dc2626') : '#94a3b8';
     return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><span style="flex:1;font-size:11px">'+c.course+'</span>' +
-      '<div style="width:80px;background:var(--n6);border-radius:4px;height:6px"><div style="width:'+c.completions+'%;background:'+col+';height:100%;border-radius:4px"></div></div>' +
-      '<span style="font-size:11px;font-weight:600;color:'+col+';width:30px;text-align:right">'+c.completions+'%</span></div>';
+      '<div style="width:80px;background:var(--n6);border-radius:4px;height:6px"><div style="width:'+c.pct+'%;background:'+col+';height:100%;border-radius:4px"></div></div>' +
+      '<span style="font-size:11px;font-weight:600;color:'+col+';width:30px;text-align:right">'+c.pct+'%</span></div>';
   }).join('');
   document.getElementById('ep-body').innerHTML =
     '<div class="ep-row"><span class="ep-lbl">Компания</span><span class="ep-val"><span class="co-link" onclick="closeEP();setTimeout(function(){showCompanyReport(\''+
