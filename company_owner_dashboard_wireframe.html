@@ -359,10 +359,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <table class="drill-table">
       <thead><tr><th>Company</th><th>Active users</th><th>Compliance %</th><th>Status</th><th></th></tr></thead>
       <tbody>
-        <tr><td>Kazatomprom LLP</td><td>415</td><td>89%</td><td><span class="badge green">Green</span></td><td><button class="action-btn">View full report</button></td></tr>
-        <tr><td>ArcelorMittal</td><td>562</td><td>63%</td><td><span class="badge red">Red</span></td><td><button class="action-btn">View full report</button></td></tr>
-        <tr><td>TOO MashStroy</td><td>270</td><td>72%</td><td><span class="badge amber">Amber</span></td><td><button class="action-btn">View full report</button></td></tr>
-        <tr><td>KazMunayGas</td><td>—</td><td>—</td><td><span class="badge blue">Onboarding</span></td><td><button class="action-btn">View full report</button></td></tr>
+        <tr><td><span class="co-link" onclick="showCompanyReport('kazatomprom')">Kazatomprom LLP</span></td><td>415</td><td>89%</td><td><span class="badge green">Green</span></td><td><button class="action-btn" onclick="showCompanyReport('kazatomprom')">View full report</button></td></tr>
+        <tr><td><span class="co-link" onclick="showCompanyReport('arcelormittal')">ArcelorMittal</span></td><td>562</td><td>63%</td><td><span class="badge red">Red</span></td><td><button class="action-btn" onclick="showCompanyReport('arcelormittal')">View full report</button></td></tr>
+        <tr><td><span class="co-link" onclick="showCompanyReport('mashstroy')">TOO MashStroy</span></td><td>270</td><td>72%</td><td><span class="badge amber">Amber</span></td><td><button class="action-btn" onclick="showCompanyReport('mashstroy')">View full report</button></td></tr>
+        <tr><td><span class="co-link" onclick="showCompanyReport('kazmunaygas')">KazMunayGas</span></td><td>—</td><td>—</td><td><span class="badge blue">Onboarding</span></td><td><button class="action-btn" onclick="showCompanyReport('kazmunaygas')">View full report</button></td></tr>
       </tbody>
     </table>
   </div>
