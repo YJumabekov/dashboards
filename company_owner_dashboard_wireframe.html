@@ -1920,22 +1920,22 @@ function closeList() { document.getElementById('list-modal').classList.add('hidd
 
 /* ── SECTION HEADER TOOLTIPS ─────────────────── */
 var sectionTips = {
-  'Staff dynamics — new vs deactivated (12 months)': 'Как читать: Синие полосы вверх = новые сотрудники. Красные вниз = деактивированные.\nВысокие синие + низкие красные = рост команды.\nКликните по месяцу → список пришедших и ушедших.',
-  'Turnover rate % by company': 'Формула: Деактивированные ÷ Среднее активных × 100.\n🟢 <5% — норма · 🟡 5–10% — наблюдение · 🔴 >10% — высокая текучесть.\nВысокая текучесть = рост затрат на обучение новых сотрудников.',
-  'New staff without certifications — risk panel': 'Сотрудники, нанятые 30+ дней назад, у которых ноль действующих документов.\n% = от общего числа новых. Выше 20% = критический риск доступа к опасным работам.',
-  'First-attempt pass rate by course': 'Процент сотрудников, сдавших экзамен с первой попытки.\nПорог 60% (пунктир). Ниже 60% → пересмотреть контент курса или способ подачи материала.',
-  'Actual training time vs session time': 'Синяя полоса = фактическое активное время. Серая = длительность сессии.\n% справа = коэффициент вовлечённости. Ниже 30% = сотрудник пролистывал материал.',
-  'Completion rate trend — 12 months by company': 'Процент завершённых курсов от всех записанных. Падающая линия = тревожный сигнал.\nКликните по точке → сотрудники, не завершившие курс в этом месяце.',
-  'Trust score distribution': 'Баллы доверия от системы прокторинга Quilgo.\n90–100: Доверено · 70–89: Нужна проверка · 50–69: Подозрительно · 0–49: Флаг.\nКликните сегмент → список сотрудников в этой группе.',
-  'Average trust score by company': 'Средний балл доверия по каждой компании. Пунктир = средний по платформе.\nНиже среднего + высокий процент завершения = возможная массовая фальсификация.',
-  'Trust score vs completion % — scatter': 'Каждая точка = один курс. Правый-нижний квадрант (высокое завершение + низкий балл) — самый подозрительный.\nКликните точку → список сотрудников, разбитый по группам доверия.',
-  '13-week expiry forecast histogram': 'Количество документов, истекающих в каждую неделю. Красные столбцы = пик (≥10).\nПланируйте переобучение за 2–3 недели до пика, чтобы избежать разрывов в соответствии.',
-  'Compliance by company — 12-month trend': 'Одна линия = одна компания. Пунктир = целевой показатель 80%.\nПадение ниже пунктира → требуется немедленное вмешательство HR и руководства.',
-  'Compliance % by company — snapshot': 'Текущий снимок соответствия. Отсортировано по возрастанию (худшие — первые).\nПорог 80% показан вертикальной чертой. Кликните бар → список сотрудников.',
-  'Platform status — document breakdown': '4 сегмента по статусу документов по всем тенантам.\nКликните сегмент → список сотрудников в этой группе.',
-  'Compliance heatmap — department × location': 'Каждая ячейка = % соответствия для пересечения отдела × локации.\n🔴 <70% · 🟡 70–79% · 🟢 ≥80%. Кликните ячейку → список сотрудников с нарушениями.',
-  'Expired & expiring by company': 'Два бара на компанию: красный = уже просрочено (действовать немедленно), янтарный = истекает в течение 30 дней (запланировать обучение).',
-  'Non-compliance by course type': '% записанных сотрудников без действующего документа по данному курсу.\nОтсортировано по убыванию. Working at Heights 78% — наивысший риск ответственности.'
+  'Staff dynamics — new vs deactivated (12 months)': 'How to read: Blue bars (up) = new staff added. Red bars (down) = deactivated staff.\nTall blue + short red = team growth. Tall red = high churn.\nClick any month bar → list of new and deactivated staff.',
+  'Turnover rate % by company': 'Formula: Deactivated ÷ Average active × 100.\n🟢 <5% Good · 🟡 5–10% Monitor · 🔴 >10% High turnover.\nHigh turnover = increased training costs for replacements.',
+  'New staff without certifications — risk panel': 'Employees hired 30+ days ago with zero active documents.\n% = share of total new hires. Above 20% = critical risk for access to hazardous work.\nClick a row → named list with hire date and required courses.',
+  'First-attempt pass rate by course': '% of employees who passed the exam on their first attempt.\nReference line at 60%. Below 60% → review course content or delivery method.\nClick a bar → list of employees who failed first attempt.',
+  'Actual training time vs session time': 'Blue bar = actual active time spent. Grey bar = total session length.\n% on the right = engagement ratio. Below 30% = employee likely skipped content.\nClick a course → employees below 30% engagement.',
+  'Completion rate trend — 12 months by company': '% of enrolled employees who completed their course. A falling line is a warning sign.\nReference dashed line at 80% target.\nClick a data point → incomplete employees for that month.',
+  'Trust score distribution': 'Scores from Quilgo AI proctoring system.\n90–100: Trusted · 70–89: Review recommended · 50–69: Suspicious · 0–49: Flagged.\nClick any segment → employee list for that band.',
+  'Average trust score by company': 'Average trust score per company. Dashed line = platform average.\nBelow average + high completion % = potential mass falsification risk.',
+  'Trust score vs completion % — scatter': 'Each dot = one course. Bottom-right quadrant (high completion, low trust) is most suspicious.\nClick a dot → employee list split by trust band.',
+  '13-week expiry forecast histogram': 'Number of documents expiring each week. Red bars = peak (≥10 expirations).\nPlan retraining 2–3 weeks before peak to avoid compliance gaps.\nClick a bar → employees expiring that week.',
+  'Compliance by company — 12-month trend': 'One line per company. Dashed reference at 80% target.\nA line falling below the dashed reference requires immediate HR intervention.',
+  'Compliance % by company — snapshot': 'Current compliance snapshot. Sorted ascending (worst first).\n80% threshold shown as a vertical reference line.\nClick any bar → employee drill-down list.',
+  'Platform status — document breakdown': '4 segments showing document status across all tenants.\nClick any segment → employee list filtered to that status.',
+  'Compliance heatmap — department × location': 'Each cell = compliance % for a department × location combination.\n🔴 <70% · 🟡 70–79% · 🟢 ≥80%\nClick any cell → employees with issues in that group.',
+  'Expired & expiring by company': 'Two bars per company:\nRed = already expired (immediate action required)\nAmber = expiring within 30 days (schedule training now).\nClick a bar → employee list.',
+  'Non-compliance by course type': '% of enrolled employees without a valid document for that course.\nSorted descending (worst first). Working at Heights at 78% = highest liability risk.\nClick a bar → employees without valid doc for that course.'
 };
 
 document.addEventListener('DOMContentLoaded', function() {
