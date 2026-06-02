@@ -1,0 +1,853 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g1:#0f4c81;--g2:#1d6fa4;--g3:#3b9dd4;
+  --t1:#0e6b52;--t2:#059669;--t3:#34d399;
+  --a1:#92400e;--a2:#d97706;--a3:#fbbf24;
+  --r1:#991b1b;--r2:#dc2626;--r3:#f87171;
+  --p1:#5b21b6;--p2:#7c3aed;--p3:#a78bfa;
+  --n1:#0f172a;--n2:#1e293b;--n3:#334155;--n4:#64748b;--n5:#94a3b8;--n6:#cbd5e1;--n7:#e2e8f0;--n8:#f1f5f9;--n9:#f8fafc;
+  --card:#fff;--bg:#eef2f7;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px;min-height:100vh}
+
+.header{background:var(--g1);padding:9px 16px;display:flex;align-items:center;justify-content:space-between}
+.logo{color:#fff;font-size:14px;font-weight:600;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
+.logo-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:2px 8px;font-size:10px;color:rgba(255,255,255,.9)}
+.hright{display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(255,255,255,.7)}
+.avatar{width:28px;height:28px;border-radius:50%;background:#3b9dd4;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:11px}
+.scope-tag{background:rgba(59,157,212,.25);border:1px solid rgba(59,157,212,.5);border-radius:12px;padding:2px 8px;font-size:10px;color:#7dd3fc}
+
+.tab-row{background:#fff;border-bottom:1px solid var(--border);padding:0 16px;display:flex;gap:0;overflow-x:auto}
+.tab{padding:10px 14px;font-size:12px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .15s}
+.tab:hover{color:var(--g2)}
+.tab.active{color:var(--g2);border-bottom-color:var(--g2);font-weight:600}
+
+.filter-bar{background:#fff;border-bottom:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.company-scope{display:flex;align-items:center;gap:6px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:4px 10px;font-size:11px;color:#1e40af;font-weight:600;flex-shrink:0}
+.fsel{border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--text);background:#fff;cursor:pointer;outline:none}
+.fsel:focus{border-color:var(--g3)}
+.fchip{background:var(--n8);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--n3);cursor:pointer;display:flex;align-items:center;gap:4px}
+.fchip.active{background:#eff6ff;border-color:var(--g3);color:var(--g2)}
+
+.content{padding:14px 16px;display:none}
+.content.active{display:block}
+
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.blue::before{background:linear-gradient(90deg,var(--g1),var(--g3))}
+.kpi.green::before{background:linear-gradient(90deg,var(--t1),var(--t2))}
+.kpi.amber::before{background:linear-gradient(90deg,var(--a1),var(--a2))}
+.kpi.red::before{background:linear-gradient(90deg,var(--r1),var(--r2))}
+.kpi:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);transform:translateY(-1px)}
+.kpi.sel{box-shadow:0 4px 16px rgba(29,111,164,.18);border-color:var(--g3)}
+.kpi-val{font-size:24px;font-weight:700;line-height:1.1;margin-bottom:2px}
+.kpi-val.blue{color:var(--g2)}
+.kpi-val.green{color:var(--t2)}
+.kpi-val.amber{color:var(--a2)}
+.kpi-val.red{color:var(--r2)}
+.kpi-lbl{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.kpi-trend{font-size:10px;display:flex;align-items:center;gap:3px;margin-top:3px}
+.kpi-trend.up{color:var(--t2)}
+.kpi-trend.dn{color:var(--r2)}
+.kpi-drill{font-size:10px;color:var(--g3);font-weight:500;margin-top:2px}
+
+.drill{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;display:none}
+.drill.open{display:block}
+.drill-title{font-size:13px;font-weight:600;color:var(--n3);margin-bottom:3px}
+.drill-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
+.drill-close{float:right;color:var(--n5);cursor:pointer;font-size:16px;line-height:1}
+
+.dt{width:100%;border-collapse:collapse}
+.dt th{background:var(--n8);padding:7px 9px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+.dt td{padding:7px 9px;font-size:12px;border-bottom:1px solid var(--n8);vertical-align:middle}
+.dt tr:last-child td{border:none}
+.dt tr.cr{background:#fff8f8}
+.dt tr:hover td{background:#f8fafc}
+
+.emp-link{color:var(--g2);font-weight:600;cursor:pointer;text-decoration:none;border-bottom:1px dashed var(--g3)}
+.emp-link:hover{color:var(--g1);border-bottom-style:solid}
+
+.badge{display:inline-flex;align-items:center;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:600}
+.badge.g{background:#dcfce7;color:#166534}
+.badge.a{background:#fef3c7;color:#92400e}
+.badge.r{background:#fee2e2;color:#991b1b}
+.badge.b{background:#dbeafe;color:#1e40af}
+.badge.n{background:var(--n8);color:var(--n3)}
+.loc-pill{display:inline-block;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:1px 7px;font-size:10px;color:#1e40af;font-weight:500}
+
+.action-btn{border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:11px;cursor:pointer;background:#fff;color:var(--g2);font-weight:500;white-space:nowrap;transition:all .15s}
+.action-btn:hover{background:var(--g2);color:#fff}
+.action-btn.urg{border-color:#fca5a5;color:var(--r2);background:#fff8f8}
+.action-btn.urg:hover{background:var(--r2);color:#fff}
+.action-btn.enroll{border-color:#bbf7d0;color:var(--t1)}
+.action-btn.enroll:hover{background:var(--t2);color:#fff}
+
+.card-grid{display:grid;gap:12px;margin-bottom:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.card-hdr{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);cursor:pointer}
+.card-title{font-size:12px;font-weight:600;color:var(--n3)}
+.card-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.card-badges{display:flex;gap:5px;align-items:center}
+.ctag{background:var(--n8);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:9px;color:var(--muted);font-weight:500}
+.ctag.b{background:#eff6ff;border-color:#bfdbfe;color:var(--g2)}
+.card-body{padding:14px}
+.chevron{color:var(--n5);font-size:13px;transition:transform .2s}
+.card.exp .chevron{transform:rotate(180deg)}
+.card.col .card-body{display:none}
+
+.bar-chart{display:flex;flex-direction:column;gap:7px}
+.bar-row{display:flex;align-items:center;gap:7px}
+.bar-lbl{width:116px;font-size:11px;color:var(--n3);text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;background:var(--n8);border-radius:4px;height:18px;position:relative;cursor:pointer;transition:opacity .15s}
+.bar-track:hover{opacity:.82}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
+.bar-fill span{font-size:10px;font-weight:600;color:#fff}
+.ref-line{position:absolute;top:0;bottom:0;width:1.5px;background:rgba(0,0,0,.2);z-index:2}
+.bar-val{width:36px;font-size:11px;font-weight:600;color:var(--n2);text-align:right}
+
+.gauge-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g-row{background:var(--n8);border-radius:8px;padding:9px 11px;cursor:pointer}
+.g-row:hover{background:#e8edf5}
+.g-lbl{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.g-name{font-size:11px;font-weight:600;color:var(--n3)}
+.g-pct{font-size:14px;font-weight:700}
+.g-track{height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+.g-fill{height:100%;border-radius:4px}
+.g-note{font-size:9px;color:var(--muted);margin-top:3px}
+
+.heatmap table{width:100%;border-collapse:collapse}
+.heatmap th,.heatmap td{padding:6px 8px;text-align:center;font-size:11px;border:1px solid var(--border)}
+.heatmap th{background:var(--n8);font-weight:600;color:var(--muted);font-size:10px}
+.hm-g{background:#dcfce7;color:#166534;font-weight:600;cursor:pointer;transition:opacity .15s}
+.hm-g:hover{opacity:.8}
+.hm-a{background:#fef3c7;color:#92400e;font-weight:600;cursor:pointer}
+.hm-a:hover{opacity:.8}
+.hm-r{background:#fee2e2;color:#991b1b;font-weight:600;cursor:pointer}
+.hm-r:hover{opacity:.8}
+.row-head{text-align:left!important;font-weight:600;color:var(--n3);background:var(--n9)!important}
+
+.mini-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.mini-card{border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)}
+.mini-card.rc{background:#fff1f2;border-color:#fecdd3}
+.mini-card.ac{background:#fffbeb;border-color:#fde68a}
+.mini-card.bc{background:#eff6ff;border-color:#bfdbfe}
+.mini-val{font-size:26px;font-weight:700;line-height:1}
+.mini-lbl{font-size:10px;color:var(--muted);margin-top:3px;font-weight:500}
+.mini-sub{font-size:9px;color:var(--muted);margin-top:2px}
+
+.dim-sw{display:flex;gap:5px;margin-bottom:10px}
+.dim-btn{border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:10px;font-weight:500;cursor:pointer;background:#fff;color:var(--muted)}
+.dim-btn.act{background:var(--g2);color:#fff;border-color:var(--g2)}
+
+.risk-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--n8)}
+.risk-row:last-child{border:none}
+.risk-co{font-size:12px;font-weight:600;color:var(--n2);width:130px}
+.risk-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px}
+.risk-track{flex:1;background:var(--n8);border-radius:4px;height:9px}
+.risk-fill{height:100%;border-radius:4px}
+
+.stk{display:flex;height:18px;border-radius:4px;overflow:hidden;cursor:pointer;margin-bottom:3px}
+.stk:hover{opacity:.85}
+
+.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.prog-name{flex:1;font-size:11px;color:var(--n3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prog-track{width:110px;background:var(--n8);border-radius:10px;height:6px;flex-shrink:0}
+.prog-fill{height:100%;border-radius:10px}
+.prog-pct{width:34px;text-align:right;font-size:11px;font-weight:600;color:var(--n2)}
+
+.overdue-val{font-weight:700;font-size:12px}
+.ov-r{color:#991b1b}
+.ov-a{color:#d97706}
+
+.footer-note{font-size:10px;color:var(--muted);margin-top:8px}
+
+/* ── EMPLOYEE PROFILE OVERLAY ── */
+.overlay-backdrop{position:relative;background:rgba(15,26,48,.45);border-radius:10px;padding:0;margin-bottom:14px;min-height:540px;display:flex;align-items:flex-start;justify-content:flex-end}
+.overlay-panel{background:var(--card);border-radius:10px;width:320px;border:1px solid var(--border);overflow:hidden;flex-shrink:0}
+.ov-hdr{background:var(--g1);padding:14px 16px;color:#fff}
+.ov-close{float:right;color:rgba(255,255,255,.6);cursor:pointer;font-size:16px;line-height:1;margin-top:-2px}
+.ov-avatar{width:44px;height:44px;border-radius:50%;background:var(--g3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;margin-bottom:8px}
+.ov-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px}
+.ov-meta{font-size:11px;color:rgba(255,255,255,.7);line-height:1.5}
+.ov-tabs{display:flex;background:var(--n8);border-bottom:1px solid var(--border)}
+.ov-tab{flex:1;padding:7px 4px;font-size:10px;font-weight:500;color:var(--muted);text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.ov-tab.act{color:var(--g2);border-bottom-color:var(--g2);background:#fff}
+.ov-body{padding:12px}
+.ov-section{margin-bottom:12px}
+.ov-section-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.cert-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--n8);font-size:11px}
+.cert-row:last-child{border:none}
+.cert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cert-name{flex:1;color:var(--n3)}
+.cert-days{font-weight:600;font-size:10px;min-width:36px;text-align:right}
+.timeline-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px;font-size:11px}
+.tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.tl-date{color:var(--muted);width:64px;flex-shrink:0;font-size:10px}
+.tl-ev{color:var(--n3);line-height:1.4}
+.info-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--n8);font-size:11px}
+.info-row:last-child{border:none}
+.info-lbl{color:var(--muted)}
+.info-val{color:var(--n2);font-weight:500;text-align:right;max-width:160px}
+.ov-actions{display:flex;flex-wrap:wrap;gap:5px;padding:10px 12px;border-top:1px solid var(--border);background:var(--n9)}
+.ov-btn{border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:10px;cursor:pointer;background:#fff;color:var(--g2);font-weight:500;white-space:nowrap}
+.ov-btn:hover{background:var(--g2);color:#fff}
+.ov-btn.urg{border-color:#fca5a5;color:var(--r2);background:#fff8f8}
+.ov-btn.urg:hover{background:var(--r2);color:#fff}
+
+.bg-table-area{flex:1;padding:14px;min-height:500px}
+.bg-table-title{color:rgba(255,255,255,.5);font-size:12px;font-weight:600;margin-bottom:10px}
+.bg-dt{width:100%;border-collapse:collapse}
+.bg-dt th{background:rgba(255,255,255,.08);padding:6px 8px;font-size:10px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.3px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
+.bg-dt td{padding:7px 8px;font-size:11px;border-bottom:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.7)}
+.bg-dt tr.sel-row td{background:rgba(59,157,212,.18);color:#fff}
+.bg-emp-link{color:#7dd3fc;font-weight:600;cursor:pointer;text-decoration:none;border-bottom:1px dashed rgba(125,211,252,.4)}
+.bg-emp-link:hover{color:#fff;border-bottom-color:#fff}
+
+.prog-bar-cert{display:flex;align-items:center;gap:6px}
+.cert-bar-track{flex:1;height:5px;background:rgba(255,255,255,.15);border-radius:3px;max-width:80px}
+.cert-bar-fill{height:100%;border-radius:3px}
+
+@media(max-width:600px){.kpi-strip{grid-template-columns:repeat(2,1fr)}.g2,.g3{grid-template-columns:1fr}.overlay-panel{width:100%}.overlay-backdrop{flex-direction:column}}
+</style>
+
+<h2 class="sr-only">Client Administrator Dashboard for TOO MashStroy — compliance, staff, and forecast views scoped to a single company</h2>
+
+<div class="header">
+  <div class="logo">
+    <span>Sental LMS Analytics</span>
+    <span class="logo-badge">Client Admin</span>
+  </div>
+  <div class="hright">
+    <span class="scope-tag">TOO MashStroy</span>
+    <span>Aizhan K.</span>
+    <div class="avatar">AK</div>
+  </div>
+</div>
+
+<div class="tab-row">
+  <div class="tab active" onclick="switchTab('overview',this)">Overview</div>
+  <div class="tab" onclick="switchTab('compliance',this)">Compliance</div>
+  <div class="tab" onclick="switchTab('forecast',this)">Forecast 30/60/90</div>
+  <div class="tab" onclick="switchTab('newstaff',this)">New staff</div>
+</div>
+
+<div class="filter-bar">
+  <div class="company-scope">
+    <i class="ti ti-building" aria-hidden="true" style="font-size:13px"></i>
+    TOO MashStroy · company-scoped
+  </div>
+  <select class="fsel">
+    <option>All departments</option>
+    <option>Workers</option>
+    <option>ITR</option>
+    <option>Management</option>
+  </select>
+  <select class="fsel">
+    <option>All locations</option>
+    <option>Almaty HQ</option>
+    <option>Karaganda Site</option>
+    <option>Atyrau Depot</option>
+    <option>Astana Office</option>
+  </select>
+  <select class="fsel">
+    <option>All positions</option>
+    <option>Welder</option>
+    <option>Engineer</option>
+    <option>Inspector</option>
+    <option>Operator</option>
+  </select>
+  <select class="fsel">
+    <option>Last 12 months</option>
+    <option>Last 90 days</option>
+    <option>Last 30 days</option>
+    <option>Custom range</option>
+  </select>
+  <div class="fchip active">Karaganda Site ×</div>
+</div>
+
+<!-- ═══ OVERVIEW TAB ═══════════════════════════════════════════════════════ -->
+<div class="content active" id="tab-overview">
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip">
+    <div class="kpi blue sel" onclick="toggleDrill('d-staff',this)">
+      <div class="kpi-lbl">Total active staff</div>
+      <div class="kpi-val blue">270</div>
+      <div class="kpi-trend up">▲ +8 this month</div>
+      <div class="kpi-drill">↗ by dept · location · position</div>
+    </div>
+    <div class="kpi green" onclick="toggleDrill('d-comp',this)">
+      <div class="kpi-lbl">Company compliance</div>
+      <div class="kpi-val green">72%</div>
+      <div class="kpi-trend dn">▼ −3% vs last month</div>
+      <div class="kpi-drill">↗ by dept · location · course</div>
+    </div>
+    <div class="kpi amber" onclick="toggleDrill('d-exp30',this)">
+      <div class="kpi-lbl">Expiring &lt;30 days</div>
+      <div class="kpi-val amber">42</div>
+      <div class="kpi-trend dn">▲ +11 vs last month</div>
+      <div class="kpi-drill">↗ employee list</div>
+    </div>
+    <div class="kpi red" onclick="toggleDrill('d-expnow',this)">
+      <div class="kpi-lbl">Expired now</div>
+      <div class="kpi-val red">18</div>
+      <div class="kpi-trend dn">▲ +4 this week</div>
+      <div class="kpi-drill">↗ urgent action list</div>
+    </div>
+  </div>
+
+  <!-- DRILL: Staff breakdown -->
+  <div class="drill open" id="d-staff">
+    <div class="drill-title">Total staff — 270 employees (filtered: Karaganda Site) <span class="drill-close" onclick="closeDrill('d-staff')">×</span></div>
+    <div class="drill-sub">mdl_user WHERE deleted=0 AND suspended=0 AND companyid=this_company · grouped by dept/location/position</div>
+    <div class="dim-sw">
+      <button class="dim-btn act">By department</button>
+      <button class="dim-btn">By location</button>
+      <button class="dim-btn">By position</button>
+    </div>
+    <div class="bar-chart">
+      <div class="bar-row"><span class="bar-lbl">Workers</span><div class="bar-track"><div class="bar-fill" style="width:53%;background:#3b9dd4"><span>143</span></div></div><span class="bar-val">143</span></div>
+      <div class="bar-row"><span class="bar-lbl">ITR</span><div class="bar-track"><div class="bar-fill" style="width:38%;background:#3b9dd4"><span>103</span></div></div><span class="bar-val">103</span></div>
+      <div class="bar-row"><span class="bar-lbl">Management</span><div class="bar-track"><div class="bar-fill" style="width:9%;background:#3b9dd4"><span>24</span></div></div><span class="bar-val">24</span></div>
+    </div>
+    <div class="footer-note">sental_document_versions WHERE is_current=1 AND companyid=this_company</div>
+  </div>
+
+  <!-- DRILL: Compliance breakdown -->
+  <div class="drill" id="d-comp">
+    <div class="drill-title">Compliance 72% — breakdown <span class="drill-close" onclick="closeDrill('d-comp')">×</span></div>
+    <div class="drill-sub">Company-wide · 270 staff · Formula: valid docs / total active × 100</div>
+    <div style="margin-bottom:10px">
+      <div style="display:flex;height:16px;border-radius:6px;overflow:hidden;gap:1px">
+        <div style="width:52%;background:#059669;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">Active 140</div>
+        <div style="width:15%;background:#d97706;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">Expiring 42</div>
+        <div style="width:7%;background:#dc2626;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">Exp 18</div>
+        <div style="width:26%;background:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">No doc 70</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:6px;font-size:10px">
+        <span style="color:#059669">■ Active 140</span><span style="color:#d97706">■ Expiring 42</span><span style="color:#dc2626">■ Expired 18</span><span style="color:#94a3b8">■ No doc 70</span>
+      </div>
+    </div>
+    <div class="dim-sw">
+      <button class="dim-btn act">By department</button>
+      <button class="dim-btn">By location</button>
+      <button class="dim-btn">By course</button>
+    </div>
+    <div class="bar-chart">
+      <div class="bar-row"><span class="bar-lbl">Management</span><div class="bar-track"><div class="bar-fill" style="width:90%;background:#059669"><span>90%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#059669">90%</span></div>
+      <div class="bar-row"><span class="bar-lbl">ITR</span><div class="bar-track"><div class="bar-fill" style="width:79%;background:#d97706"><span>79%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#d97706">79%</span></div>
+      <div class="bar-row"><span class="bar-lbl">Workers</span><div class="bar-track"><div class="bar-fill" style="width:68%;background:#dc2626"><span>68%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#dc2626">68%</span></div>
+    </div>
+  </div>
+
+  <!-- DRILL: Expiring -->
+  <div class="drill" id="d-exp30">
+    <div class="drill-title">Expiring &lt;30 days — 42 employees <span class="drill-close" onclick="closeDrill('d-exp30')">×</span></div>
+    <div class="drill-sub">sental_document_versions WHERE expiry_date BETWEEN NOW() AND NOW()+30d AND is_current=1 AND companyid=this_company</div>
+    <div style="overflow-x:auto">
+      <table class="dt">
+        <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Position</th><th>Course</th><th>Doc type</th><th>Expiry</th><th>Days left</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><a class="emp-link" onclick="openOverlay('Akhmetov A.K.','AK','Workers','Karaganda Site','Inspector','Fire Safety L1')">Akhmetov A.K.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Inspector</td><td>Fire Safety L1</td><td><span class="badge n">Certificate</span></td><td style="color:var(--muted)">05 Jun 2026</td><td><span class="overdue-val ov-r">3d</span></td><td><button class="action-btn">Schedule</button></td></tr>
+          <tr><td><a class="emp-link" onclick="openOverlay('Bekova D.S.','BD','Workers','Atyrau Depot','Welder','Chemical Handling')">Bekova D.S.</a></td><td>Workers</td><td><span class="loc-pill">Atyrau Depot</span></td><td>Welder</td><td>Chemical Handling</td><td><span class="badge n">Protocol</span></td><td style="color:var(--muted)">12 Jun 2026</td><td><span class="overdue-val ov-a">10d</span></td><td><button class="action-btn">Schedule</button></td></tr>
+          <tr><td><a class="emp-link" onclick="openOverlay('Muratov T.A.','MT','Workers','Karaganda Site','Rigger','Working at Heights')">Muratov T.A.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda Site</span></td><td>Rigger</td><td>Working at Heights</td><td><span class="badge n">License</span></td><td style="color:var(--muted)">16 Jun 2026</td><td><span class="overdue-val ov-a">14d</span></td><td><button class="action-btn">Schedule</button></td></tr>
+          <tr><td><a class="emp-link" onclick="openOverlay('Seitkali R.M.','SR','ITR','Almaty HQ','Electrician','Electrical Safety')">Seitkali R.M.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Electrician</td><td>Electrical Safety</td><td><span class="badge n">Certificate</span></td><td style="color:var(--muted)">29 Jun 2026</td><td><span class="overdue-val ov-a">27d</span></td><td><button class="action-btn">Schedule</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer-note">↑ Click any employee name to open full profile overlay. Showing 4 of 42.</div>
+  </div>
+
+  <!-- DRILL: Expired -->
+  <div class="drill" id="d-expnow">
+    <div class="drill-title">Expired now — 18 employees (most overdue first) <span class="drill-close" onclick="closeDrill('d-expnow')">×</span></div>
+    <div class="drill-sub">expiry_date &lt; NOW() AND is_current=1 · Urgent button → email to employee + line manager + audit log entry</div>
+    <div style="overflow-x:auto">
+      <table class="dt">
+        <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Position</th><th>Course</th><th>Overdue</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr class="cr"><td><a class="emp-link" onclick="openOverlay('Omarov K.D.','OK','Workers','Karaganda Site','Mechanic','Fire Safety L1')">Omarov K.D.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda Site</span></td><td>Mechanic</td><td>Fire Safety L1</td><td><span class="overdue-val ov-r">−38d</span></td><td><button class="action-btn urg">Urgent</button></td></tr>
+          <tr class="cr"><td><a class="emp-link" onclick="openOverlay('Dzhaksybekov A.','DA','ITR','Almaty HQ','Engineer','Radiation Safety')">Dzhaksybekov A.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Engineer</td><td>Radiation Safety</td><td><span class="overdue-val ov-r">−21d</span></td><td><button class="action-btn urg">Urgent</button></td></tr>
+          <tr class="cr"><td><a class="emp-link" onclick="openOverlay('Zhaksylyk B.N.','ZB','Workers','Atyrau Depot','Electrician','Chemical Handling')">Zhaksylyk B.N.</a></td><td>Workers</td><td><span class="loc-pill">Atyrau Depot</span></td><td>Electrician</td><td>Chemical Handling</td><td><span class="overdue-val ov-r">−14d</span></td><td><button class="action-btn urg">Urgent</button></td></tr>
+          <tr><td><a class="emp-link" onclick="openOverlay('Tokayeva M.S.','TM','Management','Astana Office','HSE Lead','Management Safety')">Tokayeva M.S.</a></td><td>Management</td><td><span class="loc-pill">Astana Office</span></td><td>HSE Lead</td><td>Management Safety</td><td><span class="overdue-val ov-r">−7d</span></td><td><button class="action-btn urg">Urgent</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer-note">↑ Click any employee name to open full profile overlay. Showing 4 of 18.</div>
+  </div>
+
+  <!-- CHARTS ROW -->
+  <div class="card-grid g2">
+    <!-- Compliance by dept -->
+    <div class="card exp" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Compliance by department</div><div class="card-sub">Current snapshot · horizontal bar</div></div>
+        <div class="card-badges"><span class="ctag b">Horizontal bar</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-lbl">Management</span><div class="bar-track" onclick="sendPrompt('Show Management department employee compliance list for TOO MashStroy')"><div class="bar-fill" style="width:90%;background:#059669"><span>90%</span></div><div class="ref-line" style="left:80%"></div></div></div>
+          <div class="bar-row"><span class="bar-lbl">ITR</span><div class="bar-track"><div class="bar-fill" style="width:79%;background:#d97706"><span>79%</span></div><div class="ref-line" style="left:80%"></div></div></div>
+          <div class="bar-row"><span class="bar-lbl">Workers</span><div class="bar-track"><div class="bar-fill" style="width:68%;background:#dc2626"><span>68%</span></div><div class="ref-line" style="left:80%"></div></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">▏ Reference = 80% target · Click bar → employee list for that dept</div>
+      </div>
+    </div>
+    <!-- Compliance by location -->
+    <div class="card exp" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Compliance by location</div><div class="card-sub">Current snapshot · horizontal bar</div></div>
+        <div class="card-badges"><span class="ctag b">Horizontal bar</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-lbl">Karaganda Site</span><div class="bar-track" onclick="sendPrompt('Show Karaganda Site employee compliance list')"><div class="bar-fill" style="width:61%;background:#dc2626"><span>61%</span></div><div class="ref-line" style="left:80%"></div></div></div>
+          <div class="bar-row"><span class="bar-lbl">Atyrau Depot</span><div class="bar-track"><div class="bar-fill" style="width:69%;background:#dc2626"><span>69%</span></div><div class="ref-line" style="left:80%"></div></div></div>
+          <div class="bar-row"><span class="bar-lbl">Almaty HQ</span><div class="bar-track"><div class="bar-fill" style="width:76%;background:#d97706"><span>76%</span></div><div class="ref-line" style="left:80%"></div></div></div>
+          <div class="bar-row"><span class="bar-lbl">Astana Office</span><div class="bar-track"><div class="bar-fill" style="width:88%;background:#059669"><span>88%</span></div><div class="ref-line" style="left:80%"></div></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">▏ Click bar → employee list filtered to that location</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Heatmap + stacked bar -->
+  <div class="card-grid g2">
+    <div class="card exp" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Compliance heatmap — dept × location</div><div class="card-sub">Click cell → filtered employee list</div></div>
+        <div class="card-badges"><span class="ctag b">Heatmap</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="heatmap">
+          <table>
+            <thead><tr><th></th><th>Almaty HQ</th><th>Karaganda</th><th>Atyrau</th><th>Astana</th></tr></thead>
+            <tbody>
+              <tr><td class="row-head">Workers</td><td class="hm-a" onclick="sendPrompt('Show Workers at Almaty HQ compliance issues')">65%</td><td class="hm-r" onclick="sendPrompt('Show Workers at Karaganda Site compliance issues — this is the worst cell')">58%</td><td class="hm-a">71%</td><td class="hm-g">80%</td></tr>
+              <tr><td class="row-head">ITR</td><td class="hm-g">82%</td><td class="hm-a">75%</td><td class="hm-a">77%</td><td class="hm-g">91%</td></tr>
+              <tr><td class="row-head">Management</td><td class="hm-g">88%</td><td class="hm-g">85%</td><td class="hm-g">90%</td><td class="hm-g">95%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click any cell → named employee list for that intersection</div>
+      </div>
+    </div>
+    <div class="card exp" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Certification status by department</div><div class="card-sub">Stacked: active · expiring · expired · no doc</div></div>
+        <div class="card-badges"><span class="ctag b">Stacked bar</span><span class="dim-btn act" style="font-size:9px;padding:1px 6px;border-radius:4px">By dept</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;gap:8px;margin-bottom:8px;font-size:10px"><span style="color:#059669">■ Active</span><span style="color:#d97706">■ Expiring &lt;30d</span><span style="color:#dc2626">■ Expired</span><span style="color:#94a3b8">■ No doc</span></div>
+        <div style="margin-bottom:6px">
+          <div style="font-size:11px;font-weight:600;color:var(--n3);margin-bottom:3px">Workers (143)</div>
+          <div class="stk" onclick="sendPrompt('Show Workers department certification breakdown')"><div style="width:52%;background:#059669"></div><div style="width:18%;background:#d97706"></div><div style="width:8%;background:#dc2626"></div><div style="width:22%;background:#94a3b8"></div></div>
+        </div>
+        <div style="margin-bottom:6px">
+          <div style="font-size:11px;font-weight:600;color:var(--n3);margin-bottom:3px">ITR (103)</div>
+          <div class="stk"><div style="width:62%;background:#059669"></div><div style="width:14%;background:#d97706"></div><div style="width:5%;background:#dc2626"></div><div style="width:19%;background:#94a3b8"></div></div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:600;color:var(--n3);margin-bottom:3px">Management (24)</div>
+          <div class="stk"><div style="width:80%;background:#059669"></div><div style="width:8%;background:#d97706"></div><div style="width:2%;background:#dc2626"></div><div style="width:10%;background:#94a3b8"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click bar → employee list for that dept + status</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Staff distribution chart -->
+  <div class="card exp" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">Staff distribution — dept × location headcount</div><div class="card-sub">Grouped bar · colour = compliance rate</div></div>
+      <div class="card-badges"><span class="ctag b">Grouped bar</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:flex-end;gap:18px;height:100px;padding:0 8px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:2px">Almaty HQ</div>
+          <div style="display:flex;align-items:flex-end;gap:3px">
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">60</span><div style="width:18px;height:60px;background:#3b9dd4;border-radius:2px 2px 0 0"></div></div>
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">30</span><div style="width:18px;height:30px;background:#059669;border-radius:2px 2px 0 0"></div></div>
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">5</span><div style="width:18px;height:5px;background:#d97706;border-radius:2px 2px 0 0"></div></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:2px">Karaganda</div>
+          <div style="display:flex;align-items:flex-end;gap:3px">
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">67</span><div style="width:18px;height:67px;background:#3b9dd4;border-radius:2px 2px 0 0"></div></div>
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">33</span><div style="width:18px;height:33px;background:#059669;border-radius:2px 2px 0 0"></div></div>
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">6</span><div style="width:18px;height:6px;background:#d97706;border-radius:2px 2px 0 0"></div></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:2px">Atyrau</div>
+          <div style="display:flex;align-items:flex-end;gap:3px">
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">29</span><div style="width:18px;height:29px;background:#3b9dd4;border-radius:2px 2px 0 0"></div></div>
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">18</span><div style="width:18px;height:18px;background:#059669;border-radius:2px 2px 0 0"></div></div>
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">3</span><div style="width:18px;height:3px;background:#d97706;border-radius:2px 2px 0 0"></div></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:2px">Astana</div>
+          <div style="display:flex;align-items:flex-end;gap:3px">
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">8</span><div style="width:18px;height:8px;background:#3b9dd4;border-radius:2px 2px 0 0"></div></div>
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">6</span><div style="width:18px;height:6px;background:#059669;border-radius:2px 2px 0 0"></div></div>
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted)">2</span><div style="width:18px;height:2px;background:#d97706;border-radius:2px 2px 0 0"></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;font-size:10px;margin-top:6px"><span style="color:#3b9dd4">■ Workers</span><span style="color:#059669">■ ITR</span><span style="color:#d97706">■ Management</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ COMPLIANCE TAB ════════════════════════════════════════════════════════ -->
+<div class="content" id="tab-compliance">
+  <div class="card-grid g2">
+    <div class="card exp" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Expired &amp; expiring — multi-dimension view</div><div class="card-sub">Switch between dept, location, position</div></div>
+        <div class="card-badges"><span class="ctag b">Grouped bar</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="dim-sw">
+          <button class="dim-btn act">By department</button>
+          <button class="dim-btn">By location</button>
+          <button class="dim-btn">By position</button>
+        </div>
+        <div class="bar-chart">
+          <div style="display:flex;gap:8px;margin-bottom:6px;font-size:10px"><span style="color:#dc2626">■ Expired now</span><span style="color:#d97706">■ Expiring &lt;30d</span></div>
+          <div class="bar-row"><span class="bar-lbl">Workers</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px" onclick="sendPrompt('List expired Workers employees sorted by most overdue')"><div class="bar-fill" style="width:56%;background:#dc2626;height:13px"><span style="font-size:9px">10 expired</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:74%;background:#d97706;height:13px"><span style="font-size:9px">27 expiring</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row"><span class="bar-lbl">ITR</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:33%;background:#dc2626;height:13px"><span style="font-size:9px">6 expired</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:55%;background:#d97706;height:13px"><span style="font-size:9px">10 expiring</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row"><span class="bar-lbl">Management</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:11%;background:#dc2626;height:13px"><span style="font-size:9px">2 exp</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:28%;background:#d97706;height:13px"><span style="font-size:9px">5 expiring</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card exp" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Non-compliance by course</div><div class="card-sub">% enrolled without valid doc · descending</div></div>
+        <div class="card-badges"><span class="ctag b">Horizontal bar</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-lbl">Working at Heights</span><div class="bar-track" onclick="sendPrompt('List TOO MashStroy employees missing valid Working at Heights certification')"><div class="bar-fill" style="width:78%;background:#dc2626"><span>78%</span></div></div></div>
+          <div class="bar-row"><span class="bar-lbl">Chemical Handling</span><div class="bar-track"><div class="bar-fill" style="width:58%;background:#dc2626"><span>58%</span></div></div></div>
+          <div class="bar-row"><span class="bar-lbl">First Aid L1</span><div class="bar-track"><div class="bar-fill" style="width:36%;background:#d97706"><span>36%</span></div></div></div>
+          <div class="bar-row"><span class="bar-lbl">Fire Safety L1</span><div class="bar-track"><div class="bar-fill" style="width:27%;background:#d97706"><span>27%</span></div></div></div>
+          <div class="bar-row"><span class="bar-lbl">Electrical Safety</span><div class="bar-track"><div class="bar-fill" style="width:15%;background:#059669"><span>15%</span></div></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click → employee list for that course</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Always-visible compliance table -->
+  <div class="card">
+    <div class="card-hdr" style="cursor:default">
+      <div><div class="card-title">All compliance violations — live employee table</div><div class="card-sub">Filtered by global filters · Row click → certificate history · Employee name → profile overlay</div></div>
+      <div class="card-badges"><span class="ctag b">Persistent table</span><span class="ctag">interactive</span></div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <select class="fsel"><option>All statuses</option><option>Expired only</option><option>Expiring only</option></select>
+        <select class="fsel"><option>All doc types</option><option>Certificate</option><option>Protocol</option><option>License</option></select>
+        <input type="text" placeholder="Search name or course..." style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;flex:1;min-width:140px;outline:none;color:var(--text)">
+      </div>
+      <div style="overflow-x:auto">
+        <table class="dt" style="min-width:680px">
+          <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Position</th><th>Course</th><th>Doc type</th><th>Expiry</th><th>Days</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr class="cr"><td><a class="emp-link" onclick="openOverlay('Omarov K.D.','OK','Workers','Karaganda Site','Mechanic','Fire Safety L1')">Omarov K.D.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Mechanic</td><td>Fire Safety L1</td><td><span class="badge n">Certif.</span></td><td style="color:var(--muted)">2026…</td><td class="ov-r" style="font-weight:700">−38d</td><td><span class="badge r">Expired</span></td><td><button class="action-btn urg" onclick="event.stopPropagation()">Urgent</button></td></tr>
+            <tr class="cr"><td><a class="emp-link" onclick="openOverlay('Dzhaksybekov A.','DA','ITR','Almaty HQ','Engineer','Radiation Safety')">Dzhaksybekov A.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Engineer</td><td>Radiation Safety</td><td><span class="badge n">Protocol</span></td><td style="color:var(--muted)">2026…</td><td class="ov-r" style="font-weight:700">−21d</td><td><span class="badge r">Expired</span></td><td><button class="action-btn urg" onclick="event.stopPropagation()">Urgent</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Akhmetov A.K.','AK','ITR','Almaty HQ','Inspector','Fire Safety L1')">Akhmetov A.K.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Inspector</td><td>Fire Safety L1</td><td><span class="badge n">Certif.</span></td><td style="color:var(--muted)">2026…</td><td class="ov-r" style="font-weight:700">3d</td><td><span class="badge a">Expiring</span></td><td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Bekova D.S.','BD','Workers','Atyrau Depot','Welder','Chemical Handling')">Bekova D.S.</a></td><td>Workers</td><td><span class="loc-pill">Atyrau</span></td><td>Welder</td><td>Chemical Handling</td><td><span class="badge n">Protocol</span></td><td style="color:var(--muted)">2026…</td><td class="ov-a" style="font-weight:700">10d</td><td><span class="badge a">Expiring</span></td><td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Muratov T.A.','MT','Workers','Karaganda Site','Rigger','Working at Heights')">Muratov T.A.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Rigger</td><td>Working at Heights</td><td><span class="badge n">License</span></td><td style="color:var(--muted)">2026…</td><td class="ov-a" style="font-weight:700">14d</td><td><span class="badge a">Expiring</span></td><td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="footer-note">↑ Employee name = clickable link → opens profile overlay. Row click → certificate history. Showing 5 of 60.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FORECAST TAB ══════════════════════════════════════════════════════════ -->
+<div class="content" id="tab-forecast">
+  <div class="mini-cards">
+    <div class="mini-card rc"><div class="mini-val" style="color:#dc2626">42</div><div class="mini-lbl" style="color:#991b1b">Expiring in 30 days</div><div class="mini-sub">Immediate scheduling needed</div></div>
+    <div class="mini-card ac"><div class="mini-val" style="color:#d97706">71</div><div class="mini-lbl" style="color:#92400e">Expiring in 60 days</div><div class="mini-sub">Plan training events now</div></div>
+    <div class="mini-card bc"><div class="mini-val" style="color:#1d4ed8">104</div><div class="mini-lbl" style="color:#1e40af">Expiring in 90 days</div><div class="mini-sub">Book venues &amp; instructors</div></div>
+  </div>
+
+  <div class="card exp" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">13-week expiry forecast histogram</div><div class="card-sub">W1–W13 · Blue default · Red for peak weeks (≥10)</div></div>
+      <div class="card-badges"><span class="ctag b">Bar chart</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:flex-end;gap:4px;height:90px">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted);margin-bottom:1px">3</span><div style="height:18px;background:#3b9dd4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted);margin-bottom:1px">5</span><div style="height:30px;background:#3b9dd4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:1px">14</span><div style="height:70px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer" onclick="sendPrompt('Show all employees expiring in W3 for TOO MashStroy with Schedule retraining options')"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:1px">12</span><div style="height:60px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted);margin-bottom:1px">7</span><div style="height:42px;background:#3b9dd4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted);margin-bottom:1px">4</span><div style="height:24px;background:#3b9dd4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:1px">11</span><div style="height:55px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:1px">13</span><div style="height:65px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted);margin-bottom:1px">6</span><div style="height:36px;background:#3b9dd4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted);margin-bottom:1px">3</span><div style="height:18px;background:#3b9dd4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:1px">11</span><div style="height:55px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:1px">11</span><div style="height:55px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><span style="font-size:8px;color:var(--muted);margin-bottom:1px">5</span><div style="height:30px;background:#3b9dd4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div></div>
+      </div>
+      <div style="display:flex;gap:4px;font-size:7px;color:var(--muted);margin-top:2px">
+        <div style="flex:1;text-align:center">W1</div><div style="flex:1;text-align:center">W2</div><div style="flex:1;text-align:center">W3</div><div style="flex:1;text-align:center">W4</div><div style="flex:1;text-align:center">W5</div><div style="flex:1;text-align:center">W6</div><div style="flex:1;text-align:center">W7</div><div style="flex:1;text-align:center">W8</div><div style="flex:1;text-align:center">W9</div><div style="flex:1;text-align:center">W10</div><div style="flex:1;text-align:center">W11</div><div style="flex:1;text-align:center">W12</div><div style="flex:1;text-align:center">W13</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+        <span style="font-size:10px;color:var(--muted)">Peak threshold:</span>
+        <input type="range" min="5" max="20" value="10" step="1" style="flex:1" oninput="document.getElementById('thr-lbl').textContent=this.value">
+        <span id="thr-lbl" style="font-size:11px;font-weight:600;color:var(--n2)">10</span>
+        <span style="font-size:10px;color:var(--muted)">expirations</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card exp" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">Forecast breakdown — 90 days</div><div class="card-sub">Switch dimension to see upcoming expirations</div></div>
+      <div class="card-badges"><span class="ctag b">Horizontal bar</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div class="dim-sw">
+        <button class="dim-btn act">By department</button>
+        <button class="dim-btn">By location</button>
+        <button class="dim-btn">By course</button>
+      </div>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-lbl">Workers</span><div class="bar-track" onclick="sendPrompt('List Workers employees with documents expiring in 90 days')"><div class="bar-fill" style="width:90%;background:#dc2626"><span>67</span></div></div></div>
+        <div class="bar-row"><span class="bar-lbl">ITR</span><div class="bar-track"><div class="bar-fill" style="width:44%;background:#d97706"><span>33</span></div></div></div>
+        <div class="bar-row"><span class="bar-lbl">Management</span><div class="bar-track"><div class="bar-fill" style="width:5%;background:#059669"><span>4</span></div></div></div>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click bar → employee list with "Schedule retraining" button per row</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NEW STAFF TAB ══════════════════════════════════════════════════════ -->
+<div class="content" id="tab-newstaff">
+  <div class="card exp" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">New staff without certifications — by location</div><div class="card-sub">Hired 30+ days ago · zero active documents · your company only</div></div>
+      <div class="card-badges"><span class="ctag" style="background:#fee2e2;border-color:#fca5a5;color:#991b1b">risk panel</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+        <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;padding:10px;text-align:center"><div style="font-size:22px;font-weight:700;color:#dc2626">12</div><div style="font-size:10px;color:#991b1b;font-weight:600">Total at risk</div></div>
+        <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--n2)">5</div><div style="font-size:10px;color:var(--muted)">Karaganda Site</div></div>
+        <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--n2)">4</div><div style="font-size:10px;color:var(--muted)">Almaty HQ</div></div>
+        <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--n2)">3</div><div style="font-size:10px;color:var(--muted)">Atyrau Depot</div></div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="dt" style="min-width:580px">
+          <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Position</th><th>Hire date</th><th>Days in</th><th>Courses needed</th><th>EDS</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><a class="emp-link" onclick="openOverlay('Abenov K.S.','AK','Workers','Karaganda Site','Welder','Working at Heights')">Abenov K.S.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Welder</td><td>22 Mar 2026</td><td style="color:#dc2626;font-weight:700">43d</td><td>3 courses</td><td><span class="badge r">1 pending</span></td><td><button class="action-btn enroll">Enroll</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Zhaksybekov N.T.','ZN','Workers','Almaty HQ','Electrician','Electrical Safety')">Zhaksybekov N.T.</a></td><td>Workers</td><td><span class="loc-pill">Almaty HQ</span></td><td>Electrician</td><td>01 Apr 2026</td><td style="color:#dc2626;font-weight:700">33d</td><td>4 courses</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Mukhanova A.R.','MA','ITR','Almaty HQ','Engineer','Radiation Safety')">Mukhanova A.R.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Engineer</td><td>03 Apr 2026</td><td style="color:#d97706;font-weight:700">31d</td><td>2 courses</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Dusipov T.K.','DT','Workers','Atyrau Depot','Rigger','Working at Heights')">Dusipov T.K.</a></td><td>Workers</td><td><span class="loc-pill">Atyrau</span></td><td>Rigger</td><td>05 Apr 2026</td><td style="color:#d97706;font-weight:700">29d</td><td>3 courses</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="footer-note">↑ Employee name → profile overlay. Enroll button links to Moodle enrolment. Showing 4 of 12. · mdl_user WHERE timecreated ≤ NOW()−30d AND no sental_document_versions AND companyid=this_company</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EMPLOYEE PROFILE OVERLAY ════════════════════════════════════════════ -->
+<div id="overlay-root" style="display:none">
+  <div class="overlay-backdrop">
+    <div class="bg-table-area">
+      <div class="bg-table-title">Compliance table — click any employee name to open profile</div>
+      <table class="bg-dt">
+        <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Course</th><th>Days</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr class="sel-row"><td><a class="bg-emp-link">Omarov K.D.</a></td><td>Workers</td><td>Karaganda</td><td>Fire Safety L1</td><td style="color:#f87171;font-weight:700">−38d</td><td><span class="badge r">Expired</span></td></tr>
+          <tr><td><a class="bg-emp-link" onclick="openOverlay('Dzhaksybekov A.','DA','ITR','Almaty HQ','Engineer','Radiation Safety')">Dzhaksybekov A.</a></td><td>ITR</td><td>Almaty HQ</td><td>Radiation Safety</td><td style="color:#f87171;font-weight:700">−21d</td><td><span class="badge r">Expired</span></td></tr>
+          <tr><td><a class="bg-emp-link" onclick="openOverlay('Akhmetov A.K.','AK','ITR','Almaty HQ','Inspector','Fire Safety L1')">Akhmetov A.K.</a></td><td>ITR</td><td>Almaty HQ</td><td>Fire Safety L1</td><td style="color:#d97706;font-weight:700">3d</td><td><span class="badge a">Expiring</span></td></tr>
+          <tr><td><a class="bg-emp-link" onclick="openOverlay('Bekova D.S.','BD','Workers','Atyrau Depot','Welder','Chemical Handling')">Bekova D.S.</a></td><td>Workers</td><td>Atyrau</td><td>Chemical Handling</td><td style="color:#d97706;font-weight:700">10d</td><td><span class="badge a">Expiring</span></td></tr>
+          <tr><td><a class="bg-emp-link" onclick="openOverlay('Muratov T.A.','MT','Workers','Karaganda Site','Rigger','Working at Heights')">Muratov T.A.</a></td><td>Workers</td><td>Karaganda</td><td>Working at Heights</td><td style="color:#d97706;font-weight:700">14d</td><td><span class="badge a">Expiring</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="overlay-panel" id="ov-panel">
+      <div class="ov-hdr">
+        <span class="ov-close" onclick="closeOverlay()">×</span>
+        <div class="ov-avatar" id="ov-avatar">OK</div>
+        <div class="ov-name" id="ov-name">Omarov K.D.</div>
+        <div class="ov-meta" id="ov-meta">TOO MashStroy · Workers · Karaganda Site<br>Mechanic · ID: MS-0381</div>
+      </div>
+      <div class="ov-tabs">
+        <div class="ov-tab act" onclick="switchOvTab('certs',this)">Certificates</div>
+        <div class="ov-tab" onclick="switchOvTab('courses',this)">Courses</div>
+        <div class="ov-tab" onclick="switchOvTab('info',this)">Info</div>
+        <div class="ov-tab" onclick="switchOvTab('history',this)">History</div>
+      </div>
+
+      <div class="ov-body" id="ov-certs">
+        <div class="ov-section">
+          <div class="ov-section-title">Certificate status</div>
+          <div class="cert-row"><div class="cert-dot" style="background:#dc2626"></div><span class="cert-name">Fire Safety L1</span><span style="font-size:10px;color:var(--muted)">Protocol</span><span class="cert-days" style="color:#dc2626">−38d</span><span class="badge r" style="margin-left:4px;font-size:9px">Expired</span></div>
+          <div class="cert-row"><div class="cert-dot" style="background:#d97706"></div><span class="cert-name">Working at Heights</span><span style="font-size:10px;color:var(--muted)">License</span><span class="cert-days" style="color:#d97706">18d</span><span class="badge a" style="margin-left:4px;font-size:9px">Expiring</span></div>
+          <div class="cert-row"><div class="cert-dot" style="background:#059669"></div><span class="cert-name">First Aid L1</span><span style="font-size:10px;color:var(--muted)">Protocol</span><span class="cert-days" style="color:#059669">142d</span><span class="badge g" style="margin-left:4px;font-size:9px">Active</span></div>
+          <div class="cert-row"><div class="cert-dot" style="background:#059669"></div><span class="cert-name">Chemical Handling</span><span style="font-size:10px;color:var(--muted)">Certificate</span><span class="cert-days" style="color:#059669">210d</span><span class="badge g" style="margin-left:4px;font-size:9px">Active</span></div>
+        </div>
+        <div class="ov-section">
+          <div class="ov-section-title">Certificate validity timeline</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Bar = validity period · Red line = today</div>
+          <div style="margin-bottom:5px"><div style="font-size:10px;color:var(--n3);margin-bottom:2px">Fire Safety L1</div><div style="height:8px;background:var(--n7);border-radius:4px;position:relative"><div style="position:absolute;left:0;width:85%;height:100%;background:#dc2626;border-radius:4px;opacity:.7"></div><div style="position:absolute;left:88%;top:-2px;bottom:-2px;width:2px;background:var(--n2)"></div></div></div>
+          <div style="margin-bottom:5px"><div style="font-size:10px;color:var(--n3);margin-bottom:2px">Working at Heights</div><div style="height:8px;background:var(--n7);border-radius:4px;position:relative"><div style="position:absolute;left:5%;width:78%;height:100%;background:#d97706;border-radius:4px;opacity:.7"></div><div style="position:absolute;left:88%;top:-2px;bottom:-2px;width:2px;background:var(--n2)"></div></div></div>
+          <div style="margin-bottom:5px"><div style="font-size:10px;color:var(--n3);margin-bottom:2px">First Aid L1</div><div style="height:8px;background:var(--n7);border-radius:4px;position:relative"><div style="position:absolute;left:10%;width:55%;height:100%;background:#059669;border-radius:4px;opacity:.7"></div><div style="position:absolute;left:88%;top:-2px;bottom:-2px;width:2px;background:var(--n2)"></div></div></div>
+          <div style="font-size:9px;color:var(--muted);margin-top:4px">▏ Today · ■ Valid period</div>
+        </div>
+      </div>
+
+      <div class="ov-body" id="ov-courses" style="display:none">
+        <div class="ov-section">
+          <div class="ov-section-title">Course progress</div>
+          <div class="prog-row"><span class="prog-name">Electrical Safety</span><div class="prog-track"><div class="prog-fill" style="width:100%;background:#059669"></div></div><span class="prog-pct" style="color:#059669">100%</span><span class="badge g" style="font-size:9px;margin-left:4px">Done</span></div>
+          <div class="prog-row"><span class="prog-name">First Aid L1</span><div class="prog-track"><div class="prog-fill" style="width:100%;background:#059669"></div></div><span class="prog-pct" style="color:#059669">100%</span><span class="badge g" style="font-size:9px;margin-left:4px">Done</span></div>
+          <div class="prog-row"><span class="prog-name">Fire Safety L1</span><div class="prog-track"><div class="prog-fill" style="width:100%;background:#059669"></div></div><span class="prog-pct" style="color:#059669">100%</span><span class="badge g" style="font-size:9px;margin-left:4px">Done</span></div>
+          <div class="prog-row"><span class="prog-name">Working at Heights</span><div class="prog-track"><div class="prog-fill" style="width:0%;background:#3b9dd4"></div></div><span class="prog-pct" style="color:#94a3b8">0%</span><button class="action-btn" style="font-size:10px;padding:2px 7px;margin-left:4px">Start</button></div>
+          <div class="prog-row"><span class="prog-name">Chemical Handling Adv.</span><div class="prog-track"><div class="prog-fill" style="width:0%;background:#3b9dd4"></div></div><span class="prog-pct" style="color:#94a3b8">0%</span><button class="action-btn" style="font-size:10px;padding:2px 7px;margin-left:4px">Start</button></div>
+        </div>
+      </div>
+
+      <div class="ov-body" id="ov-info" style="display:none">
+        <div class="ov-section">
+          <div class="ov-section-title">Employee information</div>
+          <div class="info-row"><span class="info-lbl">Full name</span><span class="info-val">Omarov Kairat Darenovich</span></div>
+          <div class="info-row"><span class="info-lbl">Employee ID</span><span class="info-val">MS-0381</span></div>
+          <div class="info-row"><span class="info-lbl">Email</span><span class="info-val" style="color:var(--g2)">k.omarov@mashs.kz</span></div>
+          <div class="info-row"><span class="info-lbl">Department</span><span class="info-val">Workers</span></div>
+          <div class="info-row"><span class="info-lbl">Location</span><span class="info-val">Karaganda Site</span></div>
+          <div class="info-row"><span class="info-lbl">Position</span><span class="info-val">Mechanic</span></div>
+          <div class="info-row"><span class="info-lbl">Hire date</span><span class="info-val">14 Mar 2022</span></div>
+          <div class="info-row"><span class="info-lbl">Line manager</span><span class="info-val">Seisenov B.K. (Foreman)</span></div>
+          <div class="info-row"><span class="info-lbl">Manager email</span><span class="info-val" style="color:var(--g2)">b.seisenov@mashs.kz</span></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+          <button class="ov-btn" onclick="sendPrompt('Open Moodle user profile for Omarov K.D. MS-0381')">View in Moodle ↗</button>
+        </div>
+      </div>
+
+      <div class="ov-body" id="ov-history" style="display:none">
+        <div class="ov-section">
+          <div class="ov-section-title">Certificate history</div>
+          <div class="timeline-row"><div class="tl-dot" style="background:#059669"></div><span class="tl-date">14 Mar 2024</span><span class="tl-ev">Fire Safety L1 Protocol issued — valid 1 year</span></div>
+          <div class="timeline-row"><div class="tl-dot" style="background:#d97706"></div><span class="tl-date">14 Feb 2025</span><span class="tl-ev">Auto-reminder sent (30d warning)</span></div>
+          <div class="timeline-row"><div class="tl-dot" style="background:#dc2626"></div><span class="tl-date">14 Mar 2025</span><span class="tl-ev">Certificate expired — no action taken</span></div>
+          <div class="timeline-row"><div class="tl-dot" style="background:#059669"></div><span class="tl-date">22 May 2025</span><span class="tl-ev">Working at Heights License issued — valid 1 year</span></div>
+        </div>
+        <div class="ov-section" style="margin-top:8px">
+          <div class="ov-section-title">Audit log (last 5 actions)</div>
+          <div class="info-row"><span class="info-lbl">25 Apr 2026</span><span class="info-val">Urgent reminder sent by Aizhan K.</span></div>
+          <div class="info-row"><span class="info-lbl">10 Mar 2026</span><span class="info-val">Certificate expired (Fire Safety L1)</span></div>
+          <div class="info-row"><span class="info-lbl">09 Feb 2026</span><span class="info-val">Auto-reminder triggered (30d warning)</span></div>
+          <div class="info-row"><span class="info-lbl">14 Mar 2024</span><span class="info-val">Certificate issued by Coordinator</span></div>
+        </div>
+      </div>
+
+      <div class="ov-actions">
+        <button class="ov-btn urg" onclick="sendPrompt('Send urgent renewal reminder to Omarov K.D. MS-0381 for expired Fire Safety L1 protocol')">Urgent reminder ↗</button>
+        <button class="ov-btn" onclick="sendPrompt('Schedule Fire Safety L1 retraining for Omarov K.D. at Karaganda Site')">Schedule retraining ↗</button>
+        <button class="ov-btn" onclick="sendPrompt('Enroll Omarov K.D. in Working at Heights refresher course')">Enroll in course ↗</button>
+        <button class="ov-btn" onclick="sendPrompt('Open full Moodle admin profile for user MS-0381')">View in Moodle ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var currentOvTab='certs';
+
+function switchTab(id,el){
+  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  var t=document.getElementById('tab-'+id);
+  if(t)t.classList.add('active');
+  if(el)el.classList.add('active');
+  document.getElementById('overlay-root').style.display='none';
+}
+
+function toggleDrill(id,kpi){
+  var d=document.getElementById(id);
+  var allD=document.querySelectorAll('#tab-overview .drill');
+  var allK=document.querySelectorAll('.kpi');
+  var isOpen=d.classList.contains('open');
+  allD.forEach(p=>p.classList.remove('open'));
+  allK.forEach(k=>k.classList.remove('sel'));
+  if(!isOpen){d.classList.add('open');if(kpi)kpi.classList.add('sel');}
+}
+
+function closeDrill(id){
+  document.getElementById(id).classList.remove('open');
+  document.querySelectorAll('.kpi').forEach(k=>k.classList.remove('sel'));
+}
+
+function toggleCard(card){
+  if(event.target.closest('.dim-btn,.action-btn,.emp-link,.badge,select,input'))return;
+  var body=card.querySelector('.card-body');
+  if(!body)return;
+  var isExp=card.classList.contains('exp');
+  card.classList.toggle('exp',!isExp);
+  card.classList.toggle('col',isExp);
+  body.style.display=isExp?'none':'block';
+  var ch=card.querySelector('.chevron');
+  if(ch)ch.textContent=isExp?'▼':'▲';
+}
+
+function openOverlay(name,initials,dept,loc,pos,course){
+  var root=document.getElementById('overlay-root');
+  root.style.display='block';
+  document.getElementById('ov-avatar').textContent=initials;
+  document.getElementById('ov-name').textContent=name;
+  document.getElementById('ov-meta').innerHTML='TOO MashStroy · '+dept+' · '+loc+'<br>'+pos;
+  switchOvTab('certs',document.querySelector('.ov-tab'));
+  root.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function closeOverlay(){
+  document.getElementById('overlay-root').style.display='none';
+}
+
+function switchOvTab(tab,el){
+  currentOvTab=tab;
+  ['certs','courses','info','history'].forEach(function(t){
+    var b=document.getElementById('ov-'+t);
+    if(b)b.style.display=t===tab?'block':'none';
+  });
+  document.querySelectorAll('.ov-tab').forEach(function(t){t.classList.remove('act');});
+  if(el)el.classList.add('act');
+}
+</script>

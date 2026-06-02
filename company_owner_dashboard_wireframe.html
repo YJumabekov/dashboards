@@ -1,0 +1,1123 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g1:#1a3a5c;--g2:#2563a8;--g3:#3b82c4;--a1:#7c3aed;--a2:#a855f7;
+  --s1:#0e6b52;--s2:#059669;--s3:#34d399;
+  --w1:#92400e;--w2:#d97706;--w3:#fbbf24;
+  --r1:#991b1b;--r2:#dc2626;--r3:#f87171;
+  --n1:#1e293b;--n2:#334155;--n3:#64748b;--n4:#94a3b8;--n5:#cbd5e1;--n6:#f1f5f9;
+  --card:#fff;--bg:#f0f4f8;--border:#e2e8f0;--text:#1e293b;--muted:#64748b;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px;min-height:100vh}
+
+/* header */
+.header{background:linear-gradient(135deg,var(--g1) 0%,var(--g2) 60%,var(--a1) 100%);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.logo{color:#fff;font-size:15px;font-weight:600;letter-spacing:.5px}
+.logo span{color:var(--a2);font-weight:700}
+.hright{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.7);font-size:12px}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--a2);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:11px}
+.role-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:2px 8px;font-size:11px;color:rgba(255,255,255,.9)}
+
+/* tabs */
+.tab-row{background:#fff;border-bottom:1px solid var(--border);padding:0 16px;display:flex;gap:2px;overflow-x:auto}
+.tab{padding:10px 14px;font-size:12px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .2s}
+.tab:hover{color:var(--g2)}
+.tab.active{color:var(--g2);border-bottom-color:var(--g2);font-weight:600}
+
+/* filters */
+.filter-bar{background:#fff;border-bottom:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-label{font-size:11px;font-weight:600;color:var(--n3);text-transform:uppercase;letter-spacing:.5px;margin-right:4px}
+.fchip{background:var(--n6);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--n2);cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .15s}
+.fchip:hover{border-color:var(--g3)}
+.fchip.active{background:#eff6ff;border-color:var(--g3);color:var(--g2)}
+.fchip .x{color:var(--n4);font-size:10px;cursor:pointer}
+.fsel{border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--text);background:#fff;cursor:pointer;outline:none}
+.fsel:focus{border-color:var(--g3)}
+
+/* content */
+.content{padding:14px 16px;display:none}
+.content.active{display:block}
+
+/* KPI strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.blue::before{background:linear-gradient(90deg,var(--g2),var(--g3))}
+.kpi.green::before{background:linear-gradient(90deg,var(--s1),var(--s2))}
+.kpi.amber::before{background:linear-gradient(90deg,var(--w1),var(--w2))}
+.kpi.red::before{background:linear-gradient(90deg,var(--r1),var(--r2))}
+.kpi.purple::before{background:linear-gradient(90deg,var(--a1),var(--a2))}
+.kpi.teal::before{background:linear-gradient(90deg,#0f766e,#14b8a6)}
+.kpi:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-1px)}
+.kpi.selected{box-shadow:0 4px 16px rgba(37,99,168,.2);border-color:var(--g3)}
+.kpi-val{font-size:22px;font-weight:700;line-height:1.1;margin-bottom:2px}
+.kpi-val.blue{color:var(--g2)}
+.kpi-val.green{color:var(--s2)}
+.kpi-val.amber{color:var(--w2)}
+.kpi-val.red{color:var(--r2)}
+.kpi-val.purple{color:var(--a1)}
+.kpi-val.teal{color:#0f766e}
+.kpi-lbl{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi-drill{font-size:10px;color:var(--g3);cursor:pointer;font-weight:500}
+.kpi-trend{font-size:10px;display:flex;align-items:center;gap:2px;margin-top:3px}
+.kpi-trend.up{color:var(--s2)}
+.kpi-trend.down{color:var(--r2)}
+
+/* drill panel */
+.drill-panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;display:none}
+.drill-panel.open{display:block}
+.drill-title{font-size:13px;font-weight:600;color:var(--n2);margin-bottom:4px}
+.drill-sub{font-size:11px;color:var(--muted);margin-bottom:12px}
+.drill-close{float:right;color:var(--n4);cursor:pointer;font-size:16px;line-height:1}
+.drill-table{width:100%;border-collapse:collapse}
+.drill-table th{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:5px 8px;border-bottom:1px solid var(--border);text-align:left}
+.drill-table td{padding:7px 8px;font-size:12px;border-bottom:1px solid var(--n6)}
+.drill-table tr:last-child td{border:none}
+.badge{display:inline-block;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:600}
+.badge.green{background:#dcfce7;color:#166534}
+.badge.amber{background:#fef3c7;color:#92400e}
+.badge.red{background:#fee2e2;color:#991b1b}
+.badge.blue{background:#dbeafe;color:#1e40af}
+.badge.ok{background:#f0fdf4;color:#166534}
+.badge.warn{background:#fffbeb;color:#92400e}
+.badge.crit{background:#fff1f2;color:#9f1239}
+.action-btn{border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:11px;cursor:pointer;background:#fff;color:var(--g2);font-weight:500;white-space:nowrap}
+.action-btn:hover{background:var(--g2);color:#fff}
+.action-btn.urgent{border-color:var(--r2);color:var(--r2)}
+.action-btn.urgent:hover{background:var(--r2);color:#fff}
+
+/* chart cards */
+.card-grid{display:grid;gap:12px;margin-bottom:14px}
+.card-grid.cols2{grid-template-columns:1fr 1fr}
+.card-grid.cols3{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.card-hdr{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);cursor:pointer}
+.card-title{font-size:12px;font-weight:600;color:var(--n2)}
+.card-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.card-badges{display:flex;gap:5px;align-items:center}
+.ctag{background:var(--n6);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:9px;color:var(--muted);font-weight:500}
+.ctag.blue{background:#eff6ff;border-color:#bfdbfe;color:var(--g2)}
+.card-body{padding:14px}
+.collapsed .card-body{display:none}
+.chevron{color:var(--n4);font-size:14px;transition:transform .2s}
+.card.expanded .chevron{transform:rotate(180deg)}
+
+/* bar chart mockup */
+.bar-chart{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-label{width:120px;font-size:11px;color:var(--n2);text-align:right;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;background:var(--n6);border-radius:4px;height:18px;position:relative;cursor:pointer;transition:opacity .2s}
+.bar-track:hover{opacity:.85}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
+.bar-fill span{font-size:10px;font-weight:600;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.ref-line{position:absolute;top:0;bottom:0;width:1.5px;background:rgba(0,0,0,.25);z-index:2}
+.bar-val{width:36px;font-size:11px;font-weight:600;color:var(--n2);text-align:right}
+
+/* donut mockup */
+.donut-wrap{display:flex;align-items:center;gap:20px}
+.donut-svg{flex-shrink:0}
+.donut-legend{display:flex;flex-direction:column;gap:6px}
+.legend-row{display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* line chart mockup */
+.sparkwrap{position:relative}
+.ref80{position:absolute;left:0;right:0;border-top:1px dashed #94a3b8;font-size:9px;color:var(--n4)}
+.ref80 span{position:absolute;right:4px;top:-10px}
+
+/* server gauges */
+.gauge-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gauge-row{display:flex;flex-direction:column;gap:4px;padding:10px;background:var(--n6);border-radius:8px;cursor:pointer}
+.gauge-row:hover{background:#e8edf5}
+.gauge-lbl{display:flex;justify-content:space-between;align-items:center}
+.gauge-name{font-size:11px;font-weight:600;color:var(--n2)}
+.gauge-pct{font-size:14px;font-weight:700}
+.gauge-track{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.gauge-fill{height:100%;border-radius:4px;transition:width .5s}
+
+/* mini metric */
+.mini-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.mini-card{background:var(--n6);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)}
+.mini-card.red-card{background:#fff1f2;border-color:#fecdd3}
+.mini-card.amber-card{background:#fffbeb;border-color:#fde68a}
+.mini-card.blue-card{background:#eff6ff;border-color:#bfdbfe}
+.mini-val{font-size:26px;font-weight:700;line-height:1}
+.mini-lbl{font-size:10px;color:var(--muted);margin-top:3px;font-weight:500}
+.mini-sub{font-size:9px;color:var(--muted);margin-top:2px}
+
+/* heatmap */
+.heatmap table{width:100%;border-collapse:collapse}
+.heatmap th,.heatmap td{padding:7px 10px;text-align:center;font-size:11px;border:1px solid var(--border)}
+.heatmap th{background:var(--n6);font-weight:600;color:var(--muted);font-size:10px}
+.hm-g{background:#dcfce7;color:#166534;font-weight:600;cursor:pointer;border-radius:4px}
+.hm-a{background:#fef3c7;color:#92400e;font-weight:600;cursor:pointer}
+.hm-r{background:#fee2e2;color:#991b1b;font-weight:600;cursor:pointer}
+.row-head{text-align:left!important;font-weight:600;color:var(--n2)}
+
+/* scatter mock */
+.scatter-wrap{position:relative;height:160px;background:var(--n6);border-radius:8px;overflow:hidden}
+.scatter-dot{position:absolute;border-radius:50%;cursor:pointer;transform:translate(-50%,-50%);transition:all .2s}
+.scatter-dot:hover{box-shadow:0 0 0 4px rgba(0,0,0,.1)}
+.q-shade{position:absolute;background:rgba(220,252,231,.5)}
+.q-label{position:absolute;font-size:9px;font-weight:600;color:var(--muted)}
+.axis-lbl{font-size:9px;color:var(--n4);position:absolute}
+
+/* forecast hist */
+.hist-wrap{display:flex;align-items:flex-end;gap:4px;height:100px;padding:0 4px}
+.hist-bar{flex:1;border-radius:3px 3px 0 0;cursor:pointer;position:relative;min-width:14px;transition:opacity .2s}
+.hist-bar:hover{opacity:.8}
+.hist-bar span{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;white-space:nowrap}
+.hist-xlbl{display:flex;gap:4px;padding:4px 4px 0;font-size:8px;color:var(--muted)}
+.hist-xlbl div{flex:1;text-align:center;min-width:14px}
+
+/* completion bars */
+.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.prog-name{flex:1;font-size:11px;color:var(--n2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-track{width:120px;background:var(--n6);border-radius:10px;height:6px;flex-shrink:0}
+.prog-fill{height:100%;border-radius:10px}
+.prog-pct{width:36px;text-align:right;font-size:11px;font-weight:600;color:var(--n2)}
+
+/* trust score bands */
+.trust-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;cursor:pointer;padding:5px 8px;border-radius:6px}
+.trust-row:hover{background:var(--n6)}
+.trust-color{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.trust-name{flex:1;font-size:11px;color:var(--n2)}
+.trust-bar-wrap{width:100px;background:var(--n6);border-radius:4px;height:12px}
+.trust-bar{height:100%;border-radius:4px}
+.trust-pct{width:32px;text-align:right;font-size:11px;font-weight:600;color:var(--n2)}
+
+/* staff dynamics */
+.combo-bars{display:flex;align-items:stretch;gap:5px;height:120px}
+.month-grp{display:flex;flex-direction:column;align-items:center;flex:1;gap:2px}
+.month-lbl{font-size:8px;color:var(--muted);margin-top:4px}
+.bar-up{background:var(--g3);border-radius:2px 2px 0 0;width:14px;align-self:flex-end;cursor:pointer;transition:opacity .2s}
+.bar-dn{background:var(--r3);border-radius:0 0 2px 2px;width:14px;cursor:pointer;transition:opacity .2s}
+.bar-up:hover,.bar-dn:hover{opacity:.7}
+.combo-axis{display:flex;flex-direction:column;justify-content:space-between;font-size:8px;color:var(--muted);padding:0 4px;min-width:20px;text-align:right}
+
+/* new staff risk */
+.risk-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--n6)}
+.risk-row:last-child{border:none}
+.risk-co{font-size:12px;font-weight:600;color:var(--n2);width:120px}
+.risk-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px}
+.risk-track{flex:1;background:var(--n6);border-radius:4px;height:10px}
+.risk-fill{height:100%;border-radius:4px}
+
+/* revenue forecast stack */
+.rev-stack{display:flex;align-items:flex-end;gap:5px;height:100px}
+.rev-col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer}
+.rev-seg{width:100%}
+.rev-xlbl{display:flex;gap:5px;margin-top:4px;font-size:8px;color:var(--muted)}
+.rev-xlbl div{flex:1;text-align:center}
+
+/* error log */
+.err-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:4px;border:1px solid var(--border);background:var(--card)}
+.err-row.has-err{border-left:3px solid var(--r2);background:#fff8f8}
+.err-name{flex:1;font-size:12px;font-weight:600;color:var(--n2)}
+.err-count{font-size:16px;font-weight:700;width:32px;text-align:center}
+.err-count.red{color:var(--r2)}
+.err-count.amber{color:var(--w2)}
+.err-count.green{color:var(--s2)}
+.err-meta{font-size:10px;color:var(--muted);flex:1}
+.inv-btn{border:1px solid var(--g3);border-radius:6px;padding:3px 10px;font-size:10px;color:var(--g2);cursor:pointer;font-weight:500;background:#fff}
+.inv-btn:hover{background:var(--g2);color:#fff}
+
+/* settings panel */
+.settings-row{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid var(--n6)}
+.settings-row:last-child{border:none}
+.set-name{flex:1;font-size:12px;color:var(--n2)}
+.set-val{font-size:12px;font-weight:500;color:var(--n2);width:160px;font-family:monospace}
+.set-status{width:100px;text-align:right}
+
+/* tooltip */
+.tooltip-box{position:absolute;background:#1e293b;color:#fff;border-radius:6px;padding:5px 10px;font-size:11px;pointer-events:none;z-index:100;white-space:nowrap;display:none}
+
+/* section title */
+.section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin:0 0 8px}
+
+/* dim switch */
+.dim-switch{display:flex;gap:5px;margin-bottom:10px}
+.dim-btn{border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:10px;font-weight:500;cursor:pointer;background:#fff;color:var(--muted)}
+.dim-btn.active{background:var(--g2);color:#fff;border-color:var(--g2)}
+
+/* stacked bars */
+.stacked-bar{display:flex;height:20px;border-radius:4px;overflow:hidden;cursor:pointer;margin-bottom:4px}
+.stacked-bar:hover{opacity:.85}
+.seg{height:100%;transition:width .3s}
+
+/* responsive tweak */
+@media(max-width:600px){.kpi-strip{grid-template-columns:repeat(3,1fr)}.card-grid.cols2{grid-template-columns:1fr}.card-grid.cols3{grid-template-columns:1fr}}
+</style>
+
+<div class="header">
+  <div class="logo">Sental <span>LMS</span> Analytics</div>
+  <div class="hright">
+    <span class="role-badge">Company Owner</span>
+    <span>Aibek N.</span>
+    <div class="avatar">AN</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tab-row">
+  <div class="tab active" onclick="switchTab('kpi',this)">KPI Strip</div>
+  <div class="tab" onclick="switchTab('overview',this)">Overview</div>
+  <div class="tab" onclick="switchTab('compliance',this)">Compliance</div>
+  <div class="tab" onclick="switchTab('turnover',this)">Staff Turnover</div>
+  <div class="tab" onclick="switchTab('training',this)">Training Quality</div>
+  <div class="tab" onclick="switchTab('proctoring',this)">Proctoring</div>
+  <div class="tab" onclick="switchTab('forecast',this)">Forecast</div>
+  <div class="tab" onclick="switchTab('server',this)">Server</div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="filter-label">Filter:</span>
+  <select class="fsel" onchange="updateFilters()">
+    <option>All companies</option>
+    <option>TOO MashStroy</option>
+    <option>Kazatomprom LLP</option>
+    <option>ArcelorMittal</option>
+    <option>KazMunayGas</option>
+  </select>
+  <select class="fsel">
+    <option>All departments</option>
+    <option>Workers</option>
+    <option>ITR</option>
+    <option>Management</option>
+  </select>
+  <select class="fsel">
+    <option>All locations</option>
+    <option>Almaty HQ</option>
+    <option>Karaganda Site</option>
+    <option>Atyrau Depot</option>
+    <option>Astana Office</option>
+  </select>
+  <select class="fsel">
+    <option>All positions</option>
+    <option>Welder</option>
+    <option>Engineer</option>
+    <option>Inspector</option>
+    <option>HSE Lead</option>
+  </select>
+  <select class="fsel" id="dateRange">
+    <option>Last 12 months</option>
+    <option>Last 90 days</option>
+    <option>Last 30 days</option>
+    <option>Custom range</option>
+  </select>
+  <div class="fchip active">Active filters: All <span class="x">×</span></div>
+</div>
+
+<!-- KPI TAB -->
+<div class="content active" id="tab-kpi">
+  <!-- KPI STRIP -->
+  <div class="kpi-strip">
+    <div class="kpi blue selected" onclick="toggleDrill('d-users',this)">
+      <div class="kpi-lbl">Total active users</div>
+      <div class="kpi-val blue">1,247</div>
+      <div class="kpi-trend up">▲ +8 this mo</div>
+      <div class="kpi-drill">↗ drill down</div>
+    </div>
+    <div class="kpi green" onclick="toggleDrill('d-comp',this)">
+      <div class="kpi-lbl">Overall compliance</div>
+      <div class="kpi-val green">78%</div>
+      <div class="kpi-trend down">▼ −3% vs last mo</div>
+      <div class="kpi-drill">↗ drill down</div>
+    </div>
+    <div class="kpi amber" onclick="toggleDrill('d-exp30',this)">
+      <div class="kpi-lbl">Expiring &lt;30 days</div>
+      <div class="kpi-val amber">171</div>
+      <div class="kpi-trend down">▲ +11 vs last mo</div>
+      <div class="kpi-drill">↗ drill down</div>
+    </div>
+    <div class="kpi red" onclick="toggleDrill('d-expnow',this)">
+      <div class="kpi-lbl">Expired now</div>
+      <div class="kpi-val red">74</div>
+      <div class="kpi-trend down">▲ +4 this week</div>
+      <div class="kpi-drill">↗ drill down</div>
+    </div>
+    <div class="kpi purple" onclick="toggleDrill('d-eds',this)">
+      <div class="kpi-lbl">EDS queue</div>
+      <div class="kpi-val purple">17</div>
+      <div class="kpi-trend down">3 critical</div>
+      <div class="kpi-drill">↗ drill down</div>
+    </div>
+    <div class="kpi teal" onclick="toggleDrill('d-server',this)">
+      <div class="kpi-lbl">Server disk</div>
+      <div class="kpi-val teal">82%</div>
+      <div class="kpi-trend down">⚠ Warning</div>
+      <div class="kpi-drill">↗ drill down</div>
+    </div>
+  </div>
+
+  <!-- DRILL: Users -->
+  <div class="drill-panel open" id="d-users">
+    <div class="drill-title">Total active users — company aggregate <span class="drill-close" onclick="closeDrill('d-users','d-users-kpi')">×</span></div>
+    <div class="drill-sub">Count of active users (deleted=0, suspended=0) grouped by IOMAD tenant · No individual names</div>
+    <table class="drill-table">
+      <thead><tr><th>Company</th><th>Active users</th><th>Compliance %</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>Kazatomprom LLP</td><td>415</td><td>89%</td><td><span class="badge green">Green</span></td><td><button class="action-btn">View full report</button></td></tr>
+        <tr><td>ArcelorMittal</td><td>562</td><td>63%</td><td><span class="badge red">Red</span></td><td><button class="action-btn">View full report</button></td></tr>
+        <tr><td>TOO MashStroy</td><td>270</td><td>72%</td><td><span class="badge amber">Amber</span></td><td><button class="action-btn">View full report</button></td></tr>
+        <tr><td>KazMunayGas</td><td>—</td><td>—</td><td><span class="badge blue">Onboarding</span></td><td><button class="action-btn">View full report</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DRILL: Compliance -->
+  <div class="drill-panel" id="d-comp">
+    <div class="drill-title">Overall compliance — colour-coded by threshold <span class="drill-close" onclick="closeDrill('d-comp')">×</span></div>
+    <div class="drill-sub">Formula: users with valid docs / total active users × 100. Valid = sental_document_versions WHERE expiry_date &gt; NOW() AND is_current=1. Sorted ascending (worst first).</div>
+    <div class="bar-chart" style="margin-bottom:8px">
+      <div class="bar-row"><span class="bar-label">ArcelorMittal</span><div class="bar-track" style="cursor:pointer" onclick="sendPrompt('Show me ArcelorMittal employee compliance drill-down')"><div class="bar-fill" style="width:63%;background:#dc2626"><span>63%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#dc2626">63%</span></div>
+      <div class="bar-row"><span class="bar-label">TOO MashStroy</span><div class="bar-track" onclick="sendPrompt('Show me TOO MashStroy compliance details')"><div class="bar-fill" style="width:72%;background:#d97706"><span>72%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#d97706">72%</span></div>
+      <div class="bar-row"><span class="bar-label">Kazatomprom LLP</span><div class="bar-track"><div class="bar-fill" style="width:89%;background:#059669"><span>89%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#059669">89%</span></div>
+    </div>
+    <div style="font-size:10px;color:var(--muted)">▏ Reference line = 80% target</div>
+  </div>
+
+  <!-- DRILL: Expiring -->
+  <div class="drill-panel" id="d-exp30">
+    <div class="drill-title">Expiring &lt;30 days — named employee list <span class="drill-close" onclick="closeDrill('d-exp30')">×</span></div>
+    <div class="drill-sub">All employees whose document expires within 30 calendar days · Sorted ascending (most urgent first)</div>
+    <table class="drill-table">
+      <thead><tr><th>Employee</th><th>Company</th><th>Course</th><th>Doc type</th><th>Days left</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>Akhmetov A.K.</td><td>TOO MashStroy</td><td>Fire Safety L1</td><td>Certificate</td><td style="color:#dc2626;font-weight:700">4d</td><td><button class="action-btn">Schedule</button></td></tr>
+        <tr><td>Bekova D.S.</td><td>ArcelorMittal</td><td>Chemical Handling</td><td>Protocol</td><td style="color:#dc2626;font-weight:700">11d</td><td><button class="action-btn">Schedule</button></td></tr>
+        <tr><td>Muratov T.A.</td><td>TOO MashStroy</td><td>Working at Heights</td><td>License</td><td style="color:#d97706;font-weight:700">14d</td><td><button class="action-btn">Schedule</button></td></tr>
+        <tr><td>Seitkali R.M.</td><td>Kazatomprom</td><td>Electrical Safety</td><td>Certificate</td><td style="color:#d97706;font-weight:700">27d</td><td><button class="action-btn">Schedule</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DRILL: Expired -->
+  <div class="drill-panel" id="d-expnow">
+    <div class="drill-title">Expired now — sorted by most overdue first <span class="drill-close" onclick="closeDrill('d-expnow')">×</span></div>
+    <div class="drill-sub">expiry_date &lt; NOW() AND is_current=1. Negative = days overdue. "Urgent" triggers email to employee + line manager + logs action in audit trail.</div>
+    <table class="drill-table">
+      <thead><tr><th>Employee</th><th>Company</th><th>Course</th><th>Overdue</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>Nurgali T.B.</td><td>ArcelorMittal</td><td>Working at Heights</td><td style="color:#dc2626;font-weight:700">−62d</td><td><button class="action-btn urgent">Urgent</button></td></tr>
+        <tr><td>Omarov K.D.</td><td>TOO MashStroy</td><td>Fire Safety L1</td><td style="color:#dc2626;font-weight:700">−38d</td><td><button class="action-btn urgent">Urgent</button></td></tr>
+        <tr><td>Zhumagali A.</td><td>Kazatomprom</td><td>Radiation Safety</td><td style="color:#dc2626;font-weight:700">−14d</td><td><button class="action-btn urgent">Urgent</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DRILL: EDS -->
+  <div class="drill-panel" id="d-eds">
+    <div class="drill-title">EDS queue — pending document records <span class="drill-close" onclick="closeDrill('d-eds')">×</span></div>
+    <div class="drill-sub">Awaiting electronic signature. Aging: OK &lt;2d · Urgent 2–5d · Critical &gt;5d. No personal names shown for privacy.</div>
+    <table class="drill-table">
+      <thead><tr><th>Doc ID</th><th>Company</th><th>Expected signer</th><th>Days waiting</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>#EDS-2041</td><td>ArcelorMittal</td><td>HSE Manager</td><td>7</td><td><span class="badge red">Critical</span></td></tr>
+        <tr><td>#EDS-2055</td><td>TOO MashStroy</td><td>HR Director</td><td>3</td><td><span class="badge amber">Urgent</span></td></tr>
+        <tr><td>#EDS-2071</td><td>Kazatomprom</td><td>Dept Head</td><td>1</td><td><span class="badge ok">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DRILL: Server -->
+  <div class="drill-panel" id="d-server">
+    <div class="drill-title">Server disk — inline capacity gauges <span class="drill-close" onclick="closeDrill('d-server')">×</span></div>
+    <div class="drill-sub">sental_server_metrics — latest collected_at per metric. Amber at 70%, Red at 90%.</div>
+    <div class="gauge-grid">
+      <div class="gauge-row" onclick="sendPrompt('Show 7-day disk usage sparkline and threshold breaches')">
+        <div class="gauge-lbl"><span class="gauge-name">Disk</span><span class="gauge-pct" style="color:#d97706">82% ⚠</span></div>
+        <div class="gauge-track"><div class="gauge-fill" style="width:82%;background:#d97706"></div></div>
+        <div style="font-size:9px;color:var(--muted)">192 GB of 234 GB · Warning &gt;80%</div>
+      </div>
+      <div class="gauge-row">
+        <div class="gauge-lbl"><span class="gauge-name">RAM</span><span class="gauge-pct" style="color:#059669">58% ✓</span></div>
+        <div class="gauge-track"><div class="gauge-fill" style="width:58%;background:#059669"></div></div>
+        <div style="font-size:9px;color:var(--muted)">9.3 GB of 16 GB · OK</div>
+      </div>
+      <div class="gauge-row">
+        <div class="gauge-lbl"><span class="gauge-name">CPU (1-min)</span><span class="gauge-pct" style="color:#059669">28% ✓</span></div>
+        <div class="gauge-track"><div class="gauge-fill" style="width:28%;background:#059669"></div></div>
+        <div style="font-size:9px;color:var(--muted)">Load avg 1.4 · 8 cores · OK</div>
+      </div>
+      <div class="gauge-row">
+        <div class="gauge-lbl"><span class="gauge-name">Database</span><span class="gauge-pct" style="color:#2563a8">67% ◉</span></div>
+        <div class="gauge-track"><div class="gauge-fill" style="width:67%;background:#2563a8"></div></div>
+        <div style="font-size:9px;color:var(--muted)">16.8 GB of 25 GB · Monitor</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;text-align:right"><button class="action-btn" onclick="switchTab('server',document.querySelector('.tab:last-child'))">→ Go to Server tab</button></div>
+  </div>
+</div>
+
+<!-- OVERVIEW TAB -->
+<div class="content" id="tab-overview">
+  <div class="card-grid cols2">
+    <!-- 12-month trend -->
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Compliance by company — 12-month trend</div><div class="card-sub">One line per company · X: months · Y: compliance %</div></div>
+        <div class="card-badges"><span class="ctag blue">Chart.js line</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="sparkwrap" style="position:relative;padding:20px 0 8px">
+          <div class="ref80" style="top:20px"><span>80% target</span></div>
+          <svg width="100%" height="120" viewBox="0 0 400 120" style="overflow:visible">
+            <line x1="0" y1="24" x2="400" y2="24" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4 4"/>
+            <!-- Kazatomprom - green solid -->
+            <polyline fill="none" stroke="#059669" stroke-width="2" points="0,28 36,26 72,22 108,20 144,18 180,20 216,18 252,16 288,18 324,16 360,15 396,14"/>
+            <!-- MashStroy - amber dashed -->
+            <polyline fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="6 3" points="0,56 36,54 72,50 108,52 144,60 180,58 216,62 252,60 288,56 324,58 360,55 396,52"/>
+            <!-- ArcelorMittal - red dotted -->
+            <polyline fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="2 3" points="0,80 36,82 72,84 108,90 144,88 180,92 216,88 252,86 288,90 324,88 360,92 396,94"/>
+            <text x="2" y="12" style="font-size:9px;fill:#059669;font-weight:600">Kazatomprom 89%</text>
+            <text x="2" y="48" style="font-size:9px;fill:#d97706;font-weight:600">MashStroy 72%</text>
+            <text x="2" y="76" style="font-size:9px;fill:#dc2626;font-weight:600">ArcelorMittal 63%</text>
+          </svg>
+          <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--muted);margin-top:2px"><span>Jun 25</span><span>Sep 25</span><span>Dec 25</span><span>Mar 26</span><span>May 26</span></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click any data point → employees whose status changed that month</div>
+        </div>
+      </div>
+    </div>
+    <!-- Horizontal bar compliance -->
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Compliance % by company — snapshot</div><div class="card-sub">Sorted ascending · Colour by threshold · Click bar → employee drill</div></div>
+        <div class="card-badges"><span class="ctag blue">Chart.js bar</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label">ArcelorMittal</span><div class="bar-track" onclick="sendPrompt('Show me all ArcelorMittal employees with certification statuses')"><div class="bar-fill" style="width:63%;background:#dc2626"><span>63%</span></div><div class="ref-line" style="left:80%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">TOO MashStroy</span><div class="bar-track" onclick="sendPrompt('Show me all TOO MashStroy employees with certification statuses')"><div class="bar-fill" style="width:72%;background:#d97706"><span>72%</span></div><div class="ref-line" style="left:80%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">Kazatomprom LLP</span><div class="bar-track"><div class="bar-fill" style="width:89%;background:#059669"><span>89%</span></div><div class="ref-line" style="left:80%"></div></div></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:10px;font-size:10px">
+          <span style="color:#059669">■ ≥80% Compliant</span>
+          <span style="color:#d97706">■ 70–79% At risk</span>
+          <span style="color:#dc2626">■ &lt;70% Non-compliant</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Platform status donut -->
+  <div class="card-grid cols2">
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Platform status — document breakdown</div><div class="card-sub">4 segments across all tenants</div></div>
+        <div class="card-badges"><span class="ctag blue">Chart.js donut</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="donut-wrap">
+          <svg width="120" height="120" class="donut-svg">
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#059669" stroke-width="18" stroke-dasharray="169 114" stroke-dashoffset="0"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#d97706" stroke-width="18" stroke-dasharray="43 240" stroke-dashoffset="-169"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#dc2626" stroke-width="18" stroke-dasharray="28 255" stroke-dashoffset="-212"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#94a3b8" stroke-width="18" stroke-dasharray="43 240" stroke-dashoffset="-240"/>
+            <text x="60" y="56" text-anchor="middle" style="font-size:11px;font-weight:700;fill:var(--color-text-primary,#1e293b)">3,841</text>
+            <text x="60" y="70" text-anchor="middle" style="font-size:9px;fill:#64748b">docs</text>
+          </svg>
+          <div class="donut-legend">
+            <div class="legend-row" onclick="sendPrompt('Show active document employees list')"><div class="legend-dot" style="background:#059669"></div><span>Active — 60% (2,305)</span></div>
+            <div class="legend-row" onclick="sendPrompt('Show expiring document employees list')"><div class="legend-dot" style="background:#d97706"></div><span>Expiring — 15% (576)</span></div>
+            <div class="legend-row" onclick="sendPrompt('Show expired document employees list')"><div class="legend-dot" style="background:#dc2626"></div><span>Expired — 10% (384)</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:#94a3b8"></div><span>No doc — 15% (576)</span></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:8px">↑ Click any segment → employee list filtered to that status</div>
+      </div>
+    </div>
+    <!-- Compliance heatmap -->
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Compliance heatmap — department × location</div><div class="card-sub">Each cell = compliance % · Click → filtered employee list</div></div>
+        <div class="card-badges"><span class="ctag blue">heatmap</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="heatmap" onclick="sendPrompt('Show me employees at Karaganda Site Workers with compliance issues')">
+          <table>
+            <thead><tr><th></th><th>Almaty HQ</th><th>Karaganda Site</th><th>Atyrau Depot</th><th>Astana Office</th></tr></thead>
+            <tbody>
+              <tr><td class="row-head">Workers</td><td class="hm-a">65%</td><td class="hm-r">58%</td><td class="hm-a">71%</td><td class="hm-g">80%</td></tr>
+              <tr><td class="row-head">ITR</td><td class="hm-g">82%</td><td class="hm-a">75%</td><td class="hm-a">77%</td><td class="hm-g">91%</td></tr>
+              <tr><td class="row-head">Management</td><td class="hm-g">88%</td><td class="hm-g">85%</td><td class="hm-g">90%</td><td class="hm-g">95%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click any cell → employees in that dept×location with issues</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLIANCE TAB -->
+<div class="content" id="tab-compliance">
+  <div class="card-grid cols2">
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Expired &amp; expiring by company</div><div class="card-sub">Two bars per company · Absolute counts</div></div>
+        <div class="card-badges"><span class="ctag blue">Grouped bar</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="dim-switch"><button class="dim-btn active">By company</button><button class="dim-btn">By dept</button><button class="dim-btn">By location</button></div>
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label" style="width:100px">ArcelorMittal</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+              <div class="bar-track" style="height:14px" onclick="sendPrompt('List ArcelorMittal expired employees sorted by most overdue')"><div class="bar-fill" style="width:62%;background:#dc2626;height:14px"><span style="font-size:9px">38 expired</span></div></div>
+              <div class="bar-track" style="height:14px"><div class="bar-fill" style="width:45%;background:#d97706;height:14px"><span style="font-size:9px">27 expiring</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row"><span class="bar-label" style="width:100px">TOO MashStroy</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+              <div class="bar-track" style="height:14px"><div class="bar-fill" style="width:40%;background:#dc2626;height:14px"><span style="font-size:9px">24 expired</span></div></div>
+              <div class="bar-track" style="height:14px"><div class="bar-fill" style="width:55%;background:#d97706;height:14px"><span style="font-size:9px">33 expiring</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row"><span class="bar-label" style="width:100px">Kazatomprom</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+              <div class="bar-track" style="height:14px"><div class="bar-fill" style="width:20%;background:#dc2626;height:14px"><span style="font-size:9px">12 expired</span></div></div>
+              <div class="bar-track" style="height:14px"><div class="bar-fill" style="width:37%;background:#d97706;height:14px"><span style="font-size:9px">22 expiring</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:8px;font-size:10px"><span style="color:#dc2626">■ Expired now</span><span style="color:#d97706">■ Expiring &lt;30d</span></div>
+      </div>
+    </div>
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Non-compliance by course type</div><div class="card-sub">% enrolled without valid doc · Descending</div></div>
+        <div class="card-badges"><span class="ctag blue">Horizontal bar</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label">Working at Heights</span><div class="bar-track" onclick="sendPrompt('List all employees with expired/missing Working at Heights certification')"><div class="bar-fill" style="width:78%;background:#dc2626"><span>78%</span></div></div></div>
+          <div class="bar-row"><span class="bar-label">Chemical Handling</span><div class="bar-track"><div class="bar-fill" style="width:58%;background:#dc2626"><span>58%</span></div></div></div>
+          <div class="bar-row"><span class="bar-label">First Aid L1</span><div class="bar-track"><div class="bar-fill" style="width:38%;background:#d97706"><span>38%</span></div></div></div>
+          <div class="bar-row"><span class="bar-label">Fire Safety L1</span><div class="bar-track"><div class="bar-fill" style="width:30%;background:#d97706"><span>30%</span></div></div></div>
+          <div class="bar-row"><span class="bar-label">Electrical Safety</span><div class="bar-track"><div class="bar-fill" style="width:18%;background:#059669"><span>18%</span></div></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click → employees without valid doc for that course</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Always-visible compliance table -->
+  <div class="card">
+    <div class="card-hdr" style="cursor:default">
+      <div><div class="card-title">All compliance violations — live employee table</div><div class="card-sub">Bottom of tab · All violations · Filterable · Always visible</div></div>
+      <div class="card-badges"><span class="ctag blue">Persistent table</span><span class="ctag">interactive</span></div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <select class="fsel"><option>All statuses</option><option>Expired only</option><option>Expiring only</option></select>
+        <select class="fsel"><option>All doc types</option><option>Certificate</option><option>Protocol</option><option>License</option></select>
+        <input type="text" placeholder="Search name or course..." style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--text);flex:1;min-width:140px">
+      </div>
+      <div style="overflow-x:auto">
+        <table class="drill-table" style="min-width:600px">
+          <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Position</th><th>Course</th><th>Doc type</th><th>Expiry</th><th>Days</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr style="cursor:pointer" onclick="sendPrompt('Show full certificate history for Nurgali T.B. on Working at Heights')"><td>Nurgali T.B.</td><td>Workers</td><td><span class="badge blue">Karaganda</span></td><td>Operator</td><td>Working at Heights</td><td>License</td><td>2026...</td><td style="color:#dc2626;font-weight:700">−62d</td><td><span class="badge red">Expired</span></td><td><button class="action-btn urgent" onclick="event.stopPropagation()">Urgent</button></td></tr>
+            <tr style="cursor:pointer" onclick="sendPrompt('Show full certificate history for Omarov K.D. on Fire Safety L1')"><td>Omarov K.D.</td><td>Workers</td><td><span class="badge blue">Almaty HQ</span></td><td>Mechanic</td><td>Fire Safety L1</td><td>Certif.</td><td>2026...</td><td style="color:#dc2626;font-weight:700">−38d</td><td><span class="badge red">Expired</span></td><td><button class="action-btn urgent" onclick="event.stopPropagation()">Urgent</button></td></tr>
+            <tr style="cursor:pointer" onclick="sendPrompt('Show certificate history for Akhmetov A.K.')"><td>Akhmetov A.K.</td><td>ITR</td><td><span class="badge blue">Almaty HQ</span></td><td>Inspector</td><td>Fire Safety L1</td><td>Certif.</td><td>2026...</td><td style="color:#dc2626;font-weight:700">3d</td><td><span class="badge amber">Expiring</span></td><td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td></tr>
+            <tr style="cursor:pointer"><td>Bekova D.S.</td><td>Workers</td><td><span class="badge blue">Atyrau Dep.</span></td><td>Welder</td><td>Chemical Handling</td><td>Protocol</td><td>2026...</td><td style="color:#d97706;font-weight:700">11d</td><td><span class="badge amber">Expiring</span></td><td><button class="action-btn">Schedule</button></td></tr>
+            <tr style="cursor:pointer"><td>Muratov T.A.</td><td>Workers</td><td><span class="badge blue">Karaganda</span></td><td>Rigger</td><td>Working at Heights</td><td>License</td><td>2026...</td><td style="color:#d97706;font-weight:700">14d</td><td><span class="badge amber">Expiring</span></td><td><button class="action-btn">Schedule</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click any row → certificate history dialogue · Showing 5 of 74 violations</div>
+    </div>
+  </div>
+</div>
+
+<!-- TURNOVER TAB -->
+<div class="content" id="tab-turnover">
+  <div class="card-grid cols2">
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Staff dynamics — new vs deactivated (12 months)</div><div class="card-sub">Blue: new · Red: deactivated · Green dashed: net trend</div></div>
+        <div class="card-badges"><span class="ctag blue">Combo bar+line</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;gap:6px;align-items:flex-end;height:130px;padding-bottom:4px">
+          <div class="combo-axis"><span>40</span><span>20</span><span>0</span><span>−20</span></div>
+          <div style="flex:1;display:flex;align-items:stretch;gap:4px;height:130px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px" onclick="sendPrompt('List new and deactivated staff in June 2025')">
+              <div style="height:26px;background:#3b82c4;border-radius:2px 2px 0 0;width:14px;align-self:flex-end;cursor:pointer"></div>
+              <div style="height:0;position:relative;z-index:1;width:100%"><div style="font-size:7px;color:var(--muted);text-align:center;position:absolute;width:100%;top:0">Jun</div></div>
+              <div style="height:8px;background:#f87171;border-radius:0 0 2px 2px;width:14px;cursor:pointer;margin-top:36px"></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="height:32px;background:#3b82c4;border-radius:2px 2px 0 0;width:14px;align-self:flex-end"></div>
+              <div style="height:10px;background:#f87171;border-radius:0 0 2px 2px;width:14px;margin-top:30px"></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="height:22px;background:#3b82c4;border-radius:2px 2px 0 0;width:14px;align-self:flex-end"></div>
+              <div style="height:14px;background:#f87171;border-radius:0 0 2px 2px;width:14px;margin-top:34px"></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="height:40px;background:#3b82c4;border-radius:2px 2px 0 0;width:14px;align-self:flex-end"></div>
+              <div style="height:8px;background:#f87171;border-radius:0 0 2px 2px;width:14px;margin-top:22px"></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+              <div style="height:28px;background:#3b82c4;border-radius:2px 2px 0 0;width:14px;align-self:flex-end"></div>
+              <div style="height:12px;background:#f87171;border-radius:0 0 2px 2px;width:14px;margin-top:30px"></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;font-size:10px;margin-top:4px"><span style="color:#3b82c4">■ New staff</span><span style="color:#f87171">■ Deactivated</span><span style="color:#059669">-- Net trend</span></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">↑ Click any month bar → new staff & deactivated staff sub-tables</div>
+      </div>
+    </div>
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Turnover rate % by company</div><div class="card-sub">Colour-coded by rate severity · Rolling 12 months</div></div>
+        <div class="card-badges"><span class="ctag blue">Chart.js bar</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label">ArcelorMittal</span><div class="bar-track" onclick="sendPrompt('List all deactivated ArcelorMittal employees in last 12 months with reasons')"><div class="bar-fill" style="width:72%;background:#dc2626"><span>18%</span></div></div></div>
+          <div class="bar-row"><span class="bar-label">TOO MashStroy</span><div class="bar-track"><div class="bar-fill" style="width:50%;background:#d97706"><span>12%</span></div></div></div>
+          <div class="bar-row"><span class="bar-label">Kazatomprom</span><div class="bar-track"><div class="bar-fill" style="width:20%;background:#059669"><span>5%</span></div></div></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:8px;font-size:10px"><span style="color:#059669">■ &lt;5% Good</span><span style="color:#d97706">■ 5–10% Monitor</span><span style="color:#dc2626">■ &gt;10% High</span></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">Formula: Deactivated / Avg active × 100</div>
+      </div>
+    </div>
+  </div>
+  <!-- New staff without certs -->
+  <div class="card expanded" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">New staff without certifications — risk panel</div><div class="card-sub">Hired 30+ days ago · Zero active documents · Per company</div></div>
+      <div class="card-badges"><span class="ctag" style="background:#fee2e2;border-color:#fca5a5;color:#991b1b">risk panel</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div>
+        <div class="risk-row" onclick="sendPrompt('List ArcelorMittal new staff without any certifications')"><span class="risk-co">ArcelorMittal</span><span class="risk-badge" style="background:#fee2e2;color:#991b1b">28 at risk</span><div class="risk-track"><div class="risk-fill" style="width:35%;background:#dc2626"></div></div><span style="font-size:10px;color:#dc2626;font-weight:600">35%</span></div>
+        <div class="risk-row" onclick="sendPrompt('List TOO MashStroy new staff without certifications')"><span class="risk-co">TOO MashStroy</span><span class="risk-badge" style="background:#fef3c7;color:#92400e">12 at risk</span><div class="risk-track"><div class="risk-fill" style="width:15%;background:#d97706"></div></div><span style="font-size:10px;color:#d97706;font-weight:600">15%</span></div>
+        <div class="risk-row"><span class="risk-co">Kazatomprom</span><span class="risk-badge" style="background:#dcfce7;color:#166534">3 at risk</span><div class="risk-track"><div class="risk-fill" style="width:5%;background:#059669"></div></div><span style="font-size:10px;color:#059669;font-weight:600">5%</span></div>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px">↑ Click any row → named list with Hire date · Days since hire · Courses needed · Enroll button</div>
+    </div>
+  </div>
+</div>
+
+<!-- TRAINING QUALITY TAB -->
+<div class="content" id="tab-training">
+  <div class="card-grid cols2">
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">First-attempt pass rate by course</div><div class="card-sub">Ascending · Reference line at 60%</div></div>
+        <div class="card-badges"><span class="ctag blue">Horizontal bar</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label">Chemical Handling</span><div class="bar-track" onclick="sendPrompt('List employees who failed first attempt for Chemical Handling')"><div class="bar-fill" style="width:38%;background:#dc2626"><span>38%</span></div><div class="ref-line" style="left:60%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">Working at Heights</span><div class="bar-track"><div class="bar-fill" style="width:52%;background:#dc2626"><span>52%</span></div><div class="ref-line" style="left:60%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">Radiation Safety</span><div class="bar-track"><div class="bar-fill" style="width:65%;background:#d97706"><span>65%</span></div><div class="ref-line" style="left:60%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">Fire Safety L1</span><div class="bar-track"><div class="bar-fill" style="width:78%;background:#059669"><span>78%</span></div><div class="ref-line" style="left:60%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">Electrical Safety</span><div class="bar-track"><div class="bar-fill" style="width:84%;background:#059669"><span>84%</span></div><div class="ref-line" style="left:60%"></div></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">▏ Reference = 60% threshold · Click bar → failed-attempt employee list</div>
+      </div>
+    </div>
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Actual training time vs session time</div><div class="card-sub">Avg minutes per course · Engagement ratio annotation</div></div>
+        <div class="card-badges"><span class="ctag blue">Grouped bar</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label" style="width:90px">Chemical Hndl.</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:17%;background:#3b82c4;height:13px"><span style="font-size:9px">20m</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:100%;background:#94a3b8;height:13px"><span style="font-size:9px">120m</span></div></div>
+            </div>
+            <span style="width:40px;text-align:right;font-size:10px;color:#dc2626;font-weight:700">17%</span>
+          </div>
+          <div class="bar-row"><span class="bar-label" style="width:90px">Fire Safety L1</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:38%;background:#3b82c4;height:13px"><span style="font-size:9px">45m</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:100%;background:#94a3b8;height:13px"><span style="font-size:9px">120m</span></div></div>
+            </div>
+            <span style="width:40px;text-align:right;font-size:10px;color:#d97706;font-weight:700">38%</span>
+          </div>
+          <div class="bar-row"><span class="bar-label" style="width:90px">Elec. Safety</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:55%;background:#3b82c4;height:13px"><span style="font-size:9px">55m</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:88%;background:#94a3b8;height:13px"><span style="font-size:9px">90m</span></div></div>
+            </div>
+            <span style="width:40px;text-align:right;font-size:10px;color:#059669;font-weight:700">61%</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;font-size:10px;margin-top:6px"><span style="color:#3b82c4">■ Active time</span><span style="color:#94a3b8">■ Session time</span><span>% = engagement ratio</span></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">↑ Click course → employees below 30% engagement</div>
+      </div>
+    </div>
+  </div>
+  <div class="card expanded" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">Completion rate trend — 12 months by company</div><div class="card-sub">One line per company · Y: 0–100% · Tension 0.3</div></div>
+      <div class="card-badges"><span class="ctag blue">Chart.js line</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <svg width="100%" height="100" viewBox="0 0 400 100">
+        <polyline fill="none" stroke="#059669" stroke-width="2" points="0,30 36,28 72,25 108,22 144,20 180,22 216,19 252,17 288,20 324,18 360,16 396,15"/>
+        <polyline fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="6 3" points="0,55 36,52 72,48 108,50 144,58 180,56 216,60 252,62 288,58 324,60 360,65 396,70"/>
+        <polyline fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="2 3" points="0,75 36,78 72,80 108,82 144,80 180,84 216,82 252,86 288,84 324,82 360,88 396,90"/>
+        <text x="2" y="12" style="font-size:9px;fill:#059669;font-weight:600">Kazatomprom 86%</text>
+        <text x="2" y="46" style="font-size:9px;fill:#d97706;font-weight:600">MashStroy 67%</text>
+        <text x="2" y="66" style="font-size:9px;fill:#dc2626;font-weight:600">ArcelorMittal 54%</text>
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--muted);margin-top:2px"><span>Jun 25</span><span>Sep 25</span><span>Dec 25</span><span>Mar 26</span><span>May 26</span></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click data point → enrolled-but-incomplete employees for that month</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROCTORING TAB -->
+<div class="content" id="tab-proctoring">
+  <div class="card-grid cols2">
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Trust score distribution</div><div class="card-sub">4 bands · Centre label: total attempts</div></div>
+        <div class="card-badges"><span class="ctag blue">Chart.js donut</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="donut-wrap">
+          <svg width="120" height="120">
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#059669" stroke-width="18" stroke-dasharray="155 128" stroke-dashoffset="0"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#d97706" stroke-width="18" stroke-dasharray="71 212" stroke-dashoffset="-155"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#D85A30" stroke-width="18" stroke-dasharray="42 241" stroke-dashoffset="-226"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#dc2626" stroke-width="18" stroke-dasharray="15 268" stroke-dashoffset="-268"/>
+            <text x="60" y="56" text-anchor="middle" style="font-size:11px;font-weight:700;fill:var(--color-text-primary,#1e293b)">2,841</text>
+            <text x="60" y="70" text-anchor="middle" style="font-size:9px;fill:#64748b">attempts</text>
+          </svg>
+          <div class="donut-legend">
+            <div class="trust-row" onclick="sendPrompt('List employees with Trust Score 90-100')"><div class="trust-color" style="background:#059669"></div><span class="trust-name">Trusted 90–100</span><div class="trust-bar-wrap"><div class="trust-bar" style="width:55%;background:#059669"></div></div><span class="trust-pct">55%</span></div>
+            <div class="trust-row" onclick="sendPrompt('List employees in Review band 70-89')"><div class="trust-color" style="background:#d97706"></div><span class="trust-name">Review 70–89</span><div class="trust-bar-wrap"><div class="trust-bar" style="width:25%;background:#d97706"></div></div><span class="trust-pct">25%</span></div>
+            <div class="trust-row"><div class="trust-color" style="background:#D85A30"></div><span class="trust-name">Suspicious 50–69</span><div class="trust-bar-wrap"><div class="trust-bar" style="width:15%;background:#D85A30"></div></div><span class="trust-pct">15%</span></div>
+            <div class="trust-row" onclick="sendPrompt('List flagged employees for Quilgo review')"><div class="trust-color" style="background:#dc2626"></div><span class="trust-name">Flagged 0–49</span><div class="trust-bar-wrap"><div class="trust-bar" style="width:5%;background:#dc2626"></div></div><span class="trust-pct">5%</span></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click segment → employee list · "Review in Quilgo" for Flagged entries</div>
+      </div>
+    </div>
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Average trust score by company</div><div class="card-sub">Bars by score · Platform average as dashed reference</div></div>
+        <div class="card-badges"><span class="ctag blue">Chart.js bar</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label">ArcelorMittal</span><div class="bar-track" onclick="sendPrompt('Show flagged employees at ArcelorMittal with Trust Score below 50')"><div class="bar-fill" style="width:60%;background:#dc2626"><span>72</span></div><div class="ref-line" style="left:70%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">TOO MashStroy</span><div class="bar-track"><div class="bar-fill" style="width:68%;background:#d97706"><span>79</span></div><div class="ref-line" style="left:70%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">Kazatomprom</span><div class="bar-track"><div class="bar-fill" style="width:80%;background:#059669"><span>88</span></div><div class="ref-line" style="left:70%"></div></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">Y-axis: 50–100 · ▏ Platform avg reference · Click → flagged employees</div>
+      </div>
+    </div>
+  </div>
+  <!-- Scatter -->
+  <div class="card expanded" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">Trust score vs completion % — scatter</div><div class="card-sub">Each point = one course · X: completion % · Y: avg trust score</div></div>
+      <div class="card-badges"><span class="ctag blue">Chart.js scatter</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div class="scatter-wrap">
+        <div class="q-shade" style="left:0;top:0;right:30%;bottom:50%;background:rgba(254,249,195,.5)"></div>
+        <div class="q-shade" style="left:70%;top:0;right:0;bottom:50%;background:rgba(254,226,226,.5)"></div>
+        <div class="q-shade" style="left:70%;top:50%;right:0;bottom:0;background:rgba(220,252,231,.5)"></div>
+        <div class="q-shade" style="left:0;top:50%;right:30%;bottom:0;background:rgba(243,244,246,.5)"></div>
+        <div class="q-label" style="left:5px;top:5px;font-size:8px;color:#92400e">Low comp / High trust</div>
+        <div class="q-label" style="right:5px;top:5px;font-size:8px;color:#166534">Healthy ✓</div>
+        <div class="q-label" style="right:5px;bottom:5px;font-size:8px;color:#dc2626">⚠ High comp / Low trust</div>
+        <div class="q-label" style="left:5px;bottom:5px;font-size:8px;color:#64748b">Both low</div>
+        <!-- dots -->
+        <div class="scatter-dot" style="left:38%;top:30%;width:16px;height:16px;background:#dc2626" title="Chemical Handling" onclick="sendPrompt('Show employees for Chemical Handling split by trust band')"></div>
+        <div class="scatter-dot" style="left:55%;top:55%;width:16px;height:16px;background:#d97706" title="Fire Safety L1"></div>
+        <div class="scatter-dot" style="left:82%;top:20%;width:16px;height:16px;background:#059669" title="Electrical Safety"></div>
+        <div class="scatter-dot" style="left:75%;top:35%;width:16px;height:16px;background:#059669" title="Radiation Safety"></div>
+        <div class="scatter-dot" style="left:88%;top:70%;width:16px;height:16px;background:#dc2626" title="Working at Heights"></div>
+        <!-- axes -->
+        <div style="position:absolute;bottom:4px;left:0;right:0;border-top:1px solid var(--border)"></div>
+        <div style="position:absolute;left:70%;top:0;bottom:0;border-left:1px dashed var(--n4)"></div>
+        <div style="position:absolute;top:50%;left:0;right:0;border-top:1px dashed var(--n4)"></div>
+        <div class="axis-lbl" style="bottom:6px;left:50%;transform:translateX(-50%)">Completion % →</div>
+        <div class="axis-lbl" style="top:50%;left:4px;transform:translateY(-50%) rotate(-90deg)">Trust →</div>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click any dot → employees split by trust band · "Review in Quilgo" for Flagged</div>
+    </div>
+  </div>
+</div>
+
+<!-- FORECAST TAB -->
+<div class="content" id="tab-forecast">
+  <div class="mini-cards">
+    <div class="mini-card red-card">
+      <div class="mini-val" style="color:#dc2626">42</div>
+      <div class="mini-lbl" style="color:#991b1b">Expiring in 30 days</div>
+      <div class="mini-sub">Immediate scheduling needed</div>
+    </div>
+    <div class="mini-card amber-card">
+      <div class="mini-val" style="color:#d97706">71</div>
+      <div class="mini-lbl" style="color:#92400e">Expiring in 60 days</div>
+      <div class="mini-sub">Plan training events now</div>
+    </div>
+    <div class="mini-card blue-card">
+      <div class="mini-val" style="color:#1d4ed8">104</div>
+      <div class="mini-lbl" style="color:#1e40af">Expiring in 90 days</div>
+      <div class="mini-sub">Book venues &amp; instructors</div>
+    </div>
+  </div>
+
+  <div class="card expanded" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">13-week expiry forecast histogram</div><div class="card-sub">W1–W13 · Blue default · Red for peak weeks (≥10 expirations)</div></div>
+      <div class="card-badges"><span class="ctag blue">Chart.js bar</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:flex-end;gap:5px;height:90px;padding-bottom:4px">
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1" onclick="sendPrompt('List employees expiring in W1 with Schedule retraining options')">
+          <span style="font-size:8px;color:var(--muted);margin-bottom:2px">3</span>
+          <div style="height:18px;background:#3b82c4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:var(--muted);margin-bottom:2px">5</span>
+          <div style="height:30px;background:#3b82c4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:2px">14</span>
+          <div style="height:70px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:2px">12</span>
+          <div style="height:60px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:var(--muted);margin-bottom:2px">7</span>
+          <div style="height:42px;background:#3b82c4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:var(--muted);margin-bottom:2px">4</span>
+          <div style="height:24px;background:#3b82c4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:2px">11</span>
+          <div style="height:55px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:2px">13</span>
+          <div style="height:65px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:var(--muted);margin-bottom:2px">6</span>
+          <div style="height:36px;background:#3b82c4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:var(--muted);margin-bottom:2px">3</span>
+          <div style="height:18px;background:#3b82c4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:2px">11</span>
+          <div style="height:55px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:#dc2626;font-weight:700;margin-bottom:2px">11</span>
+          <div style="height:55px;background:#dc2626;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+          <span style="font-size:8px;color:var(--muted);margin-bottom:2px">5</span>
+          <div style="height:30px;background:#3b82c4;border-radius:2px 2px 0 0;width:100%;cursor:pointer"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:5px;font-size:7px;color:var(--muted);margin-top:2px">
+        <div style="flex:1;text-align:center">W1</div><div style="flex:1;text-align:center">W2</div><div style="flex:1;text-align:center">W3</div><div style="flex:1;text-align:center">W4</div><div style="flex:1;text-align:center">W5</div><div style="flex:1;text-align:center">W6</div><div style="flex:1;text-align:center">W7</div><div style="flex:1;text-align:center">W8</div><div style="flex:1;text-align:center">W9</div><div style="flex:1;text-align:center">W10</div><div style="flex:1;text-align:center">W11</div><div style="flex:1;text-align:center">W12</div><div style="flex:1;text-align:center">W13</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+        <span style="font-size:10px;color:var(--muted)">Peak threshold:</span>
+        <input type="range" min="5" max="20" value="10" style="flex:1" oninput="document.getElementById('thresh-val').textContent=this.value">
+        <span id="thresh-val" style="font-size:11px;font-weight:600;color:var(--n2)">10</span>
+        <span style="font-size:10px;color:var(--muted)">expirations</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">↑ Click bar → employees expiring that week with "Schedule retraining" button</div>
+    </div>
+  </div>
+
+  <!-- Revenue forecast - CEO only -->
+  <div class="card expanded" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">Revenue forecast — 12-month projection</div><div class="card-sub">Stacked bars: 4 revenue streams · Red dashed trend overlay</div></div>
+      <div class="card-badges"><span class="ctag" style="background:#fef3c7;border-color:#fde68a;color:#92400e">CEO only</span><span class="ctag blue">Mixed chart</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:flex-end;gap:6px;height:100px;position:relative">
+        <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 400 100" preserveAspectRatio="none">
+          <polyline fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3" points="0,80 33,76 66,70 99,64 132,60 165,55 198,52 231,49 264,46 297,42 330,38 363,34 396,30"/>
+        </svg>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:12px;background:#3b82c4;width:100%"></div><div style="height:8px;background:#059669;width:100%"></div><div style="height:4px;background:#d97706;width:100%"></div><div style="height:2px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:14px;background:#3b82c4;width:100%"></div><div style="height:8px;background:#059669;width:100%"></div><div style="height:5px;background:#d97706;width:100%"></div><div style="height:2px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:16px;background:#3b82c4;width:100%"></div><div style="height:9px;background:#059669;width:100%"></div><div style="height:5px;background:#d97706;width:100%"></div><div style="height:3px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:18px;background:#3b82c4;width:100%"></div><div style="height:10px;background:#059669;width:100%"></div><div style="height:6px;background:#d97706;width:100%"></div><div style="height:3px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:20px;background:#3b82c4;width:100%"></div><div style="height:10px;background:#059669;width:100%"></div><div style="height:6px;background:#d97706;width:100%"></div><div style="height:3px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:22px;background:#3b82c4;width:100%"></div><div style="height:11px;background:#059669;width:100%"></div><div style="height:7px;background:#d97706;width:100%"></div><div style="height:4px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:24px;background:#3b82c4;width:100%"></div><div style="height:12px;background:#059669;width:100%"></div><div style="height:7px;background:#d97706;width:100%"></div><div style="height:4px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:26px;background:#3b82c4;width:100%"></div><div style="height:13px;background:#059669;width:100%"></div><div style="height:8px;background:#d97706;width:100%"></div><div style="height:4px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:28px;background:#3b82c4;width:100%"></div><div style="height:14px;background:#059669;width:100%"></div><div style="height:8px;background:#d97706;width:100%"></div><div style="height:5px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:30px;background:#3b82c4;width:100%"></div><div style="height:14px;background:#059669;width:100%"></div><div style="height:9px;background:#d97706;width:100%"></div><div style="height:5px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:32px;background:#3b82c4;width:100%"></div><div style="height:15px;background:#059669;width:100%"></div><div style="height:9px;background:#d97706;width:100%"></div><div style="height:6px;background:#a855f7;width:100%"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:34px;background:#3b82c4;width:100%"></div><div style="height:16px;background:#059669;width:100%"></div><div style="height:10px;background:#d97706;width:100%"></div><div style="height:6px;background:#a855f7;width:100%"></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--muted);margin-top:3px"><span>Jun 25</span><span>Sep 25</span><span>Dec 25</span><span>Mar 26</span><span>May 26</span></div>
+      <div style="display:flex;gap:10px;font-size:10px;flex-wrap:wrap;margin-top:6px"><span style="color:#3b82c4">■ Retraining</span><span style="color:#059669">■ Subscriptions</span><span style="color:#d97706">■ New staff</span><span style="color:#a855f7">■ EDS documents</span><span style="color:#dc2626">-- Trend</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVER TAB -->
+<div class="content" id="tab-server">
+  <div class="card-grid cols2">
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">Server capacity gauges</div><div class="card-sub">5 metrics · Click gauge → 7-day sparkline + breaches</div></div>
+        <div class="card-badges"><span class="ctag blue">HTML/CSS</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:8px;display:flex;gap:10px">
+          <span>Warning threshold: <input type="range" min="50" max="85" value="70" style="width:60px;vertical-align:middle" id="warn-thr" oninput="updateGauges(this.value,document.getElementById('crit-thr').value)">70%</span>
+          <span>Critical: <input type="range" min="80" max="99" value="90" style="width:60px;vertical-align:middle" id="crit-thr" oninput="updateGauges(document.getElementById('warn-thr').value,this.value)">90%</span>
+        </div>
+        <div class="gauge-grid" id="gauge-grid">
+          <div class="gauge-row" onclick="sendPrompt('Show 7-day disk usage sparkline and recent threshold breaches')">
+            <div class="gauge-lbl"><span class="gauge-name">Disk</span><span class="gauge-pct" style="color:#d97706">82%</span></div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:82%;background:#d97706"></div></div>
+            <div style="font-size:9px;color:#d97706;font-weight:500">192 GB / 234 GB · Warning</div>
+          </div>
+          <div class="gauge-row">
+            <div class="gauge-lbl"><span class="gauge-name">RAM</span><span class="gauge-pct" style="color:#059669">58%</span></div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:58%;background:#059669"></div></div>
+            <div style="font-size:9px;color:#059669">9.3 GB / 16 GB · OK</div>
+          </div>
+          <div class="gauge-row">
+            <div class="gauge-lbl"><span class="gauge-name">CPU (1-min avg)</span><span class="gauge-pct" style="color:#059669">28%</span></div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:28%;background:#059669"></div></div>
+            <div style="font-size:9px;color:#059669">Load 1.4 · 8 cores · OK</div>
+          </div>
+          <div class="gauge-row">
+            <div class="gauge-lbl"><span class="gauge-name">Database</span><span class="gauge-pct" style="color:#2563a8">67%</span></div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:67%;background:#2563a8"></div></div>
+            <div style="font-size:9px;color:#2563a8">16.8 GB / 25 GB · Monitor</div>
+          </div>
+          <div class="gauge-row">
+            <div class="gauge-lbl"><span class="gauge-name">Concurrent users</span><span class="gauge-pct" style="color:#059669">49%</span></div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:49%;background:#059669"></div></div>
+            <div style="font-size:9px;color:#059669">147 of 300 · OK</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 90-day disk forecast -->
+    <div class="card expanded" onclick="toggleCard(this)">
+      <div class="card-hdr">
+        <div><div class="card-title">90-day disk capacity forecast</div><div class="card-sub">Linear regression on 30-day history · Critical threshold annotation</div></div>
+        <div class="card-badges"><span class="ctag blue">Chart.js line</span><span class="ctag">no drill-down</span><span class="chevron">▲</span></div>
+      </div>
+      <div class="card-body">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Critical threshold: <input type="range" min="80" max="99" value="90" style="width:80px;vertical-align:middle" oninput="document.getElementById('crit-lbl').textContent=this.value+'%'"><span id="crit-lbl">90%</span> · ~5 weeks to critical at current rate</div>
+        <svg width="100%" height="110" viewBox="0 0 400 110">
+          <!-- critical line -->
+          <line x1="0" y1="22" x2="400" y2="22" stroke="#dc2626" stroke-width="1" stroke-dasharray="4 3"/>
+          <text x="395" y="18" text-anchor="end" style="font-size:8px;fill:#dc2626">90% critical</text>
+          <!-- historical solid -->
+          <polyline fill="none" stroke="#3b82c4" stroke-width="2" points="0,72 57,68 114,64 171,62"/>
+          <!-- forecast dashed -->
+          <polyline fill="none" stroke="#3b82c4" stroke-width="1.5" stroke-dasharray="5 3" points="171,62 228,55 285,46 342,36 399,26"/>
+          <!-- amber fill -->
+          <polygon fill="rgba(217,119,6,0.12)" points="171,62 228,55 285,46 342,36 399,26 399,110 171,110"/>
+          <text x="200" y="105" text-anchor="middle" style="font-size:9px;fill:#dc2626;font-weight:600">⚠ Critical in ~5 weeks at current growth (+0.6%/week)</text>
+        </svg>
+        <div style="font-size:10px;color:var(--muted)">Historical (solid) vs Projected (dashed) · Hover → projected date</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error log -->
+  <div class="card expanded" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">Error log summary — last 7 days</div><div class="card-sub">Grouped by type · Click "Investigate" for AI diagnostic</div></div>
+      <div class="card-badges"><span class="ctag blue">Error log</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div class="err-row has-err"><span class="err-name">QR generation failures</span><span class="err-count red">14</span><span class="err-meta">Last: 2h ago · sental_qr_log</span><button class="inv-btn" onclick="sendPrompt('Investigate QR generation failures in the last 7 days — what is causing them and how to fix?')">Investigate ↗</button></div>
+      <div class="err-row has-err"><span class="err-name">Email delivery failures</span><span class="err-count amber">7</span><span class="err-meta">Last: 4h ago · mdl_task_log</span><button class="inv-btn" onclick="sendPrompt('Investigate email delivery failures — SMTP issues and recommended fixes')">Investigate ↗</button></div>
+      <div class="err-row has-err"><span class="err-name">EDS signature rejections</span><span class="err-count amber">3</span><span class="err-meta">Last: 1d ago · sental_eds_log</span><button class="inv-btn" onclick="sendPrompt('Review EDS signature rejection causes and resolution steps')">Review ↗</button></div>
+      <div class="err-row"><span class="err-name">Cron overruns (&gt;120s)</span><span class="err-count amber">2</span><span class="err-meta">Log cleanup task · mdl_task_log</span><button class="inv-btn">Review ↗</button></div>
+      <div class="err-row"><span class="err-name">Quilgo API timeouts</span><span class="err-count green">0</span><span class="err-meta">No errors this week</span><span style="font-size:10px;color:#059669">Clear ✓</span></div>
+      <div class="err-row"><span class="err-name">File storage errors</span><span class="err-count green">0</span><span class="err-meta">No errors this week</span><span style="font-size:10px;color:#059669">Clear ✓</span></div>
+    </div>
+  </div>
+
+  <!-- System settings -->
+  <div class="card expanded" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">System settings — read-only panel</div><div class="card-sub">Current vs recommended · Edit in Site Admin only</div></div>
+      <div class="card-badges"><span class="ctag">read-only</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;gap:6px;margin-bottom:10px"><span class="badge green">6 OK</span><span class="badge amber">2 Warning</span><span class="badge blue">1 Check</span></div>
+      <div class="settings-row"><span class="set-name">Moodle version</span><span class="set-val">4.3.2 (Build: 20240115)</span><span class="set-status"><span class="badge ok">Latest</span></span></div>
+      <div class="settings-row"><span class="set-name">PHP version</span><span class="set-val">8.1.27</span><span class="set-status"><span class="badge ok">OK</span></span></div>
+      <div class="settings-row"><span class="set-name">PHP memory_limit</span><span class="set-val">256M</span><span class="set-status"><span class="badge ok">OK (&gt;128M)</span></span></div>
+      <div class="settings-row"><span class="set-name">Cron status</span><span class="set-val">Running – 8 min ago</span><span class="set-status"><span class="badge ok">OK</span></span></div>
+      <div class="settings-row"><span class="set-name">Cache backend</span><span class="set-val">Redis 7.2 (external)</span><span class="set-status"><span class="badge ok">OK</span></span></div>
+      <div class="settings-row"><span class="set-name">SMTP status</span><span class="set-val">smtp.company.kz:587 · TLS</span><span class="set-status"><span class="badge red">7 failures</span></span></div>
+      <div class="settings-row"><span class="set-name">Log retention period</span><span class="set-val">No limit (unlimited)</span><span class="set-status"><span class="badge amber">Set 90 days</span></span></div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="action-btn" onclick="sendPrompt('Generate full Moodle system health report')">Full health report ↗</button>
+        <button class="action-btn" onclick="sendPrompt('How do I fix SMTP delivery failures on smtp.company.kz:587 with TLS?')">Fix SMTP issues ↗</button>
+        <button class="action-btn" onclick="sendPrompt('How do I set log retention to 90 days in Moodle admin?')">Fix log retention ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(id, el) {
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  var tab = document.getElementById('tab-' + id);
+  if (tab) tab.classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function toggleDrill(id, kpiEl) {
+  var panel = document.getElementById(id);
+  var allPanels = document.querySelectorAll('#tab-kpi .drill-panel');
+  var allKpis = document.querySelectorAll('.kpi');
+  var isOpen = panel.classList.contains('open');
+  allPanels.forEach(p => p.classList.remove('open'));
+  allKpis.forEach(k => k.classList.remove('selected'));
+  if (!isOpen) { panel.classList.add('open'); if (kpiEl) kpiEl.classList.add('selected'); }
+}
+
+function closeDrill(id) {
+  document.getElementById(id).classList.remove('open');
+  document.querySelectorAll('.kpi').forEach(k => k.classList.remove('selected'));
+}
+
+function toggleCard(card) {
+  var body = card.querySelector('.card-body');
+  if (!body) return;
+  var isOpen = card.classList.contains('expanded');
+  card.classList.toggle('expanded', !isOpen);
+  body.style.display = isOpen ? 'none' : 'block';
+  var chev = card.querySelector('.chevron');
+  if (chev) chev.textContent = isOpen ? '▼' : '▲';
+}
+
+function updateFilters() {}
+function updateGauges(w, c) {}
+</script>
