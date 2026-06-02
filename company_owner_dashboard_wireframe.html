@@ -1921,70 +1921,162 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* ── FORECAST CHART ─────────────────────────── */
+var _fcFilter = 'all';
+var _fcCats = {online:true, offline:true, staff:true};
+
+var _fcData = {
+  all: [
+    {mo:'Jun',o:120,f:80,s:45,peak:0},
+    {mo:'Jul',o:130,f:90,s:50,peak:0},
+    {mo:'Aug',o:140,f:110,s:55,peak:0},
+    {mo:'Sep',o:150,f:120,s:60,peak:1,pl:'Q3 Intake — +2 instructors'},
+    {mo:'Oct',o:120,f:80,s:40,peak:0},
+    {mo:'Nov',o:110,f:70,s:35,peak:0},
+    {mo:'Dec',o:90,f:50,s:25,peak:0},
+    {mo:'Jan',o:130,f:100,s:60,peak:1,pl:'Renewals peak — group sessions'},
+    {mo:'Feb',o:160,f:130,s:70,peak:2,pl:'MAX PEAK — +3 instructors!'},
+    {mo:'Mar',o:155,f:125,s:65,peak:0},
+    {mo:'Apr',o:140,f:110,s:55,peak:0},
+    {mo:'May',o:120,f:90,s:45,peak:0}
+  ],
+  kaz: [
+    {mo:'Jun',o:40,f:26,s:15,peak:0},
+    {mo:'Jul',o:43,f:30,s:17,peak:0},
+    {mo:'Aug',o:46,f:36,s:18,peak:0},
+    {mo:'Sep',o:50,f:40,s:20,peak:1,pl:'Q3 Intake'},
+    {mo:'Oct',o:40,f:26,s:13,peak:0},
+    {mo:'Nov',o:36,f:23,s:12,peak:0},
+    {mo:'Dec',o:30,f:17,s:8,peak:0},
+    {mo:'Jan',o:43,f:33,s:20,peak:0},
+    {mo:'Feb',o:53,f:43,s:23,peak:1,pl:'Renewals peak'},
+    {mo:'Mar',o:51,f:41,s:21,peak:0},
+    {mo:'Apr',o:46,f:36,s:18,peak:0},
+    {mo:'May',o:40,f:30,s:15,peak:0}
+  ],
+  arc: [
+    {mo:'Jun',o:54,f:36,s:20,peak:0},
+    {mo:'Jul',o:59,f:41,s:23,peak:0},
+    {mo:'Aug',o:63,f:50,s:25,peak:0},
+    {mo:'Sep',o:68,f:54,s:27,peak:1,pl:'Q3 Intake — high turnover risk'},
+    {mo:'Oct',o:54,f:36,s:18,peak:0},
+    {mo:'Nov',o:50,f:32,s:16,peak:0},
+    {mo:'Dec',o:41,f:23,s:11,peak:0},
+    {mo:'Jan',o:59,f:45,s:27,peak:1,pl:'Renewals peak'},
+    {mo:'Feb',o:72,f:59,s:32,peak:2,pl:'MAX — bulk renewals + new staff'},
+    {mo:'Mar',o:70,f:56,s:29,peak:0},
+    {mo:'Apr',o:63,f:50,s:25,peak:0},
+    {mo:'May',o:54,f:41,s:20,peak:0}
+  ],
+  mash: [
+    {mo:'Jun',o:26,f:18,s:10,peak:0},
+    {mo:'Jul',o:28,f:20,s:11,peak:0},
+    {mo:'Aug',o:31,f:24,s:12,peak:0},
+    {mo:'Sep',o:33,f:26,s:13,peak:1,pl:'Q3 Intake'},
+    {mo:'Oct',o:26,f:18,s:9,peak:0},
+    {mo:'Nov',o:24,f:15,s:8,peak:0},
+    {mo:'Dec',o:20,f:11,s:6,peak:0},
+    {mo:'Jan',o:28,f:22,s:13,peak:0},
+    {mo:'Feb',o:35,f:28,s:15,peak:1,pl:'Renewals peak'},
+    {mo:'Mar',o:34,f:27,s:14,peak:0},
+    {mo:'Apr',o:31,f:24,s:12,peak:0},
+    {mo:'May',o:26,f:20,s:10,peak:0}
+  ]
+};
+
+var _fcLabels = {
+  all:'All companies · 1,247 users',
+  kaz:'Kazatomprom LLP · 415 users',
+  arc:'ArcelorMittal · 562 users',
+  mash:'TOO MashStroy · 270 users'
+};
+
+function setForecastFilter(f) {
+  _fcFilter = f;
+  ['all','kaz','arc','mash'].forEach(function(k) {
+    var el = document.getElementById('fcf-'+k);
+    if (el) el.classList.toggle('active', k===f);
+  });
+  drawForecastChart();
+}
+
+function toggleForecastCat(cat, btn) {
+  _fcCats[cat] = !_fcCats[cat];
+  btn.classList.toggle('active', _fcCats[cat]);
+  drawForecastChart();
+}
+
 function drawForecastChart() {
   var el = document.getElementById('rev-chart-container');
   if (!el) return;
-  var months = [
-    {mo:'Jun',o:120,f:80,s:45,r:30,e:15,peak:0,tip:'June 2025 — 290 sessions\n🔵 Online: 120  🟦 Offline: 80\n🟢 New staff: 45  🟡 Renewals: 30  🟣 EDS: 15',key:'month-jun'},
-    {mo:'Jul',o:130,f:90,s:50,r:35,e:15,peak:0,tip:'July 2025 — 320 sessions\n🔵 Online: 130  🟦 Offline: 90\n🟢 New staff: 50  🟡 Renewals: 35  🟣 EDS: 15',key:'month-jul'},
-    {mo:'Aug',o:140,f:110,s:55,r:40,e:20,peak:0,tip:'August 2025 — 365 sessions\nGrowth: summer intake\n🔵 Online: 140  🟦 Offline: 110\n🟢 New staff: 55  🟡 Renewals: 40  🟣 EDS: 20',key:'month-aug'},
-    {mo:'Sep',o:150,f:120,s:60,r:45,e:20,peak:1,tip:'⚠ PEAK — September 2025 — 395 sessions\nQ3 mass staff intake\n🔵 Online: 150  🟦 Offline: 120\n🟢 New staff: 60  🟡 Renewals: 45  🟣 EDS: 20\nAction: +2 instructors, open 6 extra online slots',key:'month-sep'},
-    {mo:'Oct',o:120,f:80,s:40,r:55,e:15,peak:0,tip:'October 2025 — 310 sessions\n🔵 Online: 120  🟦 Offline: 80\n🟢 New staff: 40  🟡 Renewals: 55  🟣 EDS: 15',key:'month-oct'},
-    {mo:'Nov',o:110,f:70,s:35,r:60,e:15,peak:0,tip:'November 2025 — 290 sessions\n🔵 Online: 110  🟦 Offline: 70\n🟢 New staff: 35  🟡 Renewals: 60  🟣 EDS: 15',key:'month-nov'},
-    {mo:'Dec',o:90,f:50,s:25,r:70,e:10,peak:0,tip:'December 2025 — 245 sessions (low)\nHoliday period — use for audits & planning\n🔵 Online: 90  🟦 Offline: 50\n🟢 New staff: 25  🟡 Renewals: 70  🟣 EDS: 10',key:'month-dec'},
-    {mo:'Jan',o:130,f:100,s:60,r:80,e:20,peak:1,tip:'⚠ PEAK — January 2026 — 390 sessions\nAnnual renewal cycle begins\n🔵 Online: 130  🟦 Offline: 100\n🟢 New staff: 60  🟡 Renewals: 80  🟣 EDS: 20\nAction: group sessions + automate Dec reminders',key:'month-jan'},
-    {mo:'Feb',o:160,f:130,s:70,r:85,e:25,peak:2,tip:'🔴 MAX PEAK — February 2026 — 470 sessions\nAll categories peak simultaneously!\n🔵 Online: 160  🟦 Offline: 130\n🟢 New staff: 70  🟡 Renewals: 85  🟣 EDS: 25\nCRITICAL: +3 instructors, expand LMS capacity in Jan',key:'month-feb'},
-    {mo:'Mar',o:155,f:125,s:65,r:75,e:22,peak:0,tip:'March 2026 — 442 sessions (post-peak decline)\n🔵 Online: 155  🟦 Offline: 125\n🟢 New staff: 65  🟡 Renewals: 75  🟣 EDS: 22',key:'month-mar'},
-    {mo:'Apr',o:140,f:110,s:55,r:65,e:20,peak:0,tip:'April 2026 — 390 sessions\n🔵 Online: 140  🟦 Offline: 110\n🟢 New staff: 55  🟡 Renewals: 65  🟣 EDS: 20',key:'month-apr'},
-    {mo:'May',o:120,f:90,s:45,r:55,e:18,peak:0,tip:'May 2026 — 328 sessions\n🔵 Online: 120  🟦 Offline: 90\n🟢 New staff: 45  🟡 Renewals: 55  🟣 EDS: 18',key:'month-may'}
-  ];
-  var cols = ['#3b82c4','#1e40af','#059669','#d97706','#7c3aed'];
-  var H = 140, PAD = 20, maxTotal = 470;
+  var months = _fcData[_fcFilter] || _fcData.all;
+  var cols = {o:'#3b82c4', f:'#1e40af', s:'#059669'};
+  var H = 150, PAD = 26;
   var W = el.offsetWidth || 660;
-  var bw = Math.floor((W - PAD*2 - (months.length-1)*4) / months.length);
-  var html = '<svg width="100%" height="'+(H+32)+'" viewBox="0 0 '+W+' '+(H+32)+'" style="overflow:visible">';
+  var bw = Math.max(18, Math.floor((W - PAD*2 - (months.length-1)*5) / months.length));
 
-  // Grid lines + y labels
-  [0,100,200,300,400].forEach(function(v) {
-    var y = H - (v/maxTotal)*H + 4;
-    html += '<line x1="'+PAD+'" y1="'+y+'" x2="'+(W-PAD)+'" y2="'+y+'" stroke="#e2e8f0" stroke-width="'+(v===0?'1.5':'0.8')+'"/>';
-    if (v>0) html += '<text x="'+(PAD-4)+'" y="'+(y+3)+'" text-anchor="end" font-size="8" fill="#94a3b8">'+v+'</text>';
+  // Calculate max for scale
+  var maxVal = 0;
+  months.forEach(function(m) {
+    var t = (_fcCats.online?m.o:0) + (_fcCats.offline?m.f:0) + (_fcCats.staff?m.s:0);
+    if (t > maxVal) maxVal = t;
+  });
+  if (!maxVal) maxVal = 1;
+
+  // Grid values
+  var gridStep = maxVal <= 100 ? 25 : maxVal <= 200 ? 50 : maxVal <= 400 ? 100 : 100;
+  var gridVals = [];
+  for (var v = 0; v <= maxVal; v += gridStep) gridVals.push(v);
+
+  var html = '<div style="font-size:10px;color:var(--g2);font-weight:600;margin-bottom:6px">📊 '+_fcLabels[_fcFilter]+'</div>';
+  html += '<svg width="100%" height="'+(H+30)+'" viewBox="0 0 '+W+' '+(H+30)+'" style="overflow:visible;display:block">';
+
+  // Grid
+  gridVals.forEach(function(v) {
+    var y = (H+4) - (v/maxVal)*H;
+    html += '<line x1="'+PAD+'" y1="'+y.toFixed(1)+'" x2="'+(W-8)+'" y2="'+y.toFixed(1)+'" stroke="#e2e8f0" stroke-width="'+(v===0?'1.5':'0.7')+'"/>';
+    html += '<text x="'+(PAD-4)+'" y="'+(y+3).toFixed(1)+'" text-anchor="end" font-size="8" fill="#94a3b8">'+v+'</text>';
   });
 
   months.forEach(function(m, i) {
-    var total = m.o+m.f+m.s+m.r+m.e;
-    var x = PAD + i*(bw+4);
-    var segs = [m.o,m.f,m.s,m.r,m.e];
+    var segs = [];
+    if (_fcCats.online)  segs.push({v:m.o, c:cols.o, lbl:'Online: '+m.o});
+    if (_fcCats.offline) segs.push({v:m.f, c:cols.f, lbl:'Offline: '+m.f});
+    if (_fcCats.staff)   segs.push({v:m.s, c:cols.s, lbl:'New staff: '+m.s});
+    var total = segs.reduce(function(a,b){return a+b.v;},0);
+
+    var x = PAD + i*(bw+5);
     var cumY = H + 4;
 
     // Peak bg
     if (m.peak) {
-      var bgCol = m.peak===2 ? 'rgba(153,27,27,0.08)' : 'rgba(220,38,38,0.06)';
-      html += '<rect x="'+(x-1)+'" y="4" width="'+(bw+2)+'" height="'+H+'" fill="'+bgCol+'" rx="3"/>';
+      var bgC = m.peak===2?'rgba(153,27,27,0.1)':'rgba(220,38,38,0.06)';
+      html += '<rect x="'+(x-2)+'" y="4" width="'+(bw+4)+'" height="'+H+'" fill="'+bgC+'" rx="3"/>';
     }
 
-    // Segments from bottom
-    segs.forEach(function(v, si) {
-      var sh = (v/maxTotal)*H;
+    // Bars from bottom
+    segs.forEach(function(seg, si) {
+      if (!seg.v) return;
+      var sh = (seg.v/maxVal)*H;
       cumY -= sh;
-      html += '<rect x="'+x+'" y="'+cumY.toFixed(1)+'" width="'+bw+'" height="'+sh.toFixed(1)+'" fill="'+cols[si]+'" rx="'+(si===0?'0 0 2 2':'0')+'"/>';
+      var isBottom = si === segs.length-1;
+      html += '<rect x="'+x+'" y="'+cumY.toFixed(1)+'" width="'+bw+'" height="'+Math.max(1,sh).toFixed(1)+'" fill="'+seg.c+'" rx="'+(isBottom?'2 2 0 0':'0')+'"/>';
     });
 
-    // Total label
-    var barTop = H + 4 - (total/maxTotal)*H;
+    // Total
+    var barTop = (H+4) - (total/maxVal)*H;
     html += '<text x="'+(x+bw/2)+'" y="'+(barTop-3).toFixed(1)+'" text-anchor="middle" font-size="8" fill="'+(m.peak?'#991b1b':'#475569')+'" font-weight="'+(m.peak?'700':'500')+'">'+total+'</text>';
 
-    // Peak badge
-    if (m.peak===2) html += '<text x="'+(x+bw/2)+'" y="'+(barTop-12).toFixed(1)+'" text-anchor="middle" font-size="9">🔴</text>';
-    else if (m.peak===1) html += '<text x="'+(x+bw/2)+'" y="'+(barTop-12).toFixed(1)+'" text-anchor="middle" font-size="8" fill="#dc2626">⚠</text>';
+    // Peak icon
+    if (m.peak===2) html += '<text x="'+(x+bw/2)+'" y="'+(barTop-13).toFixed(1)+'" text-anchor="middle" font-size="9">🔴</text>';
+    else if (m.peak===1) html += '<text x="'+(x+bw/2)+'" y="'+(barTop-12).toFixed(1)+'" text-anchor="middle" font-size="8" fill="#dc2626" font-weight="700">⚠</text>';
 
     // Month label
-    var mColor = m.peak ? '#dc2626' : '#94a3b8';
-    var mWeight = m.peak ? '700' : '400';
-    html += '<text x="'+(x+bw/2)+'" y="'+(H+18)+'" text-anchor="middle" font-size="9" fill="'+mColor+'" font-weight="'+mWeight+'">'+m.mo+'</text>';
+    html += '<text x="'+(x+bw/2)+'" y="'+(H+18)+'" text-anchor="middle" font-size="9" fill="'+(m.peak?'#dc2626':'#94a3b8')+'" font-weight="'+(m.peak?'700':'400')+'">'+m.mo+'</text>';
 
-    // Invisible click rect
-    html += '<rect x="'+x+'" y="4" width="'+bw+'" height="'+(H+12)+'" fill="transparent" style="cursor:pointer" onclick="showListModal(\''+m.mo+' 2025/26\',\''+m.key+'\')" onmouseenter="showTip(this,\''+m.tip.replace(/'/g,'&apos;').replace(/\n/g,'\\n')+'\')" onmouseleave="hideTip()"/>';
+    // Tooltip & click overlay
+    var tipSegs = segs.map(function(s){return s.lbl;}).join('  ');
+    var tip = m.mo+' 2025\\/26 — '+total+' sessions\\n'+tipSegs+(m.pl?'\\n⚠ '+m.pl:'');
+    html += '<rect x="'+x+'" y="4" width="'+bw+'" height="'+(H+14)+'" fill="transparent" style="cursor:pointer" onclick="showListModal(\''+m.mo+' — '+_fcLabels[_fcFilter]+'\',\'month-'+m.mo.toLowerCase()+'\')" onmouseenter="showTip(this,\''+tip+'\')" onmouseleave="hideTip()"/>';
   });
 
   html += '</svg>';
