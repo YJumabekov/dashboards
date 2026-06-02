@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sental LMS — Dashboards</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.header{text-align:center;margin-bottom:40px}
+.logo{font-size:26px;font-weight:700;color:#1a3a5c}
+.logo span{color:#7c3aed}
+.sub{font-size:14px;color:#64748b;margin-top:6px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;width:100%;max-width:960px}
+.card{background:#fff;border-radius:14px;border:1px solid #e2e8f0;overflow:hidden;text-decoration:none;color:inherit;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.card:hover{box-shadow:0 8px 32px rgba(0,0,0,.12);transform:translateY(-3px)}
+.card-top{height:6px}
+.card-top.blue{background:linear-gradient(90deg,#1a3a5c,#2563a8)}
+.card-top.green{background:linear-gradient(90deg,#0e6b52,#059669)}
+.card-top.purple{background:linear-gradient(90deg,#4c1d95,#7c3aed)}
+.card-body{padding:22px 24px}
+.card-icon{font-size:32px;margin-bottom:12px}
+.card-title{font-size:16px;font-weight:700;color:#1e293b;margin-bottom:6px}
+.card-desc{font-size:12px;color:#64748b;line-height:1.6;margin-bottom:16px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:20px;padding:3px 10px;font-size:10px;color:#475569;font-weight:500}
+.card-btn{display:flex;align-items:center;justify-content:space-between;margin-top:18px;padding-top:16px;border-top:1px solid #f1f5f9}
+.open-link{font-size:12px;font-weight:600;color:#2563a8}
+.arrow{font-size:18px;color:#94a3b8;transition:transform .2s}
+.card:hover .arrow{transform:translateX(4px);color:#2563a8}
+.footer{margin-top:40px;font-size:11px;color:#94a3b8;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Sental <span>LMS</span> Analytics</div>
+  <div class="sub">Выберите дашборд для просмотра</div>
+</div>
+
+<div class="cards">
+
+  <a class="card" href="/company_owner_dashboard_wireframe.html">
+    <div class="card-top blue"></div>
+    <div class="card-body">
+      <div class="card-icon">🏢</div>
+      <div class="card-title">Company Owner Dashboard</div>
+      <div class="card-desc">KPI по всем компаниям, соответствие документов, текучесть кадров, прокторинг, прогноз нагрузки и серверный мониторинг.</div>
+      <div class="tags">
+        <span class="tag">KPI Strip</span>
+        <span class="tag">Compliance</span>
+        <span class="tag">Forecast</span>
+        <span class="tag">Proctoring</span>
+      </div>
+      <div class="card-btn">
+        <span class="open-link">Открыть →</span>
+        <span class="arrow">›</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="card" href="/client_admin_dashboard_wireframe.html">
+    <div class="card-top green"></div>
+    <div class="card-body">
+      <div class="card-icon">👤</div>
+      <div class="card-title">Client Admin Dashboard</div>
+      <div class="card-desc">Административный дашборд клиента: управление пользователями, курсами, отчёты по отделам и локациям.</div>
+      <div class="tags">
+        <span class="tag">Users</span>
+        <span class="tag">Courses</span>
+        <span class="tag">Reports</span>
+      </div>
+      <div class="card-btn">
+        <span class="open-link">Открыть →</span>
+        <span class="arrow">›</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="card" href="/coordinator_dashboard_full.html">
+    <div class="card-top purple"></div>
+    <div class="card-body">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Coordinator Dashboard</div>
+      <div class="card-desc">Полный дашборд координатора: расписание обучений, назначения, контроль выполнения и операционные задачи.</div>
+      <div class="tags">
+        <span class="tag">Schedule</span>
+        <span class="tag">Assignments</span>
+        <span class="tag">Operations</span>
+      </div>
+      <div class="card-btn">
+        <span class="open-link">Открыть →</span>
+        <span class="arrow">›</span>
+      </div>
+    </div>
+  </a>
+
+</div>
+
+<div class="footer">Sental LMS Analytics · Powered by Claude Code · Auto-deployed via Vercel</div>
+
+</body>
+</html>
