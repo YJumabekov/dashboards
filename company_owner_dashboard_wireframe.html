@@ -1850,7 +1850,7 @@ function showCourseInfo(id) {
       '<div style="background:#fee2e2;border-radius:6px;padding:6px"><div style="font-size:16px;font-weight:700;color:#dc2626">'+d.expired+'</div><div style="font-size:9px;color:var(--muted)">Expired</div></div>'+
     '</div>'+
     '<div style="display:flex;gap:5px;flex-wrap:wrap">'+d.tags.map(function(t){return '<span style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:2px 8px;font-size:10px;color:var(--g2)">'+t+'</span>';}).join('')+'</div>'+
-    '<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:right"><button class="action-btn" onclick="closeCR()">Закрыть</button></div>';
+    '<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:right"><button class="action-btn" onclick="closeCR()">Close</button></div>';
   document.getElementById('cr-modal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
