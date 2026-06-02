@@ -1896,6 +1896,8 @@ var sectionTips = {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
+  drawForecastChart();
+  window.addEventListener('resize', drawForecastChart);
   document.querySelectorAll('.card-title').forEach(function(el) {
     var tip = sectionTips[el.textContent.trim()];
     if (tip) {
