@@ -1652,4 +1652,308 @@ function toggleCard(card) {
 
 function updateFilters() {}
 function updateGauges(w, c) {}
+
+/* ── TOOLTIP ─────────────────────────────────── */
+var _tip = document.getElementById('gtip');
+function showTip(el, html) {
+  _tip.innerHTML = html.replace(/\n/g,'<br>');
+  _tip.style.display = 'block';
+  var r = el.getBoundingClientRect();
+  var tx = r.left + r.width/2 - _tip.offsetWidth/2;
+  var ty = r.top - _tip.offsetHeight - 8;
+  if (tx < 8) tx = 8;
+  if (tx + _tip.offsetWidth > window.innerWidth - 8) tx = window.innerWidth - _tip.offsetWidth - 8;
+  if (ty < 8) ty = r.bottom + 8;
+  _tip.style.left = tx + 'px';
+  _tip.style.top  = ty + 'px';
+}
+function hideTip() { _tip.style.display = 'none'; }
+
+/* ── SEND REMINDER ───────────────────────────── */
+function sendReminder(name) {
+  var btn = event.target;
+  var orig = btn.textContent;
+  btn.textContent = '✓ Sent!';
+  btn.style.background = '#059669';
+  btn.style.color = '#fff';
+  btn.style.borderColor = '#059669';
+  setTimeout(function(){ btn.textContent = orig; btn.style.background=''; btn.style.color=''; btn.style.borderColor=''; }, 2500);
+}
+
+/* ── EMPLOYEE PROFILES ───────────────────────── */
+var empData = {
+  nurgali: {
+    name:'Nurgali T.B.', role:'Operator · Workers', av:'NT', company:'ArcelorMittal',
+    dept:'Workers', loc:'Karaganda Site', pos:'Machine Operator', hired:'12.03.2019',
+    phone:'+7 701 234 56 78', email:'t.nurgali@arcelormittal.kz',
+    docs:[
+      {course:'Working at Heights', type:'Удостоверение', num:'Уд-0841', issued:'10.01.2024', expiry:'10.01.2025', status:'red', days:'−62d'},
+      {course:'Fire Safety L1',      type:'Сертификат',   num:'Серт-0512', issued:'05.03.2023', expiry:'05.03.2026', status:'green', days:'306d'},
+    ],
+    completions:[ {course:'Fire Safety L1',72},{course:'Chemical Handling',58},{course:'Working at Heights',65}]
+  },
+  omarov: {
+    name:'Omarov K.D.', role:'Mechanic · Workers', av:'OK', company:'TOO MashStroy',
+    dept:'Workers', loc:'Almaty HQ', pos:'Mechanic Grade 3', hired:'07.09.2020',
+    phone:'+7 702 345 67 89', email:'k.omarov@mashstroy.kz',
+    docs:[
+      {course:'Fire Safety L1', type:'Сертификат', num:'Серт-1124', issued:'14.04.2023', expiry:'14.04.2025', status:'red', days:'−38d'},
+      {course:'Electrical Safety', type:'Удостоверение', num:'Уд-0623', issued:'20.06.2024', expiry:'20.06.2027', status:'green', days:'748d'},
+    ],
+    completions:[{course:'Fire Safety L1',44},{course:'Electrical Safety',81}]
+  },
+  akhmetov: {
+    name:'Akhmetov A.K.', role:'Inspector · ITR', av:'AA', company:'TOO MashStroy',
+    dept:'ITR', loc:'Almaty HQ', pos:'HSE Inspector', hired:'15.01.2021',
+    phone:'+7 705 456 78 90', email:'a.akhmetov@mashstroy.kz',
+    docs:[
+      {course:'Fire Safety L1', type:'Сертификат', num:'Серт-0987', issued:'06.06.2022', expiry:'06.06.2025', status:'amber', days:'3d'},
+      {course:'Working at Heights', type:'Удостоверение', num:'Уд-1045', issued:'10.10.2023', expiry:'10.10.2026', status:'green', days:'496d'},
+    ],
+    completions:[{course:'Fire Safety L1',88},{course:'Working at Heights',91},{course:'Chemical Handling',74}]
+  },
+  bekova: {
+    name:'Bekova D.S.', role:'Welder · Workers', av:'BD', company:'ArcelorMittal',
+    dept:'Workers', loc:'Atyrau Depot', pos:'Welder 4th Class', hired:'03.11.2022',
+    phone:'+7 707 567 89 01', email:'d.bekova@arcelormittal.kz',
+    docs:[
+      {course:'Chemical Handling', type:'Протокол', num:'Прот-0456', issued:'15.05.2024', expiry:'15.05.2025', status:'amber', days:'11d'},
+      {course:'Fire Safety L1', type:'Сертификат', num:'Серт-0781', issued:'01.03.2024', expiry:'01.03.2027', status:'green', days:'638d'},
+    ],
+    completions:[{course:'Chemical Handling',67},{course:'Fire Safety L1',79}]
+  },
+  muratov: {
+    name:'Muratov T.A.', role:'Rigger · Workers', av:'MT', company:'ArcelorMittal',
+    dept:'Workers', loc:'Karaganda Site', pos:'Rigger Grade 2', hired:'22.04.2021',
+    phone:'+7 708 678 90 12', email:'t.muratov@arcelormittal.kz',
+    docs:[
+      {course:'Working at Heights', type:'Удостоверение', num:'Уд-0762', issued:'30.05.2024', expiry:'30.05.2025', status:'amber', days:'14d'},
+      {course:'Electrical Safety', type:'Сертификат', num:'Серт-1033', issued:'12.08.2023', expiry:'12.08.2026', status:'green', days:'436d'},
+    ],
+    completions:[{course:'Working at Heights',83},{course:'Electrical Safety',77}]
+  }
+};
+
+function showEmployeeProfile(id) {
+  var d = empData[id]; if (!d) return;
+  document.getElementById('ep-av').textContent   = d.av;
+  document.getElementById('ep-name').textContent = d.name;
+  document.getElementById('ep-role').textContent = d.role;
+  var stColor = {'red':'#dc2626','amber':'#d97706','green':'#059669'};
+  var docsHtml = d.docs.map(function(doc){
+    return '<tr><td>'+doc.course+'</td><td>'+doc.type+'</td><td style="font-size:10px;font-family:monospace">'+doc.num+'</td>' +
+      '<td style="color:'+stColor[doc.status]+';font-weight:700">'+doc.days+'</td>' +
+      '<td><span class="badge '+doc.status+'">'+{red:'Expired',amber:'Expiring',green:'Valid'}[doc.status]+'</span></td></tr>';
+  }).join('');
+  var compHtml = d.completions.map(function(c){
+    var col = c.course.length > 0 ? (c.completions>=80?'#059669':c.completions>=60?'#d97706':'#dc2626') : '#94a3b8';
+    col = c.course ? (c.completions>=80?'#059669':c.completions>=60?'#d97706':'#dc2626') : '#94a3b8';
+    return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><span style="flex:1;font-size:11px">'+c.course+'</span>' +
+      '<div style="width:80px;background:var(--n6);border-radius:4px;height:6px"><div style="width:'+c.completions+'%;background:'+col+';height:100%;border-radius:4px"></div></div>' +
+      '<span style="font-size:11px;font-weight:600;color:'+col+';width:30px;text-align:right">'+c.completions+'%</span></div>';
+  }).join('');
+  document.getElementById('ep-body').innerHTML =
+    '<div class="ep-row"><span class="ep-lbl">Компания</span><span class="ep-val"><span class="co-link" onclick="closeEP();setTimeout(function(){showCompanyReport(\''+
+    (['ArcelorMittal'=>'arcelormittal','TOO MashStroy'=>'mashstroy','Kazatomprom LLP'=>'kazatomprom'][d.company]||'arcelormittal')+'\')},200)">'+d.company+'</span></span></div>'+
+    '<div class="ep-row"><span class="ep-lbl">Отдел / Локация</span><span class="ep-val">'+d.dept+' · '+d.loc+'</span></div>'+
+    '<div class="ep-row"><span class="ep-lbl">Должность</span><span class="ep-val">'+d.pos+'</span></div>'+
+    '<div class="ep-row"><span class="ep-lbl">Дата найма</span><span class="ep-val">'+d.hired+'</span></div>'+
+    '<div class="ep-row"><span class="ep-lbl">Email</span><span class="ep-val" style="color:var(--g2)">'+d.email+'</span></div>'+
+    '<div class="ep-row"><span class="ep-lbl">Телефон</span><span class="ep-val">'+d.phone+'</span></div>'+
+    '<div class="ep-sec">Документы</div>'+
+    '<div style="overflow-x:auto"><table class="drill-table" style="min-width:420px"><thead><tr><th>Курс</th><th>Тип</th><th>№</th><th>Дней</th><th>Статус</th></tr></thead><tbody>'+docsHtml+'</tbody></table></div>'+
+    '<div class="ep-sec">Прогресс обучения</div>'+compHtml+
+    '<div style="display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">'+
+    '<button class="action-btn" onclick="sendReminder(\''+d.name+'\')">Send Reminder</button>'+
+    '<button class="action-btn" onclick="closeEP()">Закрыть</button></div>';
+  document.getElementById('ep-modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeEP() { document.getElementById('ep-modal').classList.add('hidden'); document.body.style.overflow=''; }
+
+/* ── COURSE INFO ─────────────────────────────── */
+var courseData = {
+  heights: {
+    name:'Working at Heights', icon:'🏗️',
+    desc:'Курс по безопасной работе на высоте более 1,8 м. Обязателен для операторов, стропальщиков, монтажников.',
+    duration:'8 часов (онлайн 4ч + оффлайн практика 4ч)',
+    interval:'Ежегодно (каждые 12 мес)',
+    passRate:'72%', firstAttempt:'52%',
+    docType:'Удостоверение (государственного образца)',
+    regBody:'МЧС РК / Комитет по ЧС',
+    enrolled:287, active:210, expired:62, expiring:15,
+    tags:['Обязательный','Высокий риск','Государственный']
+  },
+  firesafety: {
+    name:'Fire Safety Level 1', icon:'🔥',
+    desc:'Базовый курс пожарной безопасности. Обязателен для всех сотрудников производственных объектов.',
+    duration:'4 часа (онлайн)',
+    interval:'Каждые 3 года',
+    passRate:'78%', firstAttempt:'78%',
+    docType:'Сертификат',
+    regBody:'Внутренняя аттестация + МЧС РК',
+    enrolled:412, active:380, expired:24, expiring:8,
+    tags:['Обязательный','Онлайн','Базовый']
+  },
+  chemical: {
+    name:'Chemical Handling', icon:'⚗️',
+    desc:'Курс по безопасному обращению с химическими веществами, классификации ХСЗР, КОСШ, СИЗ.',
+    duration:'6 часов (онлайн 4ч + тест)',
+    interval:'Каждые 2 года',
+    passRate:'58%', firstAttempt:'38%',
+    docType:'Протокол',
+    regBody:'Внутренняя аттестация (HSE отдел)',
+    enrolled:198, active:115, expired:48, expiring:35,
+    tags:['Обязательный','Высокий риск','Низкий процент сдачи']
+  },
+  electrical: {
+    name:'Electrical Safety', icon:'⚡',
+    desc:'Курс электробезопасности: допуски I–IV группы. Обязателен для электриков и ИТР.',
+    duration:'6 часов (онлайн)',
+    interval:'Ежегодно',
+    passRate:'84%', firstAttempt:'84%',
+    docType:'Удостоверение',
+    regBody:'Минэнерго РК',
+    enrolled:156, active:145, expired:8, expiring:3,
+    tags:['Обязательный','Государственный','Группы допуска']
+  }
+};
+
+function showCourseInfo(id) {
+  var d = courseData[id]; if (!d) return;
+  document.getElementById('cr-title').textContent = d.icon + ' ' + d.name;
+  var pr = parseFloat(d.passRate);
+  var prColor = pr>=75?'#059669':pr>=60?'#d97706':'#dc2626';
+  var fa = parseFloat(d.firstAttempt);
+  var faColor = fa>=75?'#059669':fa>=60?'#d97706':'#dc2626';
+  document.getElementById('cr-body').innerHTML =
+    '<p style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">'+d.desc+'</p>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'+
+      '<div style="background:var(--n6);border-radius:7px;padding:8px 10px"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Продолжительность</div><div style="font-size:12px;font-weight:600;margin-top:2px">'+d.duration+'</div></div>'+
+      '<div style="background:var(--n6);border-radius:7px;padding:8px 10px"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Частота обучения</div><div style="font-size:12px;font-weight:600;margin-top:2px">'+d.interval+'</div></div>'+
+      '<div style="background:var(--n6);border-radius:7px;padding:8px 10px"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Pass rate (всего)</div><div style="font-size:18px;font-weight:700;color:'+prColor+'">'+d.passRate+'</div></div>'+
+      '<div style="background:var(--n6);border-radius:7px;padding:8px 10px"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Pass rate (1-я попытка)</div><div style="font-size:18px;font-weight:700;color:'+faColor+'">'+d.firstAttempt+'</div></div>'+
+    '</div>'+
+    '<div style="font-size:11px;margin-bottom:6px"><span style="color:var(--muted)">Тип документа:</span> <strong>'+d.docType+'</strong></div>'+
+    '<div style="font-size:11px;margin-bottom:10px"><span style="color:var(--muted)">Регулятор:</span> <strong>'+d.regBody+'</strong></div>'+
+    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;text-align:center">'+
+      '<div style="background:#eff6ff;border-radius:6px;padding:6px"><div style="font-size:16px;font-weight:700;color:#2563a8">'+d.enrolled+'</div><div style="font-size:9px;color:var(--muted)">Enrolled</div></div>'+
+      '<div style="background:#f0fdf4;border-radius:6px;padding:6px"><div style="font-size:16px;font-weight:700;color:#059669">'+d.active+'</div><div style="font-size:9px;color:var(--muted)">Valid</div></div>'+
+      '<div style="background:#fef3c7;border-radius:6px;padding:6px"><div style="font-size:16px;font-weight:700;color:#d97706">'+d.expiring+'</div><div style="font-size:9px;color:var(--muted)">Expiring</div></div>'+
+      '<div style="background:#fee2e2;border-radius:6px;padding:6px"><div style="font-size:16px;font-weight:700;color:#dc2626">'+d.expired+'</div><div style="font-size:9px;color:var(--muted)">Expired</div></div>'+
+    '</div>'+
+    '<div style="display:flex;gap:5px;flex-wrap:wrap">'+d.tags.map(function(t){return '<span style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:2px 8px;font-size:10px;color:var(--g2)">'+t+'</span>';}).join('')+'</div>'+
+    '<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:right"><button class="action-btn" onclick="closeCR()">Закрыть</button></div>';
+  document.getElementById('cr-modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeCR() { document.getElementById('cr-modal').classList.add('hidden'); document.body.style.overflow=''; }
+
+/* ── DOCUMENT PREVIEW ────────────────────────── */
+var docPreviews = {
+  'nurgali-license':  { title:'УДОСТОВЕРЕНИЕ', type:'Удостоверение о допуске к работам на высоте', num:'Уд-0841', issued:'10.01.2024', expiry:'10.01.2025', holder:'Nurgali Timur Bakytbekovich', org:'ТОО «МАШ-Стандарт»', course:'Работы на высоте (Working at Heights)', status:'red'},
+  'omarov-cert':      { title:'СЕРТИФИКАТ',    type:'Сертификат о прохождении пожарной безопасности', num:'Серт-1124', issued:'14.04.2023', expiry:'14.04.2025', holder:'Omarov Kairat Dauletbekovich', org:'Учебный центр «SafetyPro»', course:'Пожарная безопасность Уровень 1', status:'red'},
+  'akhmetov-cert':    { title:'СЕРТИФИКАТ',    type:'Сертификат об аттестации по пожарной безопасности', num:'Серт-0987', issued:'06.06.2022', expiry:'06.06.2025', holder:'Akhmetov Aibek Kenzhebekovich', org:'Учебный центр «FireSafe KZ»', course:'Пожарная безопасность Уровень 1', status:'amber'},
+  'bekova-proto':     { title:'ПРОТОКОЛ',      type:'Протокол инструктажа по химической безопасности', num:'Прот-0456', issued:'15.05.2024', expiry:'15.05.2025', holder:'Bekova Dinara Sakenovna', org:'HSE отдел АО «ArcelorMittal Temirtau»', course:'Безопасное обращение с химическими веществами', status:'amber'},
+  'muratov-license':  { title:'УДОСТОВЕРЕНИЕ', type:'Удостоверение стропальщика 2-го разряда', num:'Уд-0762', issued:'30.05.2024', expiry:'30.05.2025', holder:'Muratov Talgat Askarovich', org:'ТОО «ПромСертификация»', course:'Работы на высоте + Стропальные работы', status:'amber'}
+};
+
+function showDocPreview(emp, type) {
+  var key = emp+'-'+type;
+  var d = docPreviews[key]; if (!d) return;
+  var stMap = {red:'#dc2626',amber:'#d97706',green:'#059669'};
+  var stLabel = {red:'ПРОСРОЧЕН',amber:'ИСТЕКАЕТ',green:'ДЕЙСТВИТЕЛЕН'};
+  document.getElementById('doc-modal-title').textContent = d.title + ' · ' + d.num;
+  document.getElementById('doc-modal-body').innerHTML =
+    '<div class="doc-mock">'+
+      '<div class="dm-title">'+d.type+'</div>'+
+      '<div class="dm-row"><span class="dm-lbl">Номер документа</span><span class="dm-val" style="font-family:monospace">'+d.num+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Владелец</span><span class="dm-val">'+d.holder+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Курс / Программа</span><span class="dm-val">'+d.course+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Выдан</span><span class="dm-val">'+d.issued+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Действителен до</span><span class="dm-val" style="color:'+stMap[d.status]+';font-weight:700">'+d.expiry+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Выдавшая организация</span><span class="dm-val">'+d.org+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Статус</span><span class="dm-val"><span style="background:'+stMap[d.status]+'20;color:'+stMap[d.status]+';padding:2px 10px;border-radius:12px;font-weight:700;font-size:11px">'+stLabel[d.status]+'</span></span></div>'+
+      '<div class="dm-seal">🔏 Электронная копия · Sental LMS</div>'+
+    '</div>'+
+    '<div style="padding:0 14px 14px;text-align:right"><button class="action-btn" onclick="closeDoc()">Закрыть</button> <button class="action-btn" style="background:var(--g2);color:#fff;border-color:var(--g2)">⬇ Скачать PDF</button></div>';
+  document.getElementById('doc-modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeDoc() { document.getElementById('doc-modal').classList.add('hidden'); document.body.style.overflow=''; }
+
+/* ── LIST MODAL ──────────────────────────────── */
+var listData = {
+  'users-kaz':  [{name:'Seitkali R.M.',dept:'ITR',loc:'Almaty HQ',pos:'Engineer'},{name:'Abilov D.K.',dept:'Workers',loc:'Almaty HQ',pos:'Operator'},{name:'Nurmagambetov A.',dept:'Management',loc:'Almaty HQ',pos:'Manager'},{name:'Dzhaksybekov T.',dept:'Workers',loc:'Karaganda',pos:'Mechanic'}],
+  'users-arc':  [{name:'Nurgali T.B.',dept:'Workers',loc:'Karaganda',pos:'Operator'},{name:'Bekova D.S.',dept:'Workers',loc:'Atyrau',pos:'Welder'},{name:'Muratov T.A.',dept:'Workers',loc:'Karaganda',pos:'Rigger'},{name:'Ismagulova A.',dept:'ITR',loc:'Karaganda',pos:'Inspector'}],
+  'users-mash': [{name:'Omarov K.D.',dept:'Workers',loc:'Almaty HQ',pos:'Mechanic'},{name:'Akhmetov A.K.',dept:'ITR',loc:'Almaty HQ',pos:'Inspector'},{name:'Baimukanov S.',dept:'Workers',loc:'Almaty HQ',pos:'Welder'}],
+  'comp-kaz':   [{name:'Zhumagali A.',issue:'Radiation Safety просрочен −14d',status:'red'},{name:'Seitkali R.M.',issue:'Electrical Safety истекает 27d',status:'amber'},{name:'Abilov D.K.',issue:'Fire Safety истекает 19d',status:'amber'}],
+  'comp-arc':   [{name:'Nurgali T.B.',issue:'Working at Heights просрочен −62d',status:'red'},{name:'Bekova D.S.',issue:'Chemical Handling истекает 11d',status:'amber'},{name:'Muratov T.A.',issue:'Working at Heights истекает 14d',status:'amber'},{name:'Ismagulova A.',issue:'Radiation Safety просрочен −21d',status:'red'}],
+  'comp-mash':  [{name:'Omarov K.D.',issue:'Fire Safety L1 просрочен −38d',status:'red'},{name:'Akhmetov A.K.',issue:'Fire Safety L1 истекает 3d',status:'amber'},{name:'Baimukanov S.',issue:'Working at Heights нет документа',status:'red'}]
+};
+
+function showListModal(title, key) {
+  document.getElementById('list-modal-title').textContent = title;
+  var rows = listData[key];
+  var html;
+  if (!rows) {
+    html = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:12px">Данные загружаются из IOMAD…<br><span style="font-size:10px">(в реальной системе здесь будет список из БД)</span></div>';
+  } else if (rows.length && rows[0].issue) {
+    html = rows.map(function(r){
+      var c = r.status==='red'?'#fee2e2':'#fef3c7';
+      var bc = r.status==='red'?'#fca5a5':'#fde68a';
+      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 18px;border-bottom:1px solid var(--n6)">' +
+        '<span class="emp-link" onclick="closeList()">'+r.name+'</span>' +
+        '<span style="flex:1;font-size:11px;background:'+c+';border:1px solid '+bc+';border-radius:4px;padding:2px 8px">'+r.issue+'</span></div>';
+    }).join('');
+  } else {
+    html = rows.map(function(r){
+      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 18px;border-bottom:1px solid var(--n6)">' +
+        '<span class="emp-link">'+r.name+'</span>' +
+        '<span style="font-size:11px;color:var(--muted)">'+r.dept+' · '+r.loc+'</span>' +
+        '<span style="font-size:11px;color:var(--n2);margin-left:auto">'+r.pos+'</span></div>';
+    }).join('');
+  }
+  document.getElementById('list-modal-body').innerHTML = html +
+    '<div style="padding:10px 18px 0;font-size:10px;color:var(--muted)">Показано '+(rows?rows.length:0)+' записей</div>';
+  document.getElementById('list-modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeList() { document.getElementById('list-modal').classList.add('hidden'); document.body.style.overflow=''; }
+
+/* ── SECTION HEADER TOOLTIPS ─────────────────── */
+var sectionTips = {
+  'Staff dynamics — new vs deactivated (12 months)': 'Как читать: Синие полосы вверх = новые сотрудники. Красные вниз = деактивированные.\nВысокие синие + низкие красные = рост команды.\nКликните по месяцу → список пришедших и ушедших.',
+  'Turnover rate % by company': 'Формула: Деактивированные ÷ Среднее активных × 100.\n🟢 <5% — норма · 🟡 5–10% — наблюдение · 🔴 >10% — высокая текучесть.\nВысокая текучесть = рост затрат на обучение новых сотрудников.',
+  'New staff without certifications — risk panel': 'Сотрудники, нанятые 30+ дней назад, у которых ноль действующих документов.\n% = от общего числа новых. Выше 20% = критический риск доступа к опасным работам.',
+  'First-attempt pass rate by course': 'Процент сотрудников, сдавших экзамен с первой попытки.\nПорог 60% (пунктир). Ниже 60% → пересмотреть контент курса или способ подачи материала.',
+  'Actual training time vs session time': 'Синяя полоса = фактическое активное время. Серая = длительность сессии.\n% справа = коэффициент вовлечённости. Ниже 30% = сотрудник пролистывал материал.',
+  'Completion rate trend — 12 months by company': 'Процент завершённых курсов от всех записанных. Падающая линия = тревожный сигнал.\nКликните по точке → сотрудники, не завершившие курс в этом месяце.',
+  'Trust score distribution': 'Баллы доверия от системы прокторинга Quilgo.\n90–100: Доверено · 70–89: Нужна проверка · 50–69: Подозрительно · 0–49: Флаг.\nКликните сегмент → список сотрудников в этой группе.',
+  'Average trust score by company': 'Средний балл доверия по каждой компании. Пунктир = средний по платформе.\nНиже среднего + высокий процент завершения = возможная массовая фальсификация.',
+  'Trust score vs completion % — scatter': 'Каждая точка = один курс. Правый-нижний квадрант (высокое завершение + низкий балл) — самый подозрительный.\nКликните точку → список сотрудников, разбитый по группам доверия.',
+  '13-week expiry forecast histogram': 'Количество документов, истекающих в каждую неделю. Красные столбцы = пик (≥10).\nПланируйте переобучение за 2–3 недели до пика, чтобы избежать разрывов в соответствии.',
+  'Compliance by company — 12-month trend': 'Одна линия = одна компания. Пунктир = целевой показатель 80%.\nПадение ниже пунктира → требуется немедленное вмешательство HR и руководства.',
+  'Compliance % by company — snapshot': 'Текущий снимок соответствия. Отсортировано по возрастанию (худшие — первые).\nПорог 80% показан вертикальной чертой. Кликните бар → список сотрудников.',
+  'Platform status — document breakdown': '4 сегмента по статусу документов по всем тенантам.\nКликните сегмент → список сотрудников в этой группе.',
+  'Compliance heatmap — department × location': 'Каждая ячейка = % соответствия для пересечения отдела × локации.\n🔴 <70% · 🟡 70–79% · 🟢 ≥80%. Кликните ячейку → список сотрудников с нарушениями.',
+  'Expired & expiring by company': 'Два бара на компанию: красный = уже просрочено (действовать немедленно), янтарный = истекает в течение 30 дней (запланировать обучение).',
+  'Non-compliance by course type': '% записанных сотрудников без действующего документа по данному курсу.\nОтсортировано по убыванию. Working at Heights 78% — наивысший риск ответственности.'
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.card-title').forEach(function(el) {
+    var tip = sectionTips[el.textContent.trim()];
+    if (tip) {
+      el.style.cursor = 'help';
+      el.onmouseenter = function() { showTip(el, tip); };
+      el.onmouseleave = hideTip;
+    }
+  });
+});
+
+/* close on Escape */
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { closeEP(); closeCR(); closeDoc(); closeList(); closeModal(); }
+});
 </script>
