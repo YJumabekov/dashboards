@@ -1135,29 +1135,177 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <!-- Revenue forecast - CEO only -->
   <div class="card expanded" onclick="toggleCard(this)">
     <div class="card-hdr">
-      <div><div class="card-title">Revenue forecast — 12-month projection</div><div class="card-sub">Stacked bars: 4 revenue streams · Red dashed trend overlay</div></div>
-      <div class="card-badges"><span class="ctag" style="background:#fef3c7;border-color:#fde68a;color:#92400e">CEO only</span><span class="ctag blue">Mixed chart</span><span class="chevron">▲</span></div>
+      <div><div class="card-title" onmouseenter="showTip(this,'Прогноз нагрузки на 12 месяцев с учётом:\n• Переобучения (онлайн + оффлайн)\n• Новых сотрудников и текучести кадров\n• Истечения документов\n🔴 Пиковые периоды = планировать усиление преподавателей\nНажмите на столбец → список сотрудников за месяц')" onmouseleave="hideTip()">Training load forecast — 12-month projection</div><div class="card-sub">Онлайн / Оффлайн · Новые сотрудники · Продления документов · Пики нагрузки</div></div>
+      <div class="card-badges"><span class="ctag" style="background:#fef3c7;border-color:#fde68a;color:#92400e">CEO only</span><span class="ctag blue">Interactive</span><span class="chevron">▲</span></div>
     </div>
     <div class="card-body">
-      <div style="display:flex;align-items:flex-end;gap:6px;height:100px;position:relative">
-        <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 400 100" preserveAspectRatio="none">
-          <polyline fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3" points="0,80 33,76 66,70 99,64 132,60 165,55 198,52 231,49 264,46 297,42 330,38 363,34 396,30"/>
-        </svg>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:12px;background:#3b82c4;width:100%"></div><div style="height:8px;background:#059669;width:100%"></div><div style="height:4px;background:#d97706;width:100%"></div><div style="height:2px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:14px;background:#3b82c4;width:100%"></div><div style="height:8px;background:#059669;width:100%"></div><div style="height:5px;background:#d97706;width:100%"></div><div style="height:2px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:16px;background:#3b82c4;width:100%"></div><div style="height:9px;background:#059669;width:100%"></div><div style="height:5px;background:#d97706;width:100%"></div><div style="height:3px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:18px;background:#3b82c4;width:100%"></div><div style="height:10px;background:#059669;width:100%"></div><div style="height:6px;background:#d97706;width:100%"></div><div style="height:3px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:20px;background:#3b82c4;width:100%"></div><div style="height:10px;background:#059669;width:100%"></div><div style="height:6px;background:#d97706;width:100%"></div><div style="height:3px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:22px;background:#3b82c4;width:100%"></div><div style="height:11px;background:#059669;width:100%"></div><div style="height:7px;background:#d97706;width:100%"></div><div style="height:4px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:24px;background:#3b82c4;width:100%"></div><div style="height:12px;background:#059669;width:100%"></div><div style="height:7px;background:#d97706;width:100%"></div><div style="height:4px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:26px;background:#3b82c4;width:100%"></div><div style="height:13px;background:#059669;width:100%"></div><div style="height:8px;background:#d97706;width:100%"></div><div style="height:4px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:28px;background:#3b82c4;width:100%"></div><div style="height:14px;background:#059669;width:100%"></div><div style="height:8px;background:#d97706;width:100%"></div><div style="height:5px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:30px;background:#3b82c4;width:100%"></div><div style="height:14px;background:#059669;width:100%"></div><div style="height:9px;background:#d97706;width:100%"></div><div style="height:5px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:32px;background:#3b82c4;width:100%"></div><div style="height:15px;background:#059669;width:100%"></div><div style="height:9px;background:#d97706;width:100%"></div><div style="height:6px;background:#a855f7;width:100%"></div></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end"><div style="height:34px;background:#3b82c4;width:100%"></div><div style="height:16px;background:#059669;width:100%"></div><div style="height:10px;background:#d97706;width:100%"></div><div style="height:6px;background:#a855f7;width:100%"></div></div>
+      <!-- Summary KPIs -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 10px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#2563a8">4,180</div>
+          <div style="font-size:9px;color:var(--muted);margin-top:2px">Сессий за 12 мес.</div>
+        </div>
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 10px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#059669">+328</div>
+          <div style="font-size:9px;color:var(--muted);margin-top:2px">Новых сотрудников</div>
+        </div>
+        <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#d97706">635</div>
+          <div style="font-size:9px;color:var(--muted);margin-top:2px">Продлений документов</div>
+        </div>
+        <div style="background:#fee2e2;border:1px solid #fecaca;border-radius:8px;padding:8px 10px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#dc2626">3 пика</div>
+          <div style="font-size:9px;color:var(--muted);margin-top:2px">Требуют усиления</div>
+        </div>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--muted);margin-top:3px"><span>Jun 25</span><span>Sep 25</span><span>Dec 25</span><span>Mar 26</span><span>May 26</span></div>
-      <div style="display:flex;gap:10px;font-size:10px;flex-wrap:wrap;margin-top:6px"><span style="color:#3b82c4">■ Retraining</span><span style="color:#059669">■ Subscriptions</span><span style="color:#d97706">■ New staff</span><span style="color:#a855f7">■ EDS documents</span><span style="color:#dc2626">-- Trend</span></div>
+
+      <!-- Stacked bar chart -->
+      <div style="position:relative">
+        <div style="display:flex;gap:3px;align-items:flex-end;height:120px" id="rev-chart">
+          <!-- Jun 25: total 290 → scale /4.7 = 62px -->
+          <div class="rev-col" onmouseenter="showTip(this,'Июнь 2025 — 290 сессий\n🔵 Онлайн переобучение: 120\n🟦 Оффлайн переобучение: 80\n🟢 Новые сотрудники: 45\n🟡 Продления документов: 30\n🟣 ЭЦП: 15')" onmouseleave="hideTip()" onclick="showListModal('Июнь 2025 — план обучения','month-jun')">
+            <div style="height:26px;background:#3b82c4;width:100%"></div>
+            <div style="height:17px;background:#1e40af;width:100%"></div>
+            <div style="height:10px;background:#059669;width:100%"></div>
+            <div style="height:6px;background:#d97706;width:100%"></div>
+            <div style="height:3px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- Jul 25: 320 → 68px -->
+          <div class="rev-col" onmouseenter="showTip(this,'Июль 2025 — 320 сессий\n🔵 Онлайн: 130 · 🟦 Оффлайн: 90\n🟢 Новые: 50 · 🟡 Продления: 35\n🟣 ЭЦП: 15')" onmouseleave="hideTip()" onclick="showListModal('Июль 2025','month-jul')">
+            <div style="height:28px;background:#3b82c4;width:100%"></div>
+            <div style="height:19px;background:#1e40af;width:100%"></div>
+            <div style="height:11px;background:#059669;width:100%"></div>
+            <div style="height:7px;background:#d97706;width:100%"></div>
+            <div style="height:3px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- Aug 25: 365 → 78px -->
+          <div class="rev-col" onmouseenter="showTip(this,'Август 2025 — 365 сессий\nРост: летний набор сотрудников\n🔵 Онлайн: 140 · 🟦 Оффлайн: 110\n🟢 Новые: 55 · 🟡 Продления: 40\n🟣 ЭЦП: 20')" onmouseleave="hideTip()" onclick="showListModal('Август 2025','month-aug')">
+            <div style="height:30px;background:#3b82c4;width:100%"></div>
+            <div style="height:23px;background:#1e40af;width:100%"></div>
+            <div style="height:12px;background:#059669;width:100%"></div>
+            <div style="height:9px;background:#d97706;width:100%"></div>
+            <div style="height:4px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- Sep 25: 395 → 84px — PEAK -->
+          <div class="rev-col rpeak" onmouseenter="showTip(this,'🔴 ПИКОВЫЙ ПЕРИОД — Сентябрь 2025\n395 сессий — массовый набор Q3\n🔵 Онлайн: 150 · 🟦 Оффлайн: 120\n🟢 Новые: 60 · 🟡 Продления: 45\n🟣 ЭЦП: 20\n⚠ Рекомендация: +2 внешних преподавателя,\nоткрыть 6 доп. онлайн-слотов')" onmouseleave="hideTip()" onclick="showListModal('Сентябрь 2025 — ПИКОВЫЙ ПЕРИОД','month-sep')">
+            <div class="rev-ann">⚠ Пик</div>
+            <div style="height:32px;background:#3b82c4;width:100%"></div>
+            <div style="height:26px;background:#1e40af;width:100%"></div>
+            <div style="height:13px;background:#059669;width:100%"></div>
+            <div style="height:10px;background:#d97706;width:100%"></div>
+            <div style="height:4px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- Oct 25: 310 → 66px -->
+          <div class="rev-col" onmouseenter="showTip(this,'Октябрь 2025 — 310 сессий\n🔵 Онлайн: 120 · 🟦 Оффлайн: 80\n🟢 Новые: 40 · 🟡 Продления: 55\n🟣 ЭЦП: 15')" onmouseleave="hideTip()" onclick="showListModal('Октябрь 2025','month-oct')">
+            <div style="height:26px;background:#3b82c4;width:100%"></div>
+            <div style="height:17px;background:#1e40af;width:100%"></div>
+            <div style="height:9px;background:#059669;width:100%"></div>
+            <div style="height:11px;background:#d97706;width:100%"></div>
+            <div style="height:3px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- Nov 25: 290 → 62px -->
+          <div class="rev-col" onmouseenter="showTip(this,'Ноябрь 2025 — 290 сессий\n🔵 Онлайн: 110 · 🟦 Оффлайн: 70\n🟢 Новые: 35 · 🟡 Продления: 60\n🟣 ЭЦП: 15')" onmouseleave="hideTip()" onclick="showListModal('Ноябрь 2025','month-nov')">
+            <div style="height:24px;background:#3b82c4;width:100%"></div>
+            <div style="height:15px;background:#1e40af;width:100%"></div>
+            <div style="height:7px;background:#059669;width:100%"></div>
+            <div style="height:13px;background:#d97706;width:100%"></div>
+            <div style="height:3px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- Dec 25: 245 → 52px — slow -->
+          <div class="rev-col" onmouseenter="showTip(this,'Декабрь 2025 — 245 сессий (спад)\nПраздничный период, минимальная активность\n🔵 Онлайн: 90 · 🟦 Оффлайн: 50\n🟢 Новые: 25 · 🟡 Продления: 70\n🟣 ЭЦП: 10\n💡 Использовать для внутренних аудитов')" onmouseleave="hideTip()" onclick="showListModal('Декабрь 2025','month-dec')">
+            <div style="height:19px;background:#3b82c4;width:100%"></div>
+            <div style="height:11px;background:#1e40af;width:100%"></div>
+            <div style="height:5px;background:#059669;width:100%"></div>
+            <div style="height:15px;background:#d97706;width:100%"></div>
+            <div style="height:2px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- Jan 26: 390 → 83px — PEAK -->
+          <div class="rev-col rpeak" onmouseenter="showTip(this,'🔴 ПИКОВЫЙ ПЕРИОД — Январь 2026\n390 сессий — начало годового цикла продлений\n🔵 Онлайн: 130 · 🟦 Оффлайн: 100\n🟢 Новые: 60 · 🟡 Продления: 80\n🟣 ЭЦП: 20\n⚠ Рекомендация: запланировать групповые сессии,\nавтоматизировать рассылку напоминаний в декабре')" onmouseleave="hideTip()" onclick="showListModal('Январь 2026 — ПИКОВЫЙ ПЕРИОД','month-jan')">
+            <div class="rev-ann">⚠ Пик</div>
+            <div style="height:28px;background:#3b82c4;width:100%"></div>
+            <div style="height:21px;background:#1e40af;width:100%"></div>
+            <div style="height:13px;background:#059669;width:100%"></div>
+            <div style="height:17px;background:#d97706;width:100%"></div>
+            <div style="height:4px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- Feb 26: 470 → 100px — HIGHEST PEAK -->
+          <div class="rev-col rpeak" style="outline-color:#991b1b;outline-width:3px" onmouseenter="showTip(this,'🔴🔴 МАКСИМАЛЬНЫЙ ПИК — Февраль 2026\n470 сессий — исторический максимум!\n🔵 Онлайн: 160 · 🟦 Оффлайн: 130\n🟢 Новые: 70 · 🟡 Продления: 85\n🟣 ЭЦП: 25\n⚠ КРИТИЧНО: +3 преподавателя, расширить LMS capacity,\nподготовить 10 доп. онлайн-слотов заранее в январе')" onmouseleave="hideTip()" onclick="showListModal('Февраль 2026 — МАКСИМАЛЬНЫЙ ПИК','month-feb')">
+            <div class="rev-ann" style="color:#7f1d1d;background:#fee2e2">🔴 MAX</div>
+            <div style="height:34px;background:#3b82c4;width:100%"></div>
+            <div style="height:28px;background:#1e40af;width:100%"></div>
+            <div style="height:15px;background:#059669;width:100%"></div>
+            <div style="height:18px;background:#d97706;width:100%"></div>
+            <div style="height:5px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- Mar 26: 442 → 94px -->
+          <div class="rev-col" onmouseenter="showTip(this,'Март 2026 — 442 сессии (спад после пика)\n🔵 Онлайн: 155 · 🟦 Оффлайн: 125\n🟢 Новые: 65 · 🟡 Продления: 75\n🟣 ЭЦП: 22')" onmouseleave="hideTip()" onclick="showListModal('Март 2026','month-mar')">
+            <div style="height:33px;background:#3b82c4;width:100%"></div>
+            <div style="height:27px;background:#1e40af;width:100%"></div>
+            <div style="height:14px;background:#059669;width:100%"></div>
+            <div style="height:16px;background:#d97706;width:100%"></div>
+            <div style="height:5px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- Apr 26: 390 → 83px -->
+          <div class="rev-col" onmouseenter="showTip(this,'Апрель 2026 — 390 сессий\n🔵 Онлайн: 140 · 🟦 Оффлайн: 110\n🟢 Новые: 55 · 🟡 Продления: 65\n🟣 ЭЦП: 20')" onmouseleave="hideTip()" onclick="showListModal('Апрель 2026','month-apr')">
+            <div style="height:30px;background:#3b82c4;width:100%"></div>
+            <div style="height:23px;background:#1e40af;width:100%"></div>
+            <div style="height:12px;background:#059669;width:100%"></div>
+            <div style="height:14px;background:#d97706;width:100%"></div>
+            <div style="height:4px;background:#7c3aed;width:100%"></div>
+          </div>
+          <!-- May 26: 328 → 70px -->
+          <div class="rev-col" onmouseenter="showTip(this,'Май 2026 — 328 сессий\n🔵 Онлайн: 120 · 🟦 Оффлайн: 90\n🟢 Новые: 45 · 🟡 Продления: 55\n🟣 ЭЦП: 18')" onmouseleave="hideTip()" onclick="showListModal('Май 2026','month-may')">
+            <div style="height:26px;background:#3b82c4;width:100%"></div>
+            <div style="height:19px;background:#1e40af;width:100%"></div>
+            <div style="height:10px;background:#059669;width:100%"></div>
+            <div style="height:12px;background:#d97706;width:100%"></div>
+            <div style="height:4px;background:#7c3aed;width:100%"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:3px;margin-top:5px;font-size:8px;color:var(--muted);text-align:center">
+          <div style="flex:1">Jun</div><div style="flex:1">Jul</div><div style="flex:1">Aug</div><div style="flex:1" style="color:#dc2626;font-weight:700">Sep</div><div style="flex:1">Oct</div><div style="flex:1">Nov</div><div style="flex:1">Dec</div><div style="flex:1" style="color:#dc2626;font-weight:700">Jan</div><div style="flex:1" style="color:#991b1b;font-weight:700">Feb</div><div style="flex:1">Mar</div><div style="flex:1">Apr</div><div style="flex:1">May</div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 6px;font-size:10px">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#3b82c4;border-radius:2px;display:inline-block"></span>Переобучение Онлайн</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#1e40af;border-radius:2px;display:inline-block"></span>Переобучение Оффлайн</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#059669;border-radius:2px;display:inline-block"></span>Новые сотрудники</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#d97706;border-radius:2px;display:inline-block"></span>Продление документов</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#7c3aed;border-radius:2px;display:inline-block"></span>ЭЦП</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#fee2e2;border:2px solid #dc2626;border-radius:2px;display:inline-block"></span>Пиковый период</span>
+      </div>
+
+      <!-- Peak alerts -->
+      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 12px;margin-top:6px">
+        <div style="font-size:11px;font-weight:700;color:#991b1b;margin-bottom:8px">⚠ Пиковые периоды — рекомендуется усиление</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:10px;color:var(--n2)">
+          <div style="background:#fff;border-radius:6px;padding:8px;border:1px solid #fecaca">
+            <div style="font-weight:700;color:#dc2626;margin-bottom:4px">Sep 2025 · 395 сессий</div>
+            Массовый набор Q3. 60 новых сотрудников. 8 курсов в очереди.<br><span style="color:#059669;font-weight:600">→ +2 преподавателя на сентябрь</span>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px;border:1px solid #fecaca">
+            <div style="font-weight:700;color:#dc2626;margin-bottom:4px">Jan 2026 · 390 сессий</div>
+            Начало годового цикла. 80 продлений одновременно.<br><span style="color:#059669;font-weight:600">→ Групповые сессии + авторассылка в дек.</span>
+          </div>
+          <div style="background:#fee2e2;border-radius:6px;padding:8px;border:1px solid #f87171">
+            <div style="font-weight:700;color:#7f1d1d;margin-bottom:4px">🔴 Feb 2026 · 470 сессий МАКС</div>
+            Пик всех категорий одновременно. Критическая нагрузка.<br><span style="color:#059669;font-weight:600">→ +3 преподавателя, расширить LMS-слоты</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Turnover impact -->
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;margin-top:8px">
+        <div style="font-size:11px;font-weight:700;color:#166534;margin-bottom:6px">📊 Влияние текучести кадров на нагрузку обучения</div>
+        <div style="font-size:10px;color:var(--n2);line-height:1.8">
+          <span style="color:#dc2626;font-weight:600">ArcelorMittal 18%</span> → ~100 новых сотрудников в год · avg 4 курса каждый = <strong>400 сессий</strong> только на онбординг<br>
+          <span style="color:#d97706;font-weight:600">TOO MashStroy 12%</span> → ~32 замены · <strong>128 сессий</strong> на онбординг<br>
+          <span style="color:#059669;font-weight:600">Kazatomprom 5%</span> → ~21 замена · <strong>84 сессии</strong> · низкий риск<br>
+          <span style="color:var(--muted)">Итого текучесть генерирует ~612 сессий/год (15% от общей нагрузки)</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
