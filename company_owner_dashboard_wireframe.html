@@ -1874,14 +1874,14 @@ function showDocPreview(emp, type) {
   document.getElementById('doc-modal-body').innerHTML =
     '<div class="doc-mock">'+
       '<div class="dm-title">'+d.type+'</div>'+
-      '<div class="dm-row"><span class="dm-lbl">Номер документа</span><span class="dm-val" style="font-family:monospace">'+d.num+'</span></div>'+
-      '<div class="dm-row"><span class="dm-lbl">Владелец</span><span class="dm-val">'+d.holder+'</span></div>'+
-      '<div class="dm-row"><span class="dm-lbl">Курс / Программа</span><span class="dm-val">'+d.course+'</span></div>'+
-      '<div class="dm-row"><span class="dm-lbl">Выдан</span><span class="dm-val">'+d.issued+'</span></div>'+
-      '<div class="dm-row"><span class="dm-lbl">Действителен до</span><span class="dm-val" style="color:'+stMap[d.status]+';font-weight:700">'+d.expiry+'</span></div>'+
-      '<div class="dm-row"><span class="dm-lbl">Выдавшая организация</span><span class="dm-val">'+d.org+'</span></div>'+
-      '<div class="dm-row"><span class="dm-lbl">Статус</span><span class="dm-val"><span style="background:'+stMap[d.status]+'20;color:'+stMap[d.status]+';padding:2px 10px;border-radius:12px;font-weight:700;font-size:11px">'+stLabel[d.status]+'</span></span></div>'+
-      '<div class="dm-seal">🔏 Электронная копия · Sental LMS</div>'+
+      '<div class="dm-row"><span class="dm-lbl">Document No.</span><span class="dm-val" style="font-family:monospace">'+d.num+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Holder</span><span class="dm-val">'+d.holder+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Course / Programme</span><span class="dm-val">'+d.course+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Issued</span><span class="dm-val">'+d.issued+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Valid until</span><span class="dm-val" style="color:'+stMap[d.status]+';font-weight:700">'+d.expiry+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Issuing organisation</span><span class="dm-val">'+d.org+'</span></div>'+
+      '<div class="dm-row"><span class="dm-lbl">Status</span><span class="dm-val"><span style="background:'+stMap[d.status]+'20;color:'+stMap[d.status]+';padding:2px 10px;border-radius:12px;font-weight:700;font-size:11px">'+stLabel[d.status]+'</span></span></div>'+
+      '<div class="dm-seal">🔏 Digital copy · Sental LMS</div>'+
     '</div>'+
     '<div style="padding:0 14px 14px;text-align:right"><button class="action-btn" onclick="closeDoc()">Закрыть</button> <button class="action-btn" style="background:var(--g2);color:#fff;border-color:var(--g2)">⬇ Скачать PDF</button></div>';
   document.getElementById('doc-modal').classList.remove('hidden');
