@@ -1760,19 +1760,19 @@ function showEmployeeProfile(id) {
       '<span style="font-size:11px;font-weight:600;color:'+col+';width:30px;text-align:right">'+c.pct+'%</span></div>';
   }).join('');
   document.getElementById('ep-body').innerHTML =
-    '<div class="ep-row"><span class="ep-lbl">Компания</span><span class="ep-val"><span class="co-link" onclick="closeEP();setTimeout(function(){showCompanyReport(\''+
+    '<div class="ep-row"><span class="ep-lbl">Company</span><span class="ep-val"><span class="co-link" onclick="closeEP();setTimeout(function(){showCompanyReport(\''+
     ({'ArcelorMittal':'arcelormittal','TOO MashStroy':'mashstroy','Kazatomprom LLP':'kazatomprom'}[d.company]||'arcelormittal')+'\')},200)">'+d.company+'</span></span></div>'+
-    '<div class="ep-row"><span class="ep-lbl">Отдел / Локация</span><span class="ep-val">'+d.dept+' · '+d.loc+'</span></div>'+
-    '<div class="ep-row"><span class="ep-lbl">Должность</span><span class="ep-val">'+d.pos+'</span></div>'+
-    '<div class="ep-row"><span class="ep-lbl">Дата найма</span><span class="ep-val">'+d.hired+'</span></div>'+
+    '<div class="ep-row"><span class="ep-lbl">Dept / Location</span><span class="ep-val">'+d.dept+' · '+d.loc+'</span></div>'+
+    '<div class="ep-row"><span class="ep-lbl">Position</span><span class="ep-val">'+d.pos+'</span></div>'+
+    '<div class="ep-row"><span class="ep-lbl">Hire date</span><span class="ep-val">'+d.hired+'</span></div>'+
     '<div class="ep-row"><span class="ep-lbl">Email</span><span class="ep-val" style="color:var(--g2)">'+d.email+'</span></div>'+
-    '<div class="ep-row"><span class="ep-lbl">Телефон</span><span class="ep-val">'+d.phone+'</span></div>'+
-    '<div class="ep-sec">Документы</div>'+
-    '<div style="overflow-x:auto"><table class="drill-table" style="min-width:420px"><thead><tr><th>Курс</th><th>Тип</th><th>№</th><th>Дней</th><th>Статус</th></tr></thead><tbody>'+docsHtml+'</tbody></table></div>'+
-    '<div class="ep-sec">Прогресс обучения</div>'+compHtml+
+    '<div class="ep-row"><span class="ep-lbl">Phone</span><span class="ep-val">'+d.phone+'</span></div>'+
+    '<div class="ep-sec">Documents</div>'+
+    '<div style="overflow-x:auto"><table class="drill-table" style="min-width:420px"><thead><tr><th>Course</th><th>Type</th><th>No.</th><th>Days</th><th>Status</th></tr></thead><tbody>'+docsHtml+'</tbody></table></div>'+
+    '<div class="ep-sec">Training progress</div>'+compHtml+
     '<div style="display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">'+
     '<button class="action-btn" onclick="sendReminder(\''+d.name+'\')">Send Reminder</button>'+
-    '<button class="action-btn" onclick="closeEP()">Закрыть</button></div>';
+    '<button class="action-btn" onclick="closeEP()">Close</button></div>';
   document.getElementById('ep-modal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
