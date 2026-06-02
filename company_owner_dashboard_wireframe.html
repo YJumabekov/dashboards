@@ -1869,7 +1869,7 @@ function showDocPreview(emp, type) {
   var key = emp+'-'+type;
   var d = docPreviews[key]; if (!d) return;
   var stMap = {red:'#dc2626',amber:'#d97706',green:'#059669'};
-  var stLabel = {red:'ПРОСРОЧЕН',amber:'ИСТЕКАЕТ',green:'ДЕЙСТВИТЕЛЕН'};
+  var stLabel = {red:'EXPIRED',amber:'EXPIRING',green:'VALID'};
   document.getElementById('doc-modal-title').textContent = d.title + ' · ' + d.num;
   document.getElementById('doc-modal-body').innerHTML =
     '<div class="doc-mock">'+
