@@ -1109,7 +1109,158 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 </div>
 
+<!-- COMPANY REPORT MODAL -->
+<div class="modal-overlay hidden" id="company-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-title" id="modal-title">Company Report</div>
+        <div class="modal-sub" id="modal-sub">Full compliance & activity overview</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
 <script>
+var companyData = {
+  kazatomprom: {
+    name: 'Kazatomprom LLP',
+    sub: 'Mining & Nuclear · Almaty HQ + 3 sites',
+    kpis: [
+      {val:'415', lbl:'Active users', color:'#2563a8'},
+      {val:'89%', lbl:'Compliance', color:'#059669'},
+      {val:'12', lbl:'Expiring <30d', color:'#d97706'},
+      {val:'3', lbl:'Expired now', color:'#dc2626'}
+    ],
+    compliance: [
+      {name:'Radiation Safety', pct:94, color:'#059669'},
+      {name:'Electrical Safety', pct:91, color:'#059669'},
+      {name:'Fire Safety L1', pct:88, color:'#059669'},
+      {name:'Working at Heights', pct:82, color:'#059669'},
+      {name:'Chemical Handling', pct:74, color:'#d97706'}
+    ],
+    staff: {new:18, deactivated:5, turnover:'5%', riskColor:'#059669'},
+    trust: '88 / 100',
+    trustColor: '#059669',
+    eds: 1,
+    status: 'green'
+  },
+  arcelormittal: {
+    name: 'ArcelorMittal',
+    sub: 'Steel & Mining · Karaganda Site',
+    kpis: [
+      {val:'562', lbl:'Active users', color:'#2563a8'},
+      {val:'63%', lbl:'Compliance', color:'#dc2626'},
+      {val:'27', lbl:'Expiring <30d', color:'#d97706'},
+      {val:'38', lbl:'Expired now', color:'#dc2626'}
+    ],
+    compliance: [
+      {name:'Electrical Safety', pct:79, color:'#d97706'},
+      {name:'Fire Safety L1', pct:71, color:'#d97706'},
+      {name:'Radiation Safety', pct:65, color:'#dc2626'},
+      {name:'Chemical Handling', pct:52, color:'#dc2626'},
+      {name:'Working at Heights', pct:48, color:'#dc2626'}
+    ],
+    staff: {new:31, deactivated:22, turnover:'18%', riskColor:'#dc2626'},
+    trust: '72 / 100',
+    trustColor: '#dc2626',
+    eds: 7,
+    status: 'red'
+  },
+  mashstroy: {
+    name: 'TOO MashStroy',
+    sub: 'Construction & Engineering · Almaty HQ',
+    kpis: [
+      {val:'270', lbl:'Active users', color:'#2563a8'},
+      {val:'72%', lbl:'Compliance', color:'#d97706'},
+      {val:'33', lbl:'Expiring <30d', color:'#d97706'},
+      {val:'24', lbl:'Expired now', color:'#dc2626'}
+    ],
+    compliance: [
+      {name:'Fire Safety L1', pct:84, color:'#059669'},
+      {name:'Electrical Safety', pct:78, color:'#d97706'},
+      {name:'Working at Heights', pct:70, color:'#d97706'},
+      {name:'Chemical Handling', pct:64, color:'#dc2626'},
+      {name:'Radiation Safety', pct:58, color:'#dc2626'}
+    ],
+    staff: {new:14, deactivated:9, turnover:'12%', riskColor:'#d97706'},
+    trust: '79 / 100',
+    trustColor: '#d97706',
+    eds: 3,
+    status: 'amber'
+  },
+  kazmunaygas: {
+    name: 'KazMunayGas',
+    sub: 'Oil & Gas · Onboarding in progress',
+    kpis: [
+      {val:'—', lbl:'Active users', color:'#94a3b8'},
+      {val:'—', lbl:'Compliance', color:'#94a3b8'},
+      {val:'—', lbl:'Expiring <30d', color:'#94a3b8'},
+      {val:'—', lbl:'Expired now', color:'#94a3b8'}
+    ],
+    compliance: [],
+    staff: {new:0, deactivated:0, turnover:'—', riskColor:'#94a3b8'},
+    trust: '— / 100',
+    trustColor: '#94a3b8',
+    eds: 0,
+    status: 'blue'
+  }
+};
+
+function showCompanyReport(id) {
+  var d = companyData[id];
+  if (!d) return;
+  document.getElementById('modal-title').textContent = d.name;
+  document.getElementById('modal-sub').textContent = d.sub;
+
+  var kpiHtml = '<div class="modal-kpis">' + d.kpis.map(function(k){
+    return '<div class="mk"><div class="mk-val" style="color:'+k.color+'">'+k.val+'</div><div class="mk-lbl">'+k.lbl+'</div></div>';
+  }).join('') + '</div>';
+
+  var compHtml = '';
+  if (d.compliance.length) {
+    compHtml = '<div class="modal-section">Compliance by course</div>' +
+      d.compliance.map(function(c){
+        return '<div class="modal-prog-row">' +
+          '<span class="modal-prog-name">'+c.name+'</span>' +
+          '<div class="modal-prog-track"><div class="modal-prog-fill" style="width:'+c.pct+'%;background:'+c.color+'"></div></div>' +
+          '<span class="modal-prog-pct" style="color:'+c.color+'">'+c.pct+'%</span>' +
+        '</div>';
+      }).join('');
+  } else {
+    compHtml = '<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px">Onboarding in progress — no data yet</div>';
+  }
+
+  var statusBadgeColor = {green:'#dcfce7;color:#166534', amber:'#fef3c7;color:#92400e', red:'#fee2e2;color:#991b1b', blue:'#dbeafe;color:#1e40af'}[d.status];
+
+  var extraHtml = '<div class="modal-section">Additional metrics</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">' +
+      '<div class="mk"><div class="mk-val" style="color:'+d.staff.riskColor+'">'+d.staff.turnover+'</div><div class="mk-lbl">Turnover rate</div></div>' +
+      '<div class="mk"><div class="mk-val" style="color:'+d.trustColor+'">'+d.trust+'</div><div class="mk-lbl">Avg trust score</div></div>' +
+      '<div class="mk"><div class="mk-val" style="color:#7c3aed">'+d.eds+'</div><div class="mk-lbl">EDS pending</div></div>' +
+    '</div>' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">' +
+      '<span style="font-size:11px;color:var(--muted)">Overall status: <span style="background:'+statusBadgeColor+';padding:2px 10px;border-radius:12px;font-weight:600;font-size:11px">'+d.status.charAt(0).toUpperCase()+d.status.slice(1)+'</span></span>' +
+      '<div style="display:flex;gap:8px">' +
+        '<button class="action-btn" onclick="closeModal()">Close</button>' +
+        '<button class="action-btn" style="background:var(--g2);color:#fff;border-color:var(--g2)">Export PDF ↗</button>' +
+      '</div>' +
+    '</div>';
+
+  document.getElementById('modal-body').innerHTML = kpiHtml + compHtml + extraHtml;
+  document.getElementById('company-modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('company-modal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+
 function switchTab(id, el) {
   document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
