@@ -1904,7 +1904,7 @@ function showListModal(title, key) {
   var rows = listData[key];
   var html;
   if (!rows) {
-    html = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:12px">Данные загружаются из IOMAD…<br><span style="font-size:10px">(в реальной системе здесь будет список из БД)</span></div>';
+    html = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:12px">Loading data from IOMAD…<br><span style="font-size:10px">(in the live system this list is pulled from the database)</span></div>';
   } else if (rows.length && rows[0].issue) {
     html = rows.map(function(r){
       var c = r.status==='red'?'#fee2e2':'#fef3c7';
