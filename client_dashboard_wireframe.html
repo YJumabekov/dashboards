@@ -1181,15 +1181,237 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div><!-- /emp-drawer-overlay -->
 
 <script>
-var currentOvTab='certs';
+/* ══════════════════════════════════════════════════
+   EMPLOYEE DATABASE
+   Each entry: initials (key) → full employee record
+   docs[].url = link to actual document in Moodle/S3
+══════════════════════════════════════════════════ */
+var _empDb = {
+  'OK': {
+    id:'MS-0381', name:'Omarov K.D.', full:'Omarov Kairat Darenovich',
+    dept:'Workers', loc:'Karaganda Site', pos:'Mechanic Grade 3',
+    hired:'14 Mar 2022', email:'k.omarov@mashs.kz', phone:'+7 701 234 56 78',
+    manager:'Seisenov B.K. (Foreman)', managerEmail:'b.seisenov@mashs.kz',
+    docs:[
+      {course:'Fire Safety L1',        type:'Protocol',    num:'Прот-2024-0512', issued:'14 Mar 2024', expiry:'14 Mar 2025', status:'expired',  days:-38, url:'#doc-prot-0512'},
+      {course:'Working at Heights',    type:'License',     num:'Уд-0841',        issued:'22 May 2025', expiry:'22 May 2026', status:'expiring', days:18,  url:'#doc-ud-0841'},
+      {course:'First Aid L1',          type:'Protocol',    num:'Прот-2023-0210', issued:'10 Jan 2024', expiry:'01 Aug 2026', status:'active',   days:142, url:'#doc-prot-0210'},
+      {course:'Chemical Handling',     type:'Certificate', num:'Cert-0512',      issued:'05 Mar 2023', expiry:'01 Feb 2027', status:'active',   days:210, url:'#doc-cert-0512'}
+    ],
+    courses:[
+      {name:'Electrical Safety',      pct:100, status:'done'},
+      {name:'First Aid L1',           pct:100, status:'done'},
+      {name:'Fire Safety L1',         pct:100, status:'done'},
+      {name:'Working at Heights',     pct:0,   status:'pending'},
+      {name:'Chemical Handling Adv.', pct:0,   status:'pending'}
+    ],
+    history:[
+      {date:'25 Apr 2026', color:'#d97706', ev:'Urgent reminder sent by Aizhan K.'},
+      {date:'14 Mar 2026', color:'#dc2626', ev:'Fire Safety L1 — certificate expired'},
+      {date:'09 Feb 2026', color:'#d97706', ev:'Auto-reminder triggered (30d warning)'},
+      {date:'22 May 2025', color:'#059669', ev:'Working at Heights License issued — valid 1 year'},
+      {date:'14 Mar 2024', color:'#059669', ev:'Fire Safety L1 Protocol issued — valid 1 year'}
+    ]
+  },
+  'AK': {
+    id:'MS-0512', name:'Akhmetov A.K.', full:'Akhmetov Askar Kairatuly',
+    dept:'ITR', loc:'Almaty HQ', pos:'HSE Inspector',
+    hired:'15 Jan 2021', email:'a.akhmetov@mashstroy.kz', phone:'+7 705 456 78 90',
+    manager:'Sultanova B.K. (HR Director)',
+    docs:[
+      {course:'Fire Safety L1',     type:'Certificate', num:'Cert-0987', issued:'06 Jun 2022', expiry:'06 Jun 2025', status:'expiring', days:3,   url:'#doc-cert-0987'},
+      {course:'Working at Heights', type:'License',     num:'Уд-1045',   issued:'10 Oct 2023', expiry:'10 Oct 2026', status:'active',   days:496, url:'#doc-ud-1045'}
+    ],
+    courses:[
+      {name:'Fire Safety L1',     pct:100, status:'done'},
+      {name:'Working at Heights', pct:100, status:'done'},
+      {name:'Industrial Safety',  pct:65,  status:'in-progress'}
+    ],
+    history:[
+      {date:'01 Jun 2026', color:'#d97706', ev:'Auto-reminder triggered (5d warning)'},
+      {date:'06 Jun 2022', color:'#059669', ev:'Fire Safety L1 Certificate issued — valid 3 years'}
+    ]
+  },
+  'DA': {
+    id:'MS-0388', name:'Dzhaksybekov A.', full:'Dzhaksybekov Arman',
+    dept:'ITR', loc:'Almaty HQ', pos:'Process Engineer',
+    hired:'07 Sep 2020', email:'a.dzhaksybekov@mashstroy.kz', phone:'+7 702 345 67 89',
+    manager:'Sultanova B.K. (HR Director)',
+    docs:[
+      {course:'Radiation Safety',  type:'Protocol',    num:'Прот-2024-0088', issued:'10 Feb 2024', expiry:'10 Feb 2025', status:'expired',  days:-21, url:'#doc-prot-0088'},
+      {course:'Electrical Safety', type:'License',     num:'Уд-0623',        issued:'20 Jun 2024', expiry:'20 Jun 2027', status:'active',   days:748, url:'#doc-ud-0623'},
+      {course:'Fire Safety L1',    type:'Certificate', num:'Cert-1224',      issued:'15 Dec 2023', expiry:'15 Dec 2026', status:'active',   days:561, url:'#doc-cert-1224'}
+    ],
+    courses:[
+      {name:'Radiation Safety',  pct:100, status:'done'},
+      {name:'Electrical Safety', pct:100, status:'done'},
+      {name:'Fire Safety L1',    pct:100, status:'done'},
+      {name:'Chemical Handling', pct:40,  status:'in-progress'}
+    ],
+    history:[
+      {date:'15 Feb 2025', color:'#d97706', ev:'Auto-reminder triggered (25d warning)'},
+      {date:'10 Feb 2025', color:'#dc2626', ev:'Radiation Safety Protocol expired'},
+      {date:'10 Feb 2024', color:'#059669', ev:'Radiation Safety Protocol issued — valid 1 year'}
+    ]
+  },
+  'BD': {
+    id:'MS-0441', name:'Bekova D.S.', full:'Bekova Dinara Seitkali',
+    dept:'Workers', loc:'Atyrau Depot', pos:'Welder Grade 2',
+    hired:'22 Mar 2021', email:'d.bekova@mashstroy.kz', phone:'+7 707 567 89 01',
+    manager:'Dusipov T.K. (Shift Supervisor)',
+    docs:[
+      {course:'Chemical Handling', type:'Protocol', num:'Прот-2024-0192', issued:'12 Jun 2023', expiry:'12 Jun 2026', status:'expiring', days:10, url:'#doc-prot-0192'},
+      {course:'Welding Safety',    type:'License',  num:'Уд-1102',        issued:'01 Mar 2024', expiry:'01 Mar 2027', status:'active',   days:637, url:'#doc-ud-1102'}
+    ],
+    courses:[
+      {name:'Chemical Handling', pct:100, status:'done'},
+      {name:'Welding Safety',    pct:100, status:'done'},
+      {name:'First Aid L1',      pct:75,  status:'in-progress'}
+    ],
+    history:[
+      {date:'12 May 2026', color:'#d97706', ev:'Auto-reminder triggered (30d warning — Chemical Handling)'},
+      {date:'12 Jun 2023', color:'#059669', ev:'Chemical Handling Protocol issued — valid 3 years'}
+    ]
+  },
+  'MT': {
+    id:'MS-0397', name:'Muratov T.A.', full:'Muratov Timur Askaruly',
+    dept:'Workers', loc:'Karaganda Site', pos:'Rigger',
+    hired:'10 Jul 2019', email:'t.muratov@mashstroy.kz', phone:'+7 701 678 90 12',
+    manager:'Seisenov B.K. (Foreman)',
+    docs:[
+      {course:'Working at Heights', type:'License',     num:'Уд-0934',        issued:'16 Jun 2024', expiry:'16 Jun 2026', status:'expiring', days:14, url:'#doc-ud-0934'},
+      {course:'Rigging Safety',     type:'Certificate', num:'Cert-0712',      issued:'20 Sep 2023', expiry:'20 Sep 2026', status:'active',   days:840, url:'#doc-cert-0712'},
+      {course:'Fire Safety L1',     type:'Protocol',    num:'Прот-2023-0441', issued:'05 Nov 2023', expiry:'05 Nov 2026', status:'active',   days:521, url:'#doc-prot-0441'}
+    ],
+    courses:[
+      {name:'Working at Heights', pct:100, status:'done'},
+      {name:'Rigging Safety',     pct:100, status:'done'},
+      {name:'Fire Safety L1',     pct:100, status:'done'},
+      {name:'Crane Operations',   pct:20,  status:'in-progress'}
+    ],
+    history:[
+      {date:'16 May 2026', color:'#d97706', ev:'Auto-reminder triggered (30d warning)'},
+      {date:'16 Jun 2024', color:'#059669', ev:'Working at Heights License issued — valid 2 years'}
+    ]
+  },
+  'SR': {
+    id:'MS-0521', name:'Seitkali R.M.', full:'Seitkali Ruslan Mukhituly',
+    dept:'ITR', loc:'Almaty HQ', pos:'Electrician',
+    hired:'03 Aug 2018', email:'r.seitkali@mashstroy.kz', phone:'+7 705 789 01 23',
+    manager:'Sultanova B.K. (HR Director)',
+    docs:[
+      {course:'Electrical Safety', type:'Certificate', num:'Cert-0334', issued:'29 Jun 2023', expiry:'29 Jun 2026', status:'expiring', days:27, url:'#doc-cert-0334'},
+      {course:'Fire Safety L1',    type:'Protocol',    num:'Прот-2024-0601', issued:'10 Mar 2024', expiry:'10 Mar 2027', status:'active', days:645, url:'#doc-prot-0601'}
+    ],
+    courses:[
+      {name:'Electrical Safety', pct:100, status:'done'},
+      {name:'Fire Safety L1',    pct:100, status:'done'},
+      {name:'High Voltage Work',  pct:55,  status:'in-progress'}
+    ],
+    history:[
+      {date:'29 May 2026', color:'#d97706', ev:'Auto-reminder triggered (30d warning — Electrical Safety)'},
+      {date:'29 Jun 2023', color:'#059669', ev:'Electrical Safety Certificate issued — valid 3 years'}
+    ]
+  },
+  'ZB': {
+    id:'MS-0463', name:'Zhaksylyk B.N.', full:'Zhaksylyk Bolat Nurlanuly',
+    dept:'Workers', loc:'Atyrau Depot', pos:'Electrician',
+    hired:'12 Nov 2020', email:'b.zhaksylyk@mashstroy.kz', phone:'+7 702 890 12 34',
+    manager:'Dusipov T.K. (Shift Supervisor)',
+    docs:[
+      {course:'Chemical Handling', type:'Protocol', num:'Прот-2025-0014', issued:'19 Apr 2024', expiry:'19 Apr 2025', status:'expired', days:-14, url:'#doc-prot-0014'},
+      {course:'Electrical Safety', type:'License',  num:'Уд-0788',        issued:'01 Feb 2025', expiry:'01 Feb 2028', status:'active',  days:973, url:'#doc-ud-0788'}
+    ],
+    courses:[
+      {name:'Chemical Handling', pct:100, status:'done'},
+      {name:'Electrical Safety', pct:100, status:'done'}
+    ],
+    history:[
+      {date:'20 Apr 2025', color:'#dc2626', ev:'Chemical Handling Protocol expired'},
+      {date:'20 Mar 2025', color:'#d97706', ev:'Auto-reminder triggered (30d warning)'}
+    ]
+  },
+  'TM': {
+    id:'MS-0529', name:'Tokayeva M.S.', full:'Tokayeva Marzhan Seitkali',
+    dept:'Management', loc:'Astana Office', pos:'HSE Lead',
+    hired:'01 Jun 2017', email:'m.tokayeva@mashstroy.kz', phone:'+7 701 901 23 45',
+    manager:'CEO — Seisenbaev A.K.',
+    docs:[
+      {course:'Management Safety',   type:'Certificate', num:'Cert-MGT-2025', issued:'01 Jun 2022', expiry:'01 Jun 2025', status:'expired',  days:-7,  url:'#doc-cert-mgt-2025'},
+      {course:'Fire Safety L1',      type:'Protocol',    num:'Прот-2024-MGT', issued:'15 Jan 2024', expiry:'15 Jan 2027', status:'active',   days:591, url:'#doc-prot-mgt'},
+      {course:'First Aid Advanced',  type:'Certificate', num:'Cert-FA-0211',  issued:'20 Sep 2023', expiry:'20 Sep 2026', status:'active',   days:840, url:'#doc-cert-fa-0211'}
+    ],
+    courses:[
+      {name:'Management Safety',  pct:100, status:'done'},
+      {name:'Fire Safety L1',     pct:100, status:'done'},
+      {name:'First Aid Advanced', pct:100, status:'done'},
+      {name:'ISO 45001 Lead',     pct:80,  status:'in-progress'}
+    ],
+    history:[
+      {date:'01 Jun 2025', color:'#dc2626', ev:'Management Safety Certificate expired'},
+      {date:'01 May 2025', color:'#d97706', ev:'Auto-reminder triggered (30d warning)'},
+      {date:'01 Jun 2022', color:'#059669', ev:'Management Safety Certificate issued — valid 3 years'}
+    ]
+  }
+};
 
+/* ══════════════════════════════════════════════════
+   FULL VIOLATION DATA  (18 expired + 42 expiring)
+   status: 'exp' | 'expiring'
+══════════════════════════════════════════════════ */
+var _violData = [
+  // ── EXPIRED (18) ──────────────────────────────
+  {ek:'OK', name:'Omarov K.D.',       dept:'Workers',    loc:'Karaganda', pos:'Mechanic',      course:'Fire Safety L1',    type:'Protocol',    days:-38, status:'exp'},
+  {ek:'DA', name:'Dzhaksybekov A.',   dept:'ITR',        loc:'Almaty HQ', pos:'Engineer',      course:'Radiation Safety',  type:'Protocol',    days:-21, status:'exp'},
+  {ek:'ZB', name:'Zhaksylyk B.N.',    dept:'Workers',    loc:'Atyrau',    pos:'Electrician',   course:'Chemical Handling', type:'Protocol',    days:-14, status:'exp'},
+  {ek:'TM', name:'Tokayeva M.S.',     dept:'Management', loc:'Astana',    pos:'HSE Lead',      course:'Management Safety', type:'Certificate', days:-7,  status:'exp'},
+  {ek:null, name:'Abenov K.S.',       dept:'Workers',    loc:'Karaganda', pos:'Welder',        course:'Working at Heights',type:'License',     days:-5,  status:'exp'},
+  {ek:null, name:'Nurmagambetov R.',  dept:'Workers',    loc:'Atyrau',    pos:'Rigger',        course:'Fire Safety L1',    type:'Protocol',    days:-9,  status:'exp'},
+  {ek:null, name:'Kassymova A.B.',    dept:'Workers',    loc:'Karaganda', pos:'Operator',      course:'Electrical Safety', type:'Certificate', days:-12, status:'exp'},
+  {ek:null, name:'Dusipov T.K.',      dept:'Workers',    loc:'Atyrau',    pos:'Rigger',        course:'Working at Heights',type:'License',     days:-16, status:'exp'},
+  {ek:null, name:'Ibragimov S.K.',    dept:'ITR',        loc:'Almaty HQ', pos:'Inspector',     course:'Radiation Safety',  type:'Protocol',    days:-18, status:'exp'},
+  {ek:null, name:'Seisenov E.A.',     dept:'Workers',    loc:'Karaganda', pos:'Mechanic',      course:'Fire Safety L1',    type:'Protocol',    days:-22, status:'exp'},
+  {ek:null, name:'Bekzhanova A.T.',   dept:'Workers',    loc:'Atyrau',    pos:'Electrician',   course:'Chemical Handling', type:'Protocol',    days:-24, status:'exp'},
+  {ek:null, name:'Rakhimov M.A.',     dept:'ITR',        loc:'Karaganda', pos:'Engineer',      course:'Electrical Safety', type:'Certificate', days:-27, status:'exp'},
+  {ek:null, name:'Sultanbekov A.',    dept:'Workers',    loc:'Almaty HQ', pos:'Welder',        course:'Welding Safety',    type:'License',     days:-30, status:'exp'},
+  {ek:null, name:'Otegen B.K.',       dept:'Workers',    loc:'Atyrau',    pos:'Operator',      course:'First Aid L1',      type:'Protocol',    days:-33, status:'exp'},
+  {ek:null, name:'Zhaksybekov N.T.',  dept:'Workers',    loc:'Almaty HQ', pos:'Electrician',   course:'Electrical Safety', type:'License',     days:-35, status:'exp'},
+  {ek:null, name:'Mukhanova A.R.',    dept:'ITR',        loc:'Almaty HQ', pos:'Engineer',      course:'Industrial Safety',  type:'Protocol',    days:-40, status:'exp'},
+  {ek:null, name:'Bektaev A.S.',      dept:'Workers',    loc:'Karaganda', pos:'Rigger',        course:'Crane Operations',  type:'Certificate', days:-44, status:'exp'},
+  {ek:null, name:'Tursynov K.B.',     dept:'Workers',    loc:'Atyrau',    pos:'Mechanic',      course:'Working at Heights',type:'License',     days:-51, status:'exp'},
+  // ── EXPIRING <30d (42 — showing 24 here) ──────
+  {ek:'AK', name:'Akhmetov A.K.',     dept:'ITR',        loc:'Almaty HQ', pos:'Inspector',     course:'Fire Safety L1',    type:'Certificate', days:3,   status:'expiring'},
+  {ek:'BD', name:'Bekova D.S.',       dept:'Workers',    loc:'Atyrau',    pos:'Welder',        course:'Chemical Handling', type:'Protocol',    days:10,  status:'expiring'},
+  {ek:'MT', name:'Muratov T.A.',      dept:'Workers',    loc:'Karaganda', pos:'Rigger',        course:'Working at Heights',type:'License',     days:14,  status:'expiring'},
+  {ek:'SR', name:'Seitkali R.M.',     dept:'ITR',        loc:'Almaty HQ', pos:'Electrician',   course:'Electrical Safety', type:'Certificate', days:27,  status:'expiring'},
+  {ek:null, name:'Alimov A.B.',       dept:'Workers',    loc:'Atyrau',    pos:'Operator',      course:'Chemical Handling', type:'Protocol',    days:5,   status:'expiring'},
+  {ek:null, name:'Karimova F.O.',     dept:'ITR',        loc:'Karaganda', pos:'Inspector',     course:'Fire Safety L1',    type:'Certificate', days:7,   status:'expiring'},
+  {ek:null, name:'Baiseitov M.T.',    dept:'Workers',    loc:'Almaty HQ', pos:'Welder',        course:'Welding Safety',    type:'License',     days:9,   status:'expiring'},
+  {ek:null, name:'Yeskendir A.K.',    dept:'Workers',    loc:'Atyrau',    pos:'Rigger',        course:'Working at Heights',type:'License',     days:12,  status:'expiring'},
+  {ek:null, name:'Seidakhmetov B.',   dept:'ITR',        loc:'Karaganda', pos:'Engineer',      course:'Electrical Safety', type:'Certificate', days:15,  status:'expiring'},
+  {ek:null, name:'Kazhymurat A.',     dept:'Workers',    loc:'Almaty HQ', pos:'Mechanic',      course:'First Aid L1',      type:'Protocol',    days:17,  status:'expiring'},
+  {ek:null, name:'Duisenova G.T.',    dept:'Workers',    loc:'Atyrau',    pos:'Operator',      course:'Industrial Safety',  type:'Protocol',    days:19,  status:'expiring'},
+  {ek:null, name:'Toleubayev S.K.',   dept:'ITR',        loc:'Almaty HQ', pos:'Inspector',     course:'Radiation Safety',  type:'Protocol',    days:21,  status:'expiring'},
+  {ek:null, name:'Bekov N.A.',        dept:'Workers',    loc:'Karaganda', pos:'Welder',        course:'Fire Safety L1',    type:'Protocol',    days:22,  status:'expiring'},
+  {ek:null, name:'Sydykova L.A.',     dept:'Management', loc:'Astana',    pos:'HSE Coord.',    course:'Management Safety', type:'Certificate', days:24,  status:'expiring'},
+  {ek:null, name:'Musabekov A.T.',    dept:'Workers',    loc:'Atyrau',    pos:'Electrician',   course:'Electrical Safety', type:'License',     days:25,  status:'expiring'},
+  {ek:null, name:'Sarbassov M.O.',    dept:'Workers',    loc:'Karaganda', pos:'Operator',      course:'Chemical Handling', type:'Protocol',    days:26,  status:'expiring'},
+  {ek:null, name:'Zhunissov B.K.',    dept:'ITR',        loc:'Almaty HQ', pos:'Engineer',      course:'Working at Heights',type:'License',     days:28,  status:'expiring'},
+  {ek:null, name:'Abilov T.S.',       dept:'Workers',    loc:'Atyrau',    pos:'Rigger',        course:'Crane Operations',  type:'Certificate', days:29,  status:'expiring'},
+  {ek:null, name:'Nurgaliev K.A.',    dept:'Workers',    loc:'Karaganda', pos:'Mechanic',      course:'First Aid L1',      type:'Protocol',    days:29,  status:'expiring'},
+  {ek:null, name:'Iskakov A.R.',      dept:'ITR',        loc:'Almaty HQ', pos:'Inspector',     course:'Fire Safety L1',    type:'Certificate', days:30,  status:'expiring'}
+];
+
+/* ══════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════ */
 function switchTab(id,el){
   document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   var t=document.getElementById('tab-'+id);
   if(t)t.classList.add('active');
   if(el)el.classList.add('active');
-  document.getElementById('overlay-root').style.display='none';
+  closeOverlay();
 }
 
 function toggleDrill(id,kpi){
@@ -1208,7 +1430,7 @@ function closeDrill(id){
 }
 
 function toggleCard(card){
-  if(event.target.closest('.dim-btn,.action-btn,.emp-link,.badge,select,input'))return;
+  if(event&&event.target.closest('.dim-btn,.action-btn,.emp-link,.badge,select,input,a'))return;
   var body=card.querySelector('.card-body');
   if(!body)return;
   var isExp=card.classList.contains('exp');
@@ -1219,29 +1441,221 @@ function toggleCard(card){
   if(ch)ch.textContent=isExp?'▼':'▲';
 }
 
-function openOverlay(name,initials,dept,loc,pos,course){
-  var root=document.getElementById('overlay-root');
-  root.style.display='block';
-  document.getElementById('ov-avatar').textContent=initials;
-  document.getElementById('ov-name').textContent=name;
-  document.getElementById('ov-meta').innerHTML='TOO MashStroy · '+dept+' · '+loc+'<br>'+pos;
-  switchOvTab('certs',document.querySelector('.ov-tab'));
-  root.scrollIntoView({behavior:'smooth',block:'nearest'});
+/* ══════════════════════════════════════════════════
+   EMPLOYEE DRAWER
+══════════════════════════════════════════════════ */
+var _currentDrTab = 'docs';
+var _currentEmpKey = null;
+
+function openOverlay(name, initials, dept, loc, pos, course) {
+  // find in db by initials key, or create minimal entry
+  var emp = _empDb[initials];
+  if (!emp) {
+    emp = {
+      id: '—', name: name, full: name, dept: dept, loc: loc, pos: pos,
+      hired: '—', email: '—', phone: '—', manager: '—', managerEmail: '—',
+      docs: [], courses: [], history: []
+    };
+  }
+  _currentEmpKey = initials;
+  renderDrawer(emp);
+  var overlay = document.getElementById('emp-drawer-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeOverlay(){
-  document.getElementById('overlay-root').style.display='none';
+  document.getElementById('emp-drawer-overlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
-function switchOvTab(tab,el){
-  currentOvTab=tab;
-  ['certs','courses','info','history'].forEach(function(t){
-    var b=document.getElementById('ov-'+t);
-    if(b)b.style.display=t===tab?'block':'none';
-  });
-  document.querySelectorAll('.ov-tab').forEach(function(t){t.classList.remove('act');});
-  if(el)el.classList.add('act');
+function renderDrawer(emp) {
+  // Header
+  document.getElementById('dr-photo').textContent = emp.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+  document.getElementById('dr-name').textContent = emp.name;
+  document.getElementById('dr-sub').innerHTML = 'TOO MashStroy &nbsp;·&nbsp; ' + emp.dept + ' &nbsp;·&nbsp; ' + emp.loc + '<br>' + emp.pos;
+  document.getElementById('dr-id').textContent = 'ID: ' + emp.id;
+
+  // Status dot + badge
+  var expired = emp.docs.filter(function(d){return d.status==='expired';}).length;
+  var expiring = emp.docs.filter(function(d){return d.status==='expiring';}).length;
+  var statusColor = expired > 0 ? '#dc2626' : (expiring > 0 ? '#d97706' : '#059669');
+  document.getElementById('dr-photo-status').style.background = statusColor;
+  var badgeParts = [];
+  if (expired > 0)  badgeParts.push('🔴 ' + expired + ' expired');
+  if (expiring > 0) badgeParts.push('⚠ ' + expiring + ' expiring');
+  if (badgeParts.length === 0) badgeParts.push('✅ All documents valid');
+  document.getElementById('dr-comp-badge').textContent = badgeParts.join(' · ');
+
+  // Render all tabs
+  renderDrDocs(emp);
+  renderDrCourses(emp);
+  renderDrInfo(emp);
+  renderDrHistory(emp);
+
+  // Actions
+  var actionsHtml = '<button class="ov-btn urg" onclick="sendPrompt(\'Send urgent reminder to ' + emp.name + '\')">⚡ Urgent reminder</button>' +
+    '<button class="ov-btn" onclick="sendPrompt(\'Schedule retraining for ' + emp.name + '\')">📅 Schedule retraining</button>' +
+    '<button class="ov-btn" onclick="sendPrompt(\'Enroll ' + emp.name + ' in course\')">➕ Enroll in course</button>' +
+    '<button class="ov-btn" onclick="sendPrompt(\'Open Moodle profile for ' + emp.id + '\')">🔗 View in Moodle</button>';
+  document.getElementById('dr-actions').innerHTML = actionsHtml;
+
+  // Switch to docs tab
+  switchDrTab('docs', document.querySelector('.emp-dr-tab'));
 }
+
+function renderDrDocs(emp) {
+  var statusCfg = {
+    expired:  {cls:'doc-expired',  color:'#dc2626', badgeCls:'r', label:'Expired'},
+    expiring: {cls:'doc-expiring', color:'#d97706', badgeCls:'a', label:'Expiring'},
+    active:   {cls:'doc-active',   color:'#059669', badgeCls:'g', label:'Active'}
+  };
+  var html = '';
+  if (emp.docs.length === 0) {
+    html = '<div style="color:var(--muted);font-size:11px;padding:10px 0">No documents on record.</div>';
+  }
+  emp.docs.forEach(function(d) {
+    var cfg = statusCfg[d.status] || statusCfg.active;
+    var daysLabel = d.days < 0 ? ('−' + Math.abs(d.days) + 'd overdue') : (d.days + 'd remaining');
+    html += '<div class="doc-card ' + cfg.cls + '">' +
+      '<div class="doc-card-hdr">' +
+        '<div class="doc-course-name">' + d.course + '</div>' +
+        '<span class="doc-type-pill">' + d.type + '</span>' +
+        '<span class="doc-days-badge badge ' + cfg.badgeCls + '">' + daysLabel + '</span>' +
+      '</div>' +
+      '<div class="doc-card-body">' +
+        '<div class="doc-meta-item"><span class="doc-meta-lbl">Document №</span><span class="doc-meta-val">' + d.num + '</span></div>' +
+        '<div class="doc-meta-item"><span class="doc-meta-lbl">Issued</span><span class="doc-meta-val">' + d.issued + '</span></div>' +
+        '<div class="doc-meta-item"><span class="doc-meta-lbl">Expires</span><span class="doc-meta-val" style="color:' + cfg.color + ';font-weight:600">' + d.expiry + '</span></div>' +
+        '<div class="doc-meta-item"><span class="doc-meta-lbl">Status</span><span class="doc-meta-val" style="color:' + cfg.color + ';font-weight:700">' + cfg.label + '</span></div>' +
+      '</div>' +
+      '<div class="doc-card-links">' +
+        '<a class="doc-link" href="' + d.url + '" onclick="event.preventDefault();alert(\'Document viewer: ' + d.num + '\')" >📎 View document</a>' +
+        '<a class="doc-link dl" href="' + d.url + '" onclick="event.preventDefault();alert(\'Downloading: ' + d.num + '.pdf\')">⬇ Download PDF</a>' +
+      '</div>' +
+    '</div>';
+  });
+  document.getElementById('dr-docs-list').innerHTML = html;
+}
+
+function renderDrCourses(emp) {
+  var html = '';
+  emp.courses.forEach(function(c) {
+    var color = c.status === 'done' ? '#059669' : (c.status === 'in-progress' ? '#3b9dd4' : '#94a3b8');
+    var badge = c.status === 'done' ? '<span class="badge g" style="font-size:9px;margin-left:4px">Done</span>' :
+                c.status === 'in-progress' ? '<span class="badge b" style="font-size:9px;margin-left:4px">In progress</span>' :
+                '<button class="action-btn" style="font-size:10px;padding:2px 7px;margin-left:4px">Enroll</button>';
+    html += '<div class="dr-prog-row">' +
+      '<span class="dr-prog-name">' + c.name + '</span>' +
+      '<div class="dr-prog-track"><div class="dr-prog-fill" style="width:' + c.pct + '%;background:' + color + '"></div></div>' +
+      '<span class="dr-prog-pct" style="color:' + color + '">' + c.pct + '%</span>' +
+      badge +
+    '</div>';
+  });
+  document.getElementById('dr-courses-list').innerHTML = html || '<div style="color:var(--muted);font-size:11px">No course data.</div>';
+}
+
+function renderDrInfo(emp) {
+  var rows = [
+    ['Full name', emp.full],
+    ['Employee ID', emp.id],
+    ['Email', '<span style="color:var(--g2)">' + emp.email + '</span>'],
+    ['Phone', emp.phone || '—'],
+    ['Department', emp.dept],
+    ['Location', emp.loc],
+    ['Position', emp.pos],
+    ['Hired', emp.hired],
+    ['Line manager', emp.manager || '—'],
+    ['Manager email', emp.managerEmail ? '<span style="color:var(--g2)">' + emp.managerEmail + '</span>' : '—']
+  ];
+  var html = rows.map(function(r){
+    return '<div class="dr-info-row"><span class="dr-info-lbl">' + r[0] + '</span><span class="dr-info-val">' + r[1] + '</span></div>';
+  }).join('');
+  document.getElementById('dr-info-list').innerHTML = html;
+}
+
+function renderDrHistory(emp) {
+  var html = '';
+  emp.history.forEach(function(h) {
+    html += '<div class="dr-tl-row">' +
+      '<div class="dr-tl-dot" style="background:' + h.color + '"></div>' +
+      '<span class="dr-tl-date">' + h.date + '</span>' +
+      '<span class="dr-tl-ev">' + h.ev + '</span>' +
+    '</div>';
+  });
+  document.getElementById('dr-history-list').innerHTML = html || '<div style="color:var(--muted);font-size:11px">No history available.</div>';
+}
+
+function switchDrTab(tab, el) {
+  _currentDrTab = tab;
+  ['docs','courses','info','history'].forEach(function(t) {
+    var el2 = document.getElementById('dr-' + t);
+    if (el2) el2.style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.emp-dr-tab').forEach(function(b){ b.classList.remove('act'); });
+  if (el) el.classList.add('act');
+  else {
+    var tabs = document.querySelectorAll('.emp-dr-tab');
+    var idx = ['docs','courses','info','history'].indexOf(tab);
+    if (tabs[idx]) tabs[idx].classList.add('act');
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   VIOLATIONS TABLE — full data-driven render
+══════════════════════════════════════════════════ */
+function renderViolTable(filterStatus, searchQ) {
+  filterStatus = filterStatus || 'all';
+  searchQ = (searchQ || '').toLowerCase();
+  var tbody = document.getElementById('viol-tbody');
+  var rows = '';
+  var shown = 0;
+  _violData.forEach(function(e) {
+    var sMatch = filterStatus === 'all' || e.status === filterStatus;
+    var qMatch = !searchQ || e.name.toLowerCase().includes(searchQ) || e.course.toLowerCase().includes(searchQ) || e.dept.toLowerCase().includes(searchQ);
+    if (!sMatch || !qMatch) return;
+    shown++;
+    var isExp = e.status === 'exp';
+    var daysTxt = isExp ? ('−' + Math.abs(e.days) + 'd') : (e.days + 'd');
+    var daysCls = isExp ? 'ov-r' : 'ov-a';
+    var rowCls  = isExp ? ' class="cr"' : '';
+    var statusBadge = isExp ? '<span class="badge r">Expired</span>' : '<span class="badge a">Expiring</span>';
+    var actionBtn = isExp
+      ? '<button class="action-btn urg" onclick="event.stopPropagation()">Urgent</button>'
+      : '<button class="action-btn" onclick="event.stopPropagation()">Schedule</button>';
+    var empLink = e.ek
+      ? '<a class="emp-link" onclick="openOverlay(\'' + e.name + '\',\'' + e.ek + '\',\'' + e.dept + '\',\'' + e.loc + '\',\'' + e.pos + '\',\'' + e.course + '\')">' + e.name + '</a>'
+      : '<a class="emp-link" onclick="openOverlay(\'' + e.name + '\',\'?\',\'' + e.dept + '\',\'' + e.loc + '\',\'' + e.pos + '\',\'' + e.course + '\')">' + e.name + '</a>';
+    rows += '<tr' + rowCls + ' data-status="' + e.status + '" data-name="' + e.name + '" data-course="' + e.course + '">' +
+      '<td onclick="event.stopPropagation()"><input type="checkbox" class="cb-row" onchange="updateBulkBar()"></td>' +
+      '<td>' + empLink + '</td>' +
+      '<td>' + e.dept + '</td>' +
+      '<td><span class="loc-pill">' + e.loc + '</span></td>' +
+      '<td>' + e.course + '</td>' +
+      '<td><span class="badge n">' + e.type + '</span></td>' +
+      '<td class="' + daysCls + '" style="font-weight:700">' + daysTxt + '</td>' +
+      '<td>' + statusBadge + '</td>' +
+      '<td>' + actionBtn + '</td>' +
+    '</tr>';
+  });
+  tbody.innerHTML = rows || '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:16px">No violations match filter.</td></tr>';
+  // update footer
+  var total = _violData.length;
+  var footer = document.querySelector('#tab-compliance .footer-note');
+  if (footer) footer.textContent = '↑ Name → employee profile · Checkbox → bulk actions · Showing ' + shown + ' of ' + total + ' violations.';
+}
+
+function filterViolTable() {
+  var sel = document.querySelector('#tab-compliance select');
+  var filterStatus = sel ? sel.value : 'all';
+  var searchQ = (document.getElementById('viol-search')||{}).value || '';
+  renderViolTable(filterStatus, searchQ);
+  document.getElementById('cb-all').checked = false;
+  updateBulkBar();
+}
+
+/* Escape key closes drawer */
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeOverlay(); });
 
 /* ── Compliance TARGET WIDGET ────────────────────── */
 var _curCompliance = 72;
