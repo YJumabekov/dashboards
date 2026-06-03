@@ -1067,8 +1067,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
             <th>Статус</th>
             <th>Действие</th>
           </tr></thead>
-          <tbody>
-            <tr class="cr">
+          <tbody id="eds-pending-body">
+            <tr class="cr" data-days="7">
               <td style="font-family:monospace;font-size:11px;font-weight:600">#EDS-2055</td>
               <td>АВР (Акт выполненных работ)</td>
               <td style="color:var(--muted)">Апрель 2026</td>
@@ -1078,7 +1078,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
               <td><span class="badge r">Критично</span></td>
               <td><button class="action-btn urg" onclick="notifyEDSSigner('Sultanova B.K.','#EDS-2055',this)">📨 Уведомить</button></td>
             </tr>
-            <tr>
+            <tr data-days="3">
               <td style="font-family:monospace;font-size:11px;font-weight:600">#EDS-2061</td>
               <td>Протокол обучения</td>
               <td style="color:var(--muted)">Март 2026 — Группа 12</td>
@@ -1088,7 +1088,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
               <td><span class="badge a">Срочно</span></td>
               <td><button class="action-btn" onclick="notifyEDSSigner('Tokayeva M.S.','#EDS-2061',this)">📨 Уведомить</button></td>
             </tr>
-            <tr>
+            <tr data-days="1">
               <td style="font-family:monospace;font-size:11px;font-weight:600">#EDS-2068</td>
               <td>Акт проверки знаний</td>
               <td style="color:var(--muted)">Май 2026 — Электробезопасность</td>
