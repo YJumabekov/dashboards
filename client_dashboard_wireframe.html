@@ -471,6 +471,60 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="footer-note">Только документы, относящиеся к TOO MashStroy · Полная история подписей доступна во вкладке EDS Queue</div>
   </div>
 
+  <!-- DRILL: New Registrations -->
+  <div class="drill" id="d-newreg">
+    <div class="drill-title">New registrations without certifications — 12 сотрудников <span class="drill-close" onclick="closeDrill('d-newreg')">×</span></div>
+    <div class="drill-sub">mdl_user WHERE timecreated ≤ NOW()−30d AND нет sental_document_versions AND companyid=this_company · Sorted by days in system (most overdue first)</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">
+      <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;padding:8px;text-align:center"><div style="font-size:20px;font-weight:700;color:#dc2626">12</div><div style="font-size:10px;color:#991b1b">Всего</div></div>
+      <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--n2)">5</div><div style="font-size:10px;color:var(--muted)">Karaganda</div></div>
+      <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--n2)">4</div><div style="font-size:10px;color:var(--muted)">Almaty HQ</div></div>
+      <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--n2)">3</div><div style="font-size:10px;color:var(--muted)">Atyrau</div></div>
+    </div>
+    <table class="dt">
+      <thead><tr><th>Сотрудник</th><th>Подразделение</th><th>Локация</th><th>Дней в системе</th><th>Курсов нужно</th><th>EDS</th><th>Действие</th></tr></thead>
+      <tbody>
+        <tr><td><a class="emp-link" onclick="openOverlay('Abenov K.S.','AK','Workers','Karaganda Site','Welder','Working at Heights')">Abenov K.S.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td style="color:#dc2626;font-weight:700">43d</td><td>3</td><td><span class="badge r">1 ожидает</span></td><td><button class="action-btn enroll">Записать</button></td></tr>
+        <tr><td><a class="emp-link" onclick="openOverlay('Zhaksybekov N.T.','ZN','Workers','Almaty HQ','Electrician','Electrical Safety')">Zhaksybekov N.T.</a></td><td>Workers</td><td><span class="loc-pill">Almaty HQ</span></td><td style="color:#dc2626;font-weight:700">33d</td><td>4</td><td>—</td><td><button class="action-btn enroll">Записать</button></td></tr>
+        <tr><td><a class="emp-link" onclick="openOverlay('Mukhanova A.R.','MA','ITR','Almaty HQ','Engineer','')">Mukhanova A.R.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td style="color:#d97706;font-weight:700">31d</td><td>2</td><td>—</td><td><button class="action-btn enroll">Записать</button></td></tr>
+      </tbody>
+    </table>
+    <div class="footer-note">Showing 3 of 12 · <a class="emp-link" onclick="switchTab('newreg',document.querySelectorAll('.tab')[3])">Открыть полную вкладку New Registration →</a></div>
+  </div>
+
+  <!-- COMPLIANCE TARGET PROGRESS WIDGET -->
+  <div class="cmp-target-wrap" id="cmp-target-widget">
+    <div class="cmp-target-hdr">
+      <div class="cmp-target-title">📊 Прогресс к целевому показателю</div>
+      <div class="cmp-target-controls">
+        <span>Целевой показатель:</span>
+        <input class="cmp-target-input" type="number" id="cmp-target-val" min="50" max="100" value="80" oninput="updateTargetWidget()">
+        <span>%</span>
+        <button class="action-btn" style="font-size:10px;padding:2px 8px" onclick="setPreset(80)">80%</button>
+        <button class="action-btn" style="font-size:10px;padding:2px 8px" onclick="setPreset(90)">90%</button>
+        <button class="action-btn" style="font-size:10px;padding:2px 8px" onclick="setPreset(95)">95%</button>
+        <button class="action-btn" style="font-size:10px;padding:2px 8px" onclick="setPreset(100)">100%</button>
+      </div>
+    </div>
+    <!-- Progress bar -->
+    <div class="cmp-bar-wrap">
+      <div class="cmp-bar-fill" id="cmp-bar" style="width:72%;background:#d97706">
+        <span>72%</span>
+      </div>
+      <div class="cmp-target-line" id="cmp-tline" style="left:80%">
+        <div class="cmp-target-label" id="cmp-tlabel">цель 80%</div>
+      </div>
+    </div>
+    <!-- Stats row -->
+    <div class="cmp-stats" id="cmp-stats-row">
+      <div class="cmp-stat"><span class="cmp-stat-val" style="color:#d97706">72%</span><span class="cmp-stat-lbl">Текущий</span></div>
+      <div class="cmp-stat"><span class="cmp-stat-val" id="cmp-gap-val" style="color:#dc2626">−8 п.п.</span><span class="cmp-stat-lbl">Отставание</span></div>
+      <div class="cmp-stat"><span class="cmp-stat-val" id="cmp-need-val" style="color:#dc2626">22</span><span class="cmp-stat-lbl">Сотрудников нужно довести</span></div>
+      <div class="cmp-stat"><span class="cmp-stat-val" id="cmp-pace-val" style="color:var(--muted)">~3 мес</span><span class="cmp-stat-lbl">При темпе +3%/мес</span></div>
+      <div id="cmp-achieved" style="display:none" class="cmp-stat"><span class="cmp-stat-val" style="color:#059669">✓ Цель достигнута!</span><span class="cmp-stat-lbl">Текущий показатель ≥ цели</span></div>
+    </div>
+  </div>
+
   <!-- CHARTS ROW — объединённая карточка compliance + stacked bar -->
   <div class="card-grid g2">
     <!-- Compliance snapshot — single card with dimension switcher -->
