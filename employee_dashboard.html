@@ -495,27 +495,78 @@ function markAllRead() {
   renderNotifications();
 }
 
-/* ── Render schedule ── */
-function renderSchedule() {
-  document.getElementById('schedule-list').innerHTML = SCHEDULE.length
-    ? SCHEDULE.map(function(s) {
-        var modeStyle = s.mode==='online'
-          ? 'background:#eff6ff;color:#1d4ed8'
-          : 'background:#f5f3ff;color:#6b21a8';
-        return '<div class="sched-item">' +
-          '<div class="sched-date-box"><div class="sched-day">'+s.day+'</div><div class="sched-month">'+s.month+'</div></div>' +
-          '<div class="sched-info">' +
-            '<div class="sched-name">'+s.name+'</div>' +
-            '<div class="sched-detail">' +
-              '<span class="sched-mode" style="'+modeStyle+'">'+s.mode.toUpperCase()+'</span>' +
-              '<span>'+s.time+'</span>' +
-              '<span>·</span>' +
-              '<span>'+s.location+'</span>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
-      }).join('')
-    : '<div class="empty"><div class="empty-icon">📅</div>No sessions scheduled</div>';
+/* ── Render in-progress courses ── */
+function renderInProgress() {
+  var inProgress = COURSES.filter(function(c){ return c.status === 'inprogress' || c.progress > 0 && c.progress < 100; });
+  document.getElementById('ip-count').textContent = inProgress.length;
+  if (!inProgress.length) {
+    document.getElementById('ip-list').innerHTML = '<div class="empty"><div class="empty-icon">📖</div>No courses in progress</div>';
+    return;
+  }
+  document.getElementById('ip-list').innerHTML = inProgress.map(function(c) {
+    var barColor = c.progress >= 75 ? 'var(--t2)' : c.progress >= 40 ? 'var(--g3)' : 'var(--a2)';
+    var modeTag = c.mode === 'online'
+      ? '<span style="color:var(--g2);background:#eff6ff;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700">ONLINE</span>'
+      : '<span style="color:#6b21a8;background:#f5f3ff;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700">OFFLINE</span>';
+    return '<div class="ip-row">' +
+      '<div class="ip-icon">📖</div>' +
+      '<div class="ip-info">' +
+        '<div class="ip-name">'+c.name+'</div>' +
+        '<div style="font-size:10px;color:var(--muted);margin-bottom:5px;display:flex;gap:6px;align-items:center">'+modeTag+'<span>Due '+c.dueDate+'</span></div>' +
+        '<div class="ip-bar-wrap">' +
+          '<div class="ip-bar"><div class="ip-bar-fill" style="width:'+c.progress+'%;background:'+barColor+'"></div></div>' +
+          '<span class="ip-pct" style="color:'+barColor+'">'+c.progress+'%</span>' +
+        '</div>' +
+      '</div>' +
+      '<button onclick="continueCourse('+c.id+',this)" style="flex-shrink:0;background:var(--g2);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;margin-left:8px">Continue</button>' +
+    '</div>';
+  }).join('');
+}
+
+/* ── Render pie chart ── */
+function renderPie() {
+  var counts = {active:0, expiring:0, overdue:0, inprogress:0};
+  COURSES.forEach(function(c){ counts[c.status]++; });
+  var slices = [
+    {key:'active',     label:'Active',      count:counts.active,     color:'#059669'},
+    {key:'inprogress', label:'In progress', count:counts.inprogress, color:'#3b9dd4'},
+    {key:'expiring',   label:'Expiring',    count:counts.expiring,   color:'#d97706'},
+    {key:'overdue',    label:'Overdue',     count:counts.overdue,    color:'#dc2626'}
+  ].filter(function(s){ return s.count > 0; });
+
+  var total = COURSES.length;
+  var cx = 55, cy = 55, r = 42, gap = 0.03;
+  var startAngle = -Math.PI / 2;
+  var paths = '';
+
+  slices.forEach(function(s) {
+    var angle = (s.count / total) * 2 * Math.PI - gap;
+    var endAngle = startAngle + angle;
+    var x1 = cx + r * Math.cos(startAngle + gap/2);
+    var y1 = cy + r * Math.sin(startAngle + gap/2);
+    var x2 = cx + r * Math.cos(endAngle);
+    var y2 = cy + r * Math.sin(endAngle);
+    var large = angle > Math.PI ? 1 : 0;
+    paths += '<path d="M'+cx+' '+cy+' L'+x1+' '+y1+' A'+r+' '+r+' 0 '+large+' 1 '+x2+' '+y2+' Z" fill="'+s.color+'" opacity=".92"/>';
+    startAngle = endAngle + gap;
+  });
+
+  // donut hole
+  paths += '<circle cx="'+cx+'" cy="'+cy+'" r="24" fill="#fff"/>';
+  paths += '<text x="'+cx+'" y="'+(cy-5)+'" text-anchor="middle" font-size="14" font-weight="800" fill="#1e293b">'+total+'</text>';
+  paths += '<text x="'+cx+'" y="'+(cy+9)+'" text-anchor="middle" font-size="8" fill="#64748b">courses</text>';
+
+  document.getElementById('pie-svg').innerHTML = paths;
+
+  document.getElementById('pie-legend').innerHTML = slices.map(function(s) {
+    var pct = Math.round(s.count / total * 100);
+    return '<div class="pie-leg-item">' +
+      '<div class="pie-leg-dot" style="background:'+s.color+'"></div>' +
+      '<span class="pie-leg-label">'+s.label+'</span>' +
+      '<span class="pie-leg-val">'+s.count+'</span>' +
+      '<span class="pie-leg-pct">('+pct+'%)</span>' +
+    '</div>';
+  }).join('');
 }
 
 /* ── Render certificates ── */
