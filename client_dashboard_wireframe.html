@@ -1,4 +1,4 @@
-
+﻿
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -338,7 +338,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0f766e,#059669)"></div>
       <div class="kpi-lbl">New Registrations</div>
       <div class="kpi-val" style="color:#059669">12</div>
-      <div class="kpi-trend dn" style="color:#d97706">без сертификатов</div>
+      <div class="kpi-trend dn" style="color:#d97706">no certifications</div>
       <div class="kpi-drill">↗ enroll list</div>
     </div>
   </div>
@@ -426,78 +426,78 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <!-- DRILL: EDS Queue -->
   <div class="drill" id="d-eds">
     <div class="drill-title">EDS queue — documents pending signature (TOO MashStroy) <span class="drill-close" onclick="closeDrill('d-eds')">×</span></div>
-    <div class="drill-sub">Документы, ожидающие электронной подписи от уполномоченных лиц вашей компании · ОК &lt;2d · Срочно 2–5d · Критично &gt;5d</div>
+    <div class="drill-sub">Documents pending electronic signature from authorized signatories · OK &lt;2d · Urgent 2–5d · Critical &gt;5d</div>
     <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-      <button class="action-btn" style="background:#7c3aed;color:#fff;border-color:#7c3aed;font-size:11px" onclick="notifyAllEDS()">📨 Уведомить всех подписантов</button>
+      <button class="action-btn" style="background:#7c3aed;color:#fff;border-color:#7c3aed;font-size:11px" onclick="notifyAllEDS()">📨 Notify all signatories</button>
     </div>
     <div style="overflow-x:auto">
       <table class="dt">
         <thead><tr>
           <th>Doc ID</th>
-          <th>Тип документа</th>
-          <th>Ожидает подписи от</th>
-          <th>Дней ожидания</th>
-          <th>Статус</th>
-          <th>Действие</th>
+          <th>Document type</th>
+          <th>Awaiting signature from</th>
+          <th>Days waiting</th>
+          <th>Status</th>
+          <th>Action</th>
         </tr></thead>
         <tbody>
           <tr class="cr">
             <td style="font-family:monospace;font-size:11px">#EDS-2055</td>
-            <td>АВР № 4 / Апрель 2026</td>
+            <td>Act of Completion No.4 / April 2026</td>
             <td style="font-weight:600">HR Director — Sultanova B.K.</td>
             <td style="color:#dc2626;font-weight:700">7d</td>
-            <td><span class="badge r">Критично</span></td>
-            <td><button class="action-btn urg" onclick="notifyEDSSigner('Sultanova B.K.','#EDS-2055',this)">📨 Уведомить</button></td>
+            <td><span class="badge r">Critical</span></td>
+            <td><button class="action-btn urg" onclick="notifyEDSSigner('Sultanova B.K.','#EDS-2055',this)">📨 Notify</button></td>
           </tr>
           <tr>
             <td style="font-family:monospace;font-size:11px">#EDS-2061</td>
-            <td>Протокол обучения / Март 2026</td>
+            <td>Training Protocol / March 2026</td>
             <td style="font-weight:600">HSE Lead — Tokayeva M.S.</td>
             <td style="color:#d97706;font-weight:700">3d</td>
-            <td><span class="badge a">Срочно</span></td>
-            <td><button class="action-btn" onclick="notifyEDSSigner('Tokayeva M.S.','#EDS-2061',this)">📨 Уведомить</button></td>
+            <td><span class="badge a">Urgent</span></td>
+            <td><button class="action-btn" onclick="notifyEDSSigner('Tokayeva M.S.','#EDS-2061',this)">📨 Notify</button></td>
           </tr>
           <tr>
             <td style="font-family:monospace;font-size:11px">#EDS-2068</td>
-            <td>Акт проверки знаний / Май 2026</td>
+            <td>Knowledge Assessment / May 2026</td>
             <td style="font-weight:600">Dept Head — Seisenov B.K.</td>
             <td style="color:#059669;font-weight:700">1d</td>
             <td><span class="badge g">OK</span></td>
-            <td><button class="action-btn" onclick="notifyEDSSigner('Seisenov B.K.','#EDS-2068',this)">📨 Уведомить</button></td>
+            <td><button class="action-btn" onclick="notifyEDSSigner('Seisenov B.K.','#EDS-2068',this)">📨 Notify</button></td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div class="footer-note">Только документы, относящиеся к TOO MashStroy · Полная история подписей доступна во вкладке EDS Queue</div>
+    <div class="footer-note">Documents scoped to TOO MashStroy only · Full signature history available in the EDS Queue tab</div>
   </div>
 
   <!-- DRILL: New Registrations -->
   <div class="drill" id="d-newreg">
-    <div class="drill-title">New registrations without certifications — 12 сотрудников <span class="drill-close" onclick="closeDrill('d-newreg')">×</span></div>
-    <div class="drill-sub">mdl_user WHERE timecreated ≤ NOW()−30d AND нет sental_document_versions AND companyid=this_company · Sorted by days in system (most overdue first)</div>
+    <div class="drill-title">New registrations without certifications — 12 employees <span class="drill-close" onclick="closeDrill('d-newreg')">×</span></div>
+    <div class="drill-sub">mdl_user WHERE timecreated ≤ NOW()−30d AND no sental_document_versions AND companyid=this_company · Sorted by days in system (most overdue first)</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">
-      <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;padding:8px;text-align:center"><div style="font-size:20px;font-weight:700;color:#dc2626">12</div><div style="font-size:10px;color:#991b1b">Всего</div></div>
+      <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;padding:8px;text-align:center"><div style="font-size:20px;font-weight:700;color:#dc2626">12</div><div style="font-size:10px;color:#991b1b">Total</div></div>
       <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--n2)">5</div><div style="font-size:10px;color:var(--muted)">Karaganda</div></div>
       <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--n2)">4</div><div style="font-size:10px;color:var(--muted)">Almaty HQ</div></div>
       <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--n2)">3</div><div style="font-size:10px;color:var(--muted)">Atyrau</div></div>
     </div>
     <table class="dt">
-      <thead><tr><th>Сотрудник</th><th>Подразделение</th><th>Локация</th><th>Дней в системе</th><th>Курсов нужно</th><th>EDS</th><th>Действие</th></tr></thead>
+      <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Days in system</th><th>Courses needed</th><th>EDS</th><th>Action</th></tr></thead>
       <tbody>
-        <tr><td><a class="emp-link" onclick="openOverlay('Abenov K.S.','AK','Workers','Karaganda Site','Welder','Working at Heights')">Abenov K.S.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td style="color:#dc2626;font-weight:700">43d</td><td>3</td><td><span class="badge r">1 ожидает</span></td><td><button class="action-btn enroll">Записать</button></td></tr>
-        <tr><td><a class="emp-link" onclick="openOverlay('Zhaksybekov N.T.','ZN','Workers','Almaty HQ','Electrician','Electrical Safety')">Zhaksybekov N.T.</a></td><td>Workers</td><td><span class="loc-pill">Almaty HQ</span></td><td style="color:#dc2626;font-weight:700">33d</td><td>4</td><td>—</td><td><button class="action-btn enroll">Записать</button></td></tr>
-        <tr><td><a class="emp-link" onclick="openOverlay('Mukhanova A.R.','MA','ITR','Almaty HQ','Engineer','')">Mukhanova A.R.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td style="color:#d97706;font-weight:700">31d</td><td>2</td><td>—</td><td><button class="action-btn enroll">Записать</button></td></tr>
+        <tr><td><a class="emp-link" onclick="openOverlay('Abenov K.S.','AK','Workers','Karaganda Site','Welder','Working at Heights')">Abenov K.S.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td style="color:#dc2626;font-weight:700">43d</td><td>3</td><td><span class="badge r">1 pending</span></td><td><button class="action-btn enroll">Enroll</button></td></tr>
+        <tr><td><a class="emp-link" onclick="openOverlay('Zhaksybekov N.T.','ZN','Workers','Almaty HQ','Electrician','Electrical Safety')">Zhaksybekov N.T.</a></td><td>Workers</td><td><span class="loc-pill">Almaty HQ</span></td><td style="color:#dc2626;font-weight:700">33d</td><td>4</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
+        <tr><td><a class="emp-link" onclick="openOverlay('Mukhanova A.R.','MA','ITR','Almaty HQ','Engineer','')">Mukhanova A.R.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td style="color:#d97706;font-weight:700">31d</td><td>2</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
       </tbody>
     </table>
-    <div class="footer-note">Showing 3 of 12 · <a class="emp-link" onclick="switchTab('newreg',document.querySelectorAll('.tab')[3])">Открыть полную вкладку New Registration →</a></div>
+    <div class="footer-note">Showing 3 of 12 · <a class="emp-link" onclick="switchTab('newreg',document.querySelectorAll('.tab')[3])">Open full New Registration tab →</a></div>
   </div>
 
   <!-- COMPLIANCE TARGET PROGRESS WIDGET -->
   <div class="cmp-target-wrap" id="cmp-target-widget">
     <div class="cmp-target-hdr">
-      <div class="cmp-target-title">📊 Прогресс к целевому показателю</div>
+      <div class="cmp-target-title">📊 Compliance Target Progress</div>
       <div class="cmp-target-controls">
-        <span>Целевой показатель:</span>
+        <span>Target:</span>
         <input class="cmp-target-input" type="number" id="cmp-target-val" min="50" max="100" value="80" oninput="updateTargetWidget()">
         <span>%</span>
         <button class="action-btn" style="font-size:10px;padding:2px 8px" onclick="setPreset(80)">80%</button>
@@ -512,25 +512,25 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <span>72%</span>
       </div>
       <div class="cmp-target-line" id="cmp-tline" style="left:80%">
-        <div class="cmp-target-label" id="cmp-tlabel">цель 80%</div>
+        <div class="cmp-target-label" id="cmp-tlabel">target 80%</div>
       </div>
     </div>
     <!-- Stats row -->
     <div class="cmp-stats" id="cmp-stats-row">
-      <div class="cmp-stat"><span class="cmp-stat-val" style="color:#d97706">72%</span><span class="cmp-stat-lbl">Текущий</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-val" id="cmp-gap-val" style="color:#dc2626">−8 п.п.</span><span class="cmp-stat-lbl">Отставание</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-val" id="cmp-need-val" style="color:#dc2626">22</span><span class="cmp-stat-lbl">Сотрудников нужно довести</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-val" id="cmp-pace-val" style="color:var(--muted)">~3 мес</span><span class="cmp-stat-lbl">При темпе +3%/мес</span></div>
-      <div id="cmp-achieved" style="display:none" class="cmp-stat"><span class="cmp-stat-val" style="color:#059669">✓ Цель достигнута!</span><span class="cmp-stat-lbl">Текущий показатель ≥ цели</span></div>
+      <div class="cmp-stat"><span class="cmp-stat-val" style="color:#d97706">72%</span><span class="cmp-stat-lbl">Current</span></div>
+      <div class="cmp-stat"><span class="cmp-stat-val" id="cmp-gap-val" style="color:#dc2626">−8 p.p.</span><span class="cmp-stat-lbl">Gap</span></div>
+      <div class="cmp-stat"><span class="cmp-stat-val" id="cmp-need-val" style="color:#dc2626">22</span><span class="cmp-stat-lbl">Employees to bring into compliance</span></div>
+      <div class="cmp-stat"><span class="cmp-stat-val" id="cmp-pace-val" style="color:var(--muted)">~3 mo</span><span class="cmp-stat-lbl">At current pace +3%/mo</span></div>
+      <div id="cmp-achieved" style="display:none" class="cmp-stat"><span class="cmp-stat-val" style="color:#059669">✓ Target achieved!</span><span class="cmp-stat-lbl">Current score meets target</span></div>
     </div>
   </div>
 
-  <!-- CHARTS ROW — объединённая карточка compliance + stacked bar -->
+  <!-- CHARTS ROW — merged compliance + stacked bar -->
   <div class="card-grid g2">
     <!-- Compliance snapshot — single card with dimension switcher -->
     <div class="card exp" onclick="toggleCard(this)">
       <div class="card-hdr">
-        <div><div class="card-title">Compliance snapshot</div><div class="card-sub">По подразделению, локации или должности · 80% target</div></div>
+        <div><div class="card-title">Compliance snapshot</div><div class="card-sub">By department, location or position · 80% target</div></div>
         <div class="card-badges"><span class="ctag b">Horizontal bar</span><span class="chevron">▲</span></div>
       </div>
       <div class="card-body">
@@ -663,7 +663,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <!-- 12-month compliance trend -->
   <div class="card exp" onclick="toggleCard(this)" style="margin-bottom:14px">
     <div class="card-hdr">
-      <div><div class="card-title">Compliance — динамика за 12 месяцев</div><div class="card-sub">Тренд % compliance по месяцам · пунктир = целевой показатель</div></div>
+      <div><div class="card-title">Compliance — 12-month trend</div><div class="card-sub">Monthly compliance % trend · dashed line = target</div></div>
       <div class="card-badges"><span class="ctag b">Line chart</span><span class="ctag">company-scoped</span><span class="chevron">▲</span></div>
     </div>
     <div class="card-body">
@@ -683,7 +683,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
           <text x="2" y="117" fill="#94a3b8" font-size="8">60%</text>
           <!-- Target line (80% = y=64) — dynamically updated -->
           <line id="trend-target-line" x1="30" y1="64" x2="700" y2="64" stroke="#334155" stroke-width="1.2" stroke-dasharray="5 3"/>
-          <text id="trend-target-txt" x="665" y="60" fill="#334155" font-size="8" font-weight="700">цель 80%</text>
+          <text id="trend-target-txt" x="665" y="60" fill="#334155" font-size="8" font-weight="700">target 80%</text>
           <!-- Shaded area under line -->
           <polygon fill="rgba(29,111,164,0.08)" points="30,91 87,100 144,91 201,82 258,91 315,86 372,78 429,73 486,68 543,62 600,59 657,55 657,118 30,118"/>
           <!-- Trend line: monthly data [Jun→May] compliance % -->
@@ -719,34 +719,34 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
           <text x="596" y="46"  fill="#d97706" font-size="8">72%</text>
           <text x="649" y="46"  fill="#dc2626" font-size="8" font-weight="700">72%</text>
           <!-- Month labels -->
-          <text x="22"  y="128" fill="#94a3b8" font-size="8">Июн</text>
-          <text x="79"  y="128" fill="#94a3b8" font-size="8">Июл</text>
-          <text x="136" y="128" fill="#94a3b8" font-size="8">Авг</text>
-          <text x="193" y="128" fill="#94a3b8" font-size="8">Сен</text>
-          <text x="250" y="128" fill="#94a3b8" font-size="8">Окт</text>
-          <text x="307" y="128" fill="#94a3b8" font-size="8">Ноя</text>
-          <text x="362" y="128" fill="#94a3b8" font-size="8">Дек</text>
-          <text x="419" y="128" fill="#94a3b8" font-size="8">Янв</text>
-          <text x="476" y="128" fill="#94a3b8" font-size="8">Фев</text>
-          <text x="533" y="128" fill="#94a3b8" font-size="8">Мар</text>
-          <text x="590" y="128" fill="#94a3b8" font-size="8">Апр</text>
-          <text x="645" y="128" fill="#94a3b8" font-size="8" font-weight="700">Май ←</text>
+          <text x="22"  y="128" fill="#94a3b8" font-size="8">Jun</text>
+          <text x="79"  y="128" fill="#94a3b8" font-size="8">Jul</text>
+          <text x="136" y="128" fill="#94a3b8" font-size="8">Aug</text>
+          <text x="193" y="128" fill="#94a3b8" font-size="8">Sep</text>
+          <text x="250" y="128" fill="#94a3b8" font-size="8">Oct</text>
+          <text x="307" y="128" fill="#94a3b8" font-size="8">Nov</text>
+          <text x="362" y="128" fill="#94a3b8" font-size="8">Dec</text>
+          <text x="419" y="128" fill="#94a3b8" font-size="8">Jan</text>
+          <text x="476" y="128" fill="#94a3b8" font-size="8">Feb</text>
+          <text x="533" y="128" fill="#94a3b8" font-size="8">Mar</text>
+          <text x="590" y="128" fill="#94a3b8" font-size="8">Apr</text>
+          <text x="645" y="128" fill="#94a3b8" font-size="8" font-weight="700">May ←</text>
         </svg>
       </div>
       <div style="display:flex;align-items:center;gap:14px;font-size:10px;margin-top:4px;flex-wrap:wrap">
-        <span style="color:#059669;font-weight:600">■ Выше цели</span>
-        <span style="color:#d97706;font-weight:600">■ Ниже цели</span>
-        <span style="color:#334155">-- Целевой показатель (настраивается в Overview)</span>
-        <span style="color:var(--muted);margin-left:auto">Пик: 77% (Дек 2025) · Мин: 72% (текущий)</span>
+        <span style="color:#059669;font-weight:600">■ Above target</span>
+        <span style="color:#d97706;font-weight:600">■ Below target</span>
+        <span style="color:#334155">-- Target (configurable in Overview tab)</span>
+        <span style="color:var(--muted);margin-left:auto">Peak: 77% (Dec 2025) · Min: 72% (current)</span>
       </div>
     </div>
   </div>
 
-  <!-- Единая карточка compliance с переключением измерения -->
+  <!-- Compliance card with dimension switcher -->
   <div class="card-grid g2">
     <div class="card exp" onclick="toggleCard(this)">
       <div class="card-hdr">
-        <div><div class="card-title">Expired &amp; expiring — разбивка</div><div class="card-sub">Переключайте измерение: подразделение / локация / должность</div></div>
+        <div><div class="card-title">Expired &amp; expiring — breakdown</div><div class="card-sub">Switch dimension: department / location / position</div></div>
         <div class="card-badges"><span class="ctag b">Grouped bar</span><span class="chevron">▲</span></div>
       </div>
       <div class="card-body">
@@ -827,10 +827,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         </div>
       </div>
     </div>
-    <!-- Non-compliance by course — остаётся как отдельная карточка (другой тип вопроса) -->
+    <!-- Non-compliance by course — kept as separate card (different question type) -->
     <div class="card exp" onclick="toggleCard(this)">
       <div class="card-hdr">
-        <div><div class="card-title">Non-compliance by course</div><div class="card-sub">% сотрудников без действующего документа по курсу</div></div>
+        <div><div class="card-title">Non-compliance by course</div><div class="card-sub">% of enrolled employees without a valid document</div></div>
         <div class="card-badges"><span class="ctag b">Horizontal bar</span><span class="chevron">▲</span></div>
       </div>
       <div class="card-body">
@@ -841,7 +841,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
           <div class="bar-row"><span class="bar-lbl">Fire Safety L1</span><div class="bar-track"><div class="bar-fill" style="width:27%;background:#d97706"><span>27%</span></div></div><span class="bar-val" style="color:#d97706">27%</span></div>
           <div class="bar-row"><span class="bar-lbl">Electrical Safety</span><div class="bar-track"><div class="bar-fill" style="width:15%;background:#059669"><span>15%</span></div></div><span class="bar-val" style="color:#059669">15%</span></div>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click bar → список сотрудников без действующего документа по этому курсу</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click bar → employee list without valid document for that course</div>
       </div>
     </div>
   </div>
@@ -849,7 +849,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <!-- Always-visible compliance table with BULK ACTIONS -->
   <div class="card">
     <div class="card-hdr" style="cursor:default">
-      <div><div class="card-title">All compliance violations — live employee table</div><div class="card-sub">☑ Выберите строки для массовых действий · Имя → профиль</div></div>
+      <div><div class="card-title">All compliance violations — live employee table</div><div class="card-sub">☑ Select rows for bulk actions · Name → profile</div></div>
       <div class="card-badges"><span class="ctag b">Bulk actions</span><span class="ctag">interactive</span></div>
     </div>
     <div class="card-body">
@@ -857,23 +857,23 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
         <select class="fsel" onchange="filterViolTable()"><option value="all">All statuses</option><option value="exp">Expired only</option><option value="expiring">Expiring only</option></select>
         <select class="fsel"><option>All doc types</option><option>Certificate</option><option>Protocol</option><option>License</option></select>
-        <input type="text" id="viol-search" placeholder="Поиск по имени или курсу…" oninput="filterViolTable()" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;flex:1;min-width:140px;outline:none;color:var(--text)">
+        <input type="text" id="viol-search" placeholder="Search by name or course…" oninput="filterViolTable()" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;flex:1;min-width:140px;outline:none;color:var(--text)">
       </div>
       <!-- Bulk action bar — shown when ≥1 checkbox selected -->
       <div class="bulk-bar" id="bulk-bar">
-        <span>Выбрано:</span>
+        <span>Selected:</span>
         <span class="bulk-count" id="bulk-count">0</span>
-        <span>сотрудников</span>
+        <span>employees</span>
         <div style="flex:1"></div>
-        <button class="action-btn" style="background:#d97706;color:#fff;border-color:#d97706;font-size:11px" onclick="bulkRemind()">📨 Отправить напоминание выбранным</button>
-        <button class="action-btn" style="font-size:11px" onclick="bulkSchedule()">📅 Запланировать обучение</button>
-        <button class="action-btn" style="font-size:11px;color:#dc2626;border-color:#fca5a5" onclick="clearBulk()">✕ Снять выбор</button>
+        <button class="action-btn" style="background:#d97706;color:#fff;border-color:#d97706;font-size:11px" onclick="bulkRemind()">📨 Send reminder to selected</button>
+        <button class="action-btn" style="font-size:11px" onclick="bulkSchedule()">📅 Schedule training</button>
+        <button class="action-btn" style="font-size:11px;color:#dc2626;border-color:#fca5a5" onclick="clearBulk()">✕ Clear selection</button>
       </div>
       <div style="overflow-x:auto">
         <table class="dt" id="viol-table" style="min-width:720px">
           <thead><tr>
-            <th style="width:32px"><input type="checkbox" class="cb-all" id="cb-all" onclick="toggleAllCb(this)" title="Выбрать всё"></th>
-            <th>Сотрудник</th><th>Подразделение</th><th>Локация</th><th>Курс</th><th>Тип</th><th>Просрочка / Осталось</th><th>Статус</th><th>Действие</th>
+            <th style="width:32px"><input type="checkbox" class="cb-all" id="cb-all" onclick="toggleAllCb(this)" title="Select all"></th>
+            <th>Employee</th><th>Dept</th><th>Location</th><th>Course</th><th>Type</th><th>Overdue / Days left</th><th>Status</th><th>Action</th>
           </tr></thead>
           <tbody id="viol-tbody">
             <tr class="cr" data-status="exp" data-name="Omarov K.D." data-course="Fire Safety L1">
@@ -921,7 +921,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
           </tbody>
         </table>
       </div>
-      <div class="footer-note">↑ Имя → профиль сотрудника · Checkbox → массовые действия · Showing 6 of 60.</div>
+      <div class="footer-note">↑ Name → employee profile · Checkbox → bulk actions · Showing 6 of 60.</div>
     </div>
   </div>
 </div>
@@ -992,28 +992,28 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="content" id="tab-newreg">
   <div class="card exp" onclick="toggleCard(this)">
     <div class="card-hdr">
-      <div><div class="card-title">New registrations without certifications — by location</div><div class="card-sub">Зарегистрированы 30+ дней назад · нет ни одного действующего документа · только ваша компания</div></div>
+      <div><div class="card-title">New registrations without certifications — by location</div><div class="card-sub">Registered 30+ days ago · no active documents · your company only</div></div>
       <div class="card-badges"><span class="ctag" style="background:#fee2e2;border-color:#fca5a5;color:#991b1b">risk panel</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
     </div>
     <div class="card-body">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
-        <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;padding:10px;text-align:center"><div style="font-size:22px;font-weight:700;color:#dc2626">12</div><div style="font-size:10px;color:#991b1b;font-weight:600">Всего без сертификатов</div></div>
+        <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;padding:10px;text-align:center"><div style="font-size:22px;font-weight:700;color:#dc2626">12</div><div style="font-size:10px;color:#991b1b;font-weight:600">Total without certifications</div></div>
         <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--n2)">5</div><div style="font-size:10px;color:var(--muted)">Karaganda Site</div></div>
         <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--n2)">4</div><div style="font-size:10px;color:var(--muted)">Almaty HQ</div></div>
         <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--n2)">3</div><div style="font-size:10px;color:var(--muted)">Atyrau Depot</div></div>
       </div>
       <div style="overflow-x:auto">
         <table class="dt" style="min-width:580px">
-          <thead><tr><th>Сотрудник</th><th>Подразделение</th><th>Локация</th><th>Должность</th><th>Дата регистрации</th><th>Дней в системе</th><th>Курсов требуется</th><th>EDS</th><th>Действие</th></tr></thead>
+          <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Position</th><th>Registration date</th><th>Days in system</th><th>Courses required</th><th>EDS</th><th>Action</th></tr></thead>
           <tbody>
-            <tr><td><a class="emp-link" onclick="openOverlay('Abenov K.S.','AK','Workers','Karaganda Site','Welder','Working at Heights')">Abenov K.S.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Welder</td><td>22 Mar 2026</td><td style="color:#dc2626;font-weight:700">43d</td><td>3 курса</td><td><span class="badge r">1 ожидает</span></td><td><button class="action-btn enroll">Записать</button></td></tr>
-            <tr><td><a class="emp-link" onclick="openOverlay('Zhaksybekov N.T.','ZN','Workers','Almaty HQ','Electrician','Electrical Safety')">Zhaksybekov N.T.</a></td><td>Workers</td><td><span class="loc-pill">Almaty HQ</span></td><td>Electrician</td><td>01 Apr 2026</td><td style="color:#dc2626;font-weight:700">33d</td><td>4 курса</td><td>—</td><td><button class="action-btn enroll">Записать</button></td></tr>
-            <tr><td><a class="emp-link" onclick="openOverlay('Mukhanova A.R.','MA','ITR','Almaty HQ','Engineer','Radiation Safety')">Mukhanova A.R.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Engineer</td><td>03 Apr 2026</td><td style="color:#d97706;font-weight:700">31d</td><td>2 курса</td><td>—</td><td><button class="action-btn enroll">Записать</button></td></tr>
-            <tr><td><a class="emp-link" onclick="openOverlay('Dusipov T.K.','DT','Workers','Atyrau Depot','Rigger','Working at Heights')">Dusipov T.K.</a></td><td>Workers</td><td><span class="loc-pill">Atyrau</span></td><td>Rigger</td><td>05 Apr 2026</td><td style="color:#d97706;font-weight:700">29d</td><td>3 курса</td><td>—</td><td><button class="action-btn enroll">Записать</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Abenov K.S.','AK','Workers','Karaganda Site','Welder','Working at Heights')">Abenov K.S.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Welder</td><td>22 Mar 2026</td><td style="color:#dc2626;font-weight:700">43d</td><td>3 courses</td><td><span class="badge r">1 pending</span></td><td><button class="action-btn enroll">Enroll</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Zhaksybekov N.T.','ZN','Workers','Almaty HQ','Electrician','Electrical Safety')">Zhaksybekov N.T.</a></td><td>Workers</td><td><span class="loc-pill">Almaty HQ</span></td><td>Electrician</td><td>01 Apr 2026</td><td style="color:#dc2626;font-weight:700">33d</td><td>4 courses</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Mukhanova A.R.','MA','ITR','Almaty HQ','Engineer','Radiation Safety')">Mukhanova A.R.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Engineer</td><td>03 Apr 2026</td><td style="color:#d97706;font-weight:700">31d</td><td>2 courses</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Dusipov T.K.','DT','Workers','Atyrau Depot','Rigger','Working at Heights')">Dusipov T.K.</a></td><td>Workers</td><td><span class="loc-pill">Atyrau</span></td><td>Rigger</td><td>05 Apr 2026</td><td style="color:#d97706;font-weight:700">29d</td><td>3 courses</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
           </tbody>
         </table>
       </div>
-      <div class="footer-note">↑ Имя сотрудника → профиль. Кнопка "Записать" → запись в Moodle. Показано 4 из 12. · mdl_user WHERE timecreated ≤ NOW()−30d AND нет sental_document_versions AND companyid=this_company</div>
+      <div class="footer-note">↑ Employee name → profile. Enroll button → links to Moodle. Showing 4 of 12. · mdl_user WHERE timecreated ≤ NOW()−30d AND no sental_document_versions AND companyid=this_company</div>
     </div>
   </div>
 </div>
@@ -1024,102 +1024,102 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="mini-cards">
     <div class="mini-card rc">
       <div class="mini-val" style="color:#dc2626">1</div>
-      <div class="mini-lbl" style="color:#991b1b">Критично (&gt;5 дней)</div>
-      <div class="mini-sub">Требует немедленного действия</div>
+      <div class="mini-lbl" style="color:#991b1b">Critical (&gt;5 days)</div>
+      <div class="mini-sub">Requires immediate action</div>
     </div>
     <div class="mini-card ac">
       <div class="mini-val" style="color:#d97706">1</div>
-      <div class="mini-lbl" style="color:#92400e">Срочно (2–5 дней)</div>
-      <div class="mini-sub">Отправьте напоминание сегодня</div>
+      <div class="mini-lbl" style="color:#92400e">Urgent (2–5 days)</div>
+      <div class="mini-sub">Send a reminder today</div>
     </div>
     <div class="mini-card bc">
       <div class="mini-val" style="color:#1d4ed8">1</div>
-      <div class="mini-lbl" style="color:#1e40af">В норме (&lt;2 дней)</div>
-      <div class="mini-sub">Всё под контролем</div>
+      <div class="mini-lbl" style="color:#1e40af">On track (&lt;2 days)</div>
+      <div class="mini-sub">All clear</div>
     </div>
   </div>
 
   <div class="card exp" onclick="toggleCard(this)">
     <div class="card-hdr">
-      <div><div class="card-title">Документы, ожидающие ЭЦП — TOO MashStroy</div><div class="card-sub">Только документы вашей компании · Критично &gt;5d · Срочно 2–5d · Норма &lt;2d</div></div>
+      <div><div class="card-title">Documents pending e-signature — TOO MashStroy</div><div class="card-sub">Company-scoped only · Critical &gt;5d · Urgent 2–5d · OK &lt;2d</div></div>
       <div class="card-badges"><span class="ctag" style="background:#f3e8ff;border-color:#d8b4fe;color:#5b21b6">EDS</span><span class="ctag">company-scoped</span><span class="chevron">▲</span></div>
     </div>
     <div class="card-body">
       <!-- EDS period filter -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
         <div class="eds-filter">
-          <span class="eds-filter-lbl">Период:</span>
-          <button class="dim-btn act" onclick="filterEDS('week',this)">Эта неделя</button>
-          <button class="dim-btn" onclick="filterEDS('month',this)">Этот месяц</button>
-          <button class="dim-btn" onclick="filterEDS('all',this)">Всё время</button>
+          <span class="eds-filter-lbl">Period:</span>
+          <button class="dim-btn act" onclick="filterEDS('week',this)">This week</button>
+          <button class="dim-btn" onclick="filterEDS('month',this)">This month</button>
+          <button class="dim-btn" onclick="filterEDS('all',this)">All time</button>
         </div>
-        <button class="action-btn" style="background:#7c3aed;color:#fff;border-color:#7c3aed" onclick="notifyAllEDS()">📨 Уведомить всех подписантов</button>
+        <button class="action-btn" style="background:#7c3aed;color:#fff;border-color:#7c3aed" onclick="notifyAllEDS()">📨 Notify all signatories</button>
       </div>
       <div style="overflow-x:auto">
         <table class="dt" id="eds-pending-table" style="min-width:680px">
           <thead><tr>
             <th>Doc ID</th>
-            <th>Тип документа</th>
-            <th>Период / Описание</th>
-            <th>Ожидает подписи от</th>
-            <th>Должность</th>
-            <th>Дней ожидания</th>
-            <th>Статус</th>
-            <th>Действие</th>
+            <th>Document type</th>
+            <th>Period / Description</th>
+            <th>Awaiting signature from</th>
+            <th>Role</th>
+            <th>Days waiting</th>
+            <th>Status</th>
+            <th>Action</th>
           </tr></thead>
           <tbody id="eds-pending-body">
             <tr class="cr" data-days="7">
               <td style="font-family:monospace;font-size:11px;font-weight:600">#EDS-2055</td>
-              <td>АВР (Акт выполненных работ)</td>
-              <td style="color:var(--muted)">Апрель 2026</td>
+              <td>Act of Completion (АВР)</td>
+              <td style="color:var(--muted)">April 2026</td>
               <td style="font-weight:600">Sultanova B.K.</td>
               <td><span class="loc-pill">HR Director</span></td>
               <td style="color:#dc2626;font-weight:700">7d</td>
-              <td><span class="badge r">Критично</span></td>
-              <td><button class="action-btn urg" onclick="notifyEDSSigner('Sultanova B.K.','#EDS-2055',this)">📨 Уведомить</button></td>
+              <td><span class="badge r">Critical</span></td>
+              <td><button class="action-btn urg" onclick="notifyEDSSigner('Sultanova B.K.','#EDS-2055',this)">📨 Notify</button></td>
             </tr>
             <tr data-days="3">
               <td style="font-family:monospace;font-size:11px;font-weight:600">#EDS-2061</td>
-              <td>Протокол обучения</td>
-              <td style="color:var(--muted)">Март 2026 — Группа 12</td>
+              <td>Training Protocol</td>
+              <td style="color:var(--muted)">March 2026 — Group 12</td>
               <td style="font-weight:600">Tokayeva M.S.</td>
               <td><span class="loc-pill">HSE Lead</span></td>
               <td style="color:#d97706;font-weight:700">3d</td>
-              <td><span class="badge a">Срочно</span></td>
-              <td><button class="action-btn" onclick="notifyEDSSigner('Tokayeva M.S.','#EDS-2061',this)">📨 Уведомить</button></td>
+              <td><span class="badge a">Urgent</span></td>
+              <td><button class="action-btn" onclick="notifyEDSSigner('Tokayeva M.S.','#EDS-2061',this)">📨 Notify</button></td>
             </tr>
             <tr data-days="1">
               <td style="font-family:monospace;font-size:11px;font-weight:600">#EDS-2068</td>
-              <td>Акт проверки знаний</td>
-              <td style="color:var(--muted)">Май 2026 — Электробезопасность</td>
+              <td>Knowledge Assessment</td>
+              <td style="color:var(--muted)">May 2026 — Electrical Safety</td>
               <td style="font-weight:600">Seisenov B.K.</td>
               <td><span class="loc-pill">Dept Head</span></td>
               <td style="color:#059669;font-weight:700">1d</td>
-              <td><span class="badge g">Норма</span></td>
-              <td><button class="action-btn" onclick="notifyEDSSigner('Seisenov B.K.','#EDS-2068',this)">📨 Уведомить</button></td>
+              <td><span class="badge g">OK</span></td>
+              <td><button class="action-btn" onclick="notifyEDSSigner('Seisenov B.K.','#EDS-2068',this)">📨 Notify</button></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="footer-note">Все документы привязаны к tenant TOO MashStroy в IOMAD · История подписей доступна в архиве</div>
+      <div class="footer-note">All documents scoped to TOO MashStroy tenant · Signature history available in archive</div>
     </div>
   </div>
 
   <!-- EDS History -->
   <div class="card exp" onclick="toggleCard(this)">
     <div class="card-hdr">
-      <div><div class="card-title">История подписанных документов</div><div class="card-sub">Последние 5 подписанных — только ваша компания</div></div>
-      <div class="card-badges"><span class="ctag">архив</span><span class="chevron">▲</span></div>
+      <div><div class="card-title">Signed documents history</div><div class="card-sub">Last 5 signed documents — your company only</div></div>
+      <div class="card-badges"><span class="ctag">archive</span><span class="chevron">▲</span></div>
     </div>
     <div class="card-body">
       <table class="dt">
-        <thead><tr><th>Doc ID</th><th>Тип</th><th>Период</th><th>Подписал</th><th>Дата подписи</th><th>Статус</th></tr></thead>
+        <thead><tr><th>Doc ID</th><th>Type</th><th>Period</th><th>Signed by</th><th>Signing date</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td style="font-family:monospace;font-size:11px">#EDS-2048</td><td>АВР</td><td style="color:var(--muted)">Март 2026</td><td>Sultanova B.K.</td><td style="color:#059669">28 Mar 2026</td><td><span class="badge g">Подписан</span></td></tr>
-          <tr><td style="font-family:monospace;font-size:11px">#EDS-2039</td><td>Протокол обучения</td><td style="color:var(--muted)">Февраль 2026</td><td>Tokayeva M.S.</td><td style="color:#059669">15 Feb 2026</td><td><span class="badge g">Подписан</span></td></tr>
-          <tr><td style="font-family:monospace;font-size:11px">#EDS-2031</td><td>АВР</td><td style="color:var(--muted)">Январь 2026</td><td>Sultanova B.K.</td><td style="color:#059669">04 Feb 2026</td><td><span class="badge g">Подписан</span></td></tr>
-          <tr><td style="font-family:monospace;font-size:11px">#EDS-2019</td><td>Акт проверки знаний</td><td style="color:var(--muted)">Декабрь 2025</td><td>Seisenov B.K.</td><td style="color:#059669">22 Dec 2025</td><td><span class="badge g">Подписан</span></td></tr>
-          <tr><td style="font-family:monospace;font-size:11px">#EDS-2011</td><td>Протокол обучения</td><td style="color:var(--muted)">Ноябрь 2025</td><td>Tokayeva M.S.</td><td style="color:#059669">30 Nov 2025</td><td><span class="badge g">Подписан</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:11px">#EDS-2048</td><td>Act of Completion</td><td style="color:var(--muted)">March 2026</td><td>Sultanova B.K.</td><td style="color:#059669">28 Mar 2026</td><td><span class="badge g">Signed</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:11px">#EDS-2039</td><td>Training Protocol</td><td style="color:var(--muted)">February 2026</td><td>Tokayeva M.S.</td><td style="color:#059669">15 Feb 2026</td><td><span class="badge g">Signed</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:11px">#EDS-2031</td><td>Act of Completion</td><td style="color:var(--muted)">January 2026</td><td>Sultanova B.K.</td><td style="color:#059669">04 Feb 2026</td><td><span class="badge g">Signed</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:11px">#EDS-2019</td><td>Knowledge Assessment</td><td style="color:var(--muted)">December 2025</td><td>Seisenov B.K.</td><td style="color:#059669">22 Dec 2025</td><td><span class="badge g">Signed</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:11px">#EDS-2011</td><td>Training Protocol</td><td style="color:var(--muted)">November 2025</td><td>Tokayeva M.S.</td><td style="color:#059669">30 Nov 2025</td><td><span class="badge g">Signed</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -1317,7 +1317,7 @@ function updateTargetWidget() {
   var line = document.getElementById('cmp-tline');
   var lbl  = document.getElementById('cmp-tlabel');
   line.style.left = targetPct + '%';
-  lbl.textContent = 'цель ' + target + '%';
+  lbl.textContent = 'target ' + target + '%';
 
   // Update stats
   var gapEl = document.getElementById('cmp-gap-val');
@@ -1326,7 +1326,7 @@ function updateTargetWidget() {
   var achEl  = document.getElementById('cmp-achieved');
 
   if (cur >= target) {
-    gapEl.textContent = '+' + (cur - target) + ' п.п.';
+    gapEl.textContent = '+' + (cur - target) + ' p.p.';
     gapEl.style.color = '#059669';
     needEl.textContent = '0';
     needEl.style.color = '#059669';
@@ -1336,11 +1336,11 @@ function updateTargetWidget() {
     var gapVal = target - cur;
     var needed = Math.ceil((_totalStaff * (target - cur)) / 100);
     var months = _monthlyGain > 0 ? Math.ceil(gapVal / _monthlyGain) : '∞';
-    gapEl.textContent = '−' + gapVal + ' п.п.';
+    gapEl.textContent = '−' + gapVal + ' p.p.';
     gapEl.style.color = '#dc2626';
     needEl.textContent = needed;
     needEl.style.color = '#dc2626';
-    paceEl.textContent = '~' + months + ' мес';
+    paceEl.textContent = '~' + months + ' mo';
     paceEl.closest('.cmp-stat').style.display = 'flex';
     achEl.style.display = 'none';
   }
@@ -1350,7 +1350,7 @@ function updateTargetWidget() {
   var tl = document.getElementById('trend-target-line');
   var tt = document.getElementById('trend-target-txt');
   if (tl) { tl.setAttribute('y1', trendY); tl.setAttribute('y2', trendY); }
-  if (tt) { tt.setAttribute('y', trendY - 4); tt.textContent = 'цель ' + target + '%'; }
+  if (tt) { tt.setAttribute('y', trendY - 4); tt.textContent = 'target ' + target + '%'; }
 }
 
 function setPreset(val) {
@@ -1384,7 +1384,7 @@ function bulkRemind() {
   var n = document.querySelectorAll('#viol-tbody .cb-row:checked').length;
   var btn = event.target;
   var orig = btn.innerHTML;
-  btn.innerHTML = '✓ Отправлено ' + n + ' напоминаний!';
+  btn.innerHTML = '✓ Sent ' + n + ' reminders!';
   btn.style.background = '#059669';
   setTimeout(function(){ btn.innerHTML=orig; btn.style.background='#d97706'; clearBulk(); }, 2800);
 }
@@ -1393,7 +1393,7 @@ function bulkSchedule() {
   var n = document.querySelectorAll('#viol-tbody .cb-row:checked').length;
   var btn = event.target;
   var orig = btn.innerHTML;
-  btn.innerHTML = '✓ Запланировано для ' + n + ' сотрудников';
+  btn.innerHTML = '✓ Scheduled for ' + n + ' employees';
   btn.disabled = true;
   setTimeout(function(){ btn.innerHTML=orig; btn.disabled=false; clearBulk(); }, 2800);
 }
@@ -1451,7 +1451,7 @@ function switchExpView(dim, el) {
 function notifyEDSSigner(name, docId, btn) {
   if(event) event.stopPropagation();
   var orig = btn.innerHTML;
-  btn.innerHTML = '✓ Отправлено!';
+  btn.innerHTML = '✓ Sent!';
   btn.style.background = '#7c3aed';
   btn.style.color = '#fff';
   btn.style.borderColor = '#7c3aed';
@@ -1462,7 +1462,7 @@ function notifyAllEDS() {
   if(event) event.stopPropagation();
   var btn = event.target;
   var orig = btn.innerHTML;
-  btn.innerHTML = '✓ Все уведомлены!';
+  btn.innerHTML = '✓ All notified!';
   btn.disabled = true;
   setTimeout(function(){ btn.innerHTML=orig; btn.disabled=false; }, 3000);
 }
