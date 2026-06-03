@@ -476,15 +476,15 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
     <div class="kpi amber" onclick="toggleDrill('d-exp30',this)">
       <div class="kpi-lbl">Expiring &lt;30 days</div>
-      <div class="kpi-val amber">171</div>
+      <div class="kpi-val amber" style="cursor:pointer" onclick="event.stopPropagation();showListModal('All employees expiring <30 days (171)','kpi-expiring')">171</div>
       <div class="kpi-trend down">▲ +11 vs last mo</div>
-      <div class="kpi-drill">↗ drill down</div>
+      <div class="kpi-drill">↗ drill down · click number → full list</div>
     </div>
     <div class="kpi red" onclick="toggleDrill('d-expnow',this)">
       <div class="kpi-lbl">Expired now</div>
-      <div class="kpi-val red">74</div>
+      <div class="kpi-val red" style="cursor:pointer" onclick="event.stopPropagation();showListModal('All employees with expired documents (74)','kpi-expired')">74</div>
       <div class="kpi-trend down">▲ +4 this week</div>
-      <div class="kpi-drill">↗ drill down</div>
+      <div class="kpi-drill">↗ drill down · click number → full list</div>
     </div>
     <div class="kpi purple" onclick="toggleDrill('d-eds',this)">
       <div class="kpi-lbl">EDS queue</div>
