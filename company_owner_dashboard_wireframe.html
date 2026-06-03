@@ -2651,177 +2651,356 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeEP(); closeCR(); closeDoc(); closeList(); closeModal(); }
 });
 
-/* ── REPORTS TAB ─────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   REPORTS TAB — Act of Completed Works (АВР)
+══════════════════════════════════════════════════ */
+
+/* Service definitions — English UI label + Russian official name for Excel */
 var _rptServices = [
-  {name:'Промышленная безопасность на опасных производственных объектах (офлайн)', unit:'усл', qty:142},
-  {name:'Промышленная безопасность на опасных производственных объектах (онлайн)',  unit:'усл', qty:34},
-  {name:'Пожарно-технический минимум (офлайн)',                                     unit:'усл', qty:48},
-  {name:'Пожарно-технический минимум (онлайн)',                                     unit:'усл', qty:10},
-  {name:'Безопасность и охрана труда (офлайн)',                                     unit:'усл', qty:100},
-  {name:'Безопасность и охрана труда (онлайн)',                                     unit:'усл', qty:34},
-  {name:'Электробезопасность (офлайн)',                                             unit:'усл', qty:144},
-  {name:'Электробезопасность (онлайн)',                                             unit:'усл', qty:37},
-  {name:'Оператор крана, управляемого с пола (офлайн)',                             unit:'усл', qty:69},
-  {name:'Стропальщик (офлайн)',                                                     unit:'усл', qty:69},
-  {name:'Техника безопасности при работе на высоте (офлайн)',                       unit:'усл', qty:65},
-  {name:'Техника безопасности при работе на высоте (онлайн)',                       unit:'усл', qty:30},
-  {name:'Оказание услуг координатора по обучению',                                  unit:'час', qty:152}
+  {en:'Industrial Safety at Hazardous Facilities (offline)', ru:'Промышленная безопасность на опасных производственных объектах (офлайн)', unit:'усл'},
+  {en:'Industrial Safety at Hazardous Facilities (online)',  ru:'Промышленная безопасность на опасных производственных объектах (онлайн)',  unit:'усл'},
+  {en:'Fire Safety Minimum (offline)',                       ru:'Пожарно-технический минимум (офлайн)',                                     unit:'усл'},
+  {en:'Fire Safety Minimum (online)',                        ru:'Пожарно-технический минимум (онлайн)',                                     unit:'усл'},
+  {en:'Occupational Health & Safety (offline)',              ru:'Безопасность и охрана труда (офлайн)',                                     unit:'усл'},
+  {en:'Occupational Health & Safety (online)',               ru:'Безопасность и охрана труда (онлайн)',                                     unit:'усл'},
+  {en:'Electrical Safety (offline)',                         ru:'Электробезопасность (офлайн)',                                             unit:'усл'},
+  {en:'Electrical Safety (online)',                          ru:'Электробезопасность (онлайн)',                                             unit:'усл'},
+  {en:'Floor-Operated Crane Operator (offline)',             ru:'Оператор крана, управляемого с пола (офлайн)',                             unit:'усл'},
+  {en:'Rigger (offline)',                                    ru:'Стропальщик (офлайн)',                                                     unit:'усл'},
+  {en:'Working at Heights Safety (offline)',                 ru:'Техника безопасности при работе на высоте (офлайн)',                       unit:'усл'},
+  {en:'Working at Heights Safety (online)',                  ru:'Техника безопасности при работе на высоте (онлайн)',                       unit:'усл'},
+  {en:'Training Coordinator Services',                      ru:'Оказание услуг координатора по обучению',                                  unit:'час'}
 ];
 
 var _rptCompanyNames = {
   kaz:  'Kazatomprom LLP',
   arc:  'ArcelorMittal Kazakhstan',
-  mash: 'ТОО «МашСтрой»',
-  kmg:  'ТОО «КазМунайГаз»'
+  mash: 'TOO MashStroy',
+  kmg:  'TOO KazMunayGas'
 };
 
-var _months = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-var _monthsRod = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+var _months    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var _monthsRu  = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 
+/*
+  LMS completion data per company per "year-month" key.
+  Array index = _rptServices index.
+  Source: sental_completions WHERE status='completed' AND company=? AND month=? AND year=?
+  (Simulated — replace with real API call in production)
+*/
+var _systemCompletions = {
+  kaz: {
+    '2026-1':[130,28,42,8,88,30,120,32,55,55,51,22,140],
+    '2026-2':[118,22,38,6,72,25,108,28,48,48,46,18,128],
+    '2026-3':[125,25,40,9,80,28,115,30,52,52,48,20,135],
+    '2026-4':[140,35,50,11,96,34,138,36,65,65,62,28,148],
+    '2026-5':[145,36,52,12,102,35,142,37,68,68,64,29,150],
+    '2026-6':[142,34,48,10,100,34,144,37,69,69,65,30,152]
+  },
+  arc: {
+    '2026-1':[180,45,65,15,130,50,175,48,88,88,82,38,0],
+    '2026-2':[165,40,58,12,118,44,160,43,80,80,74,33,0],
+    '2026-3':[172,43,62,14,124,47,168,46,84,84,78,36,0],
+    '2026-4':[188,48,68,16,136,52,182,50,91,91,85,40,0],
+    '2026-5':[192,50,70,17,140,54,186,52,93,93,87,41,0],
+    '2026-6':[185,47,67,16,135,51,180,49,90,90,84,39,0]
+  },
+  mash: {
+    '2026-1':[95,25,35,7,70,25,95,28,48,48,44,18,115],
+    '2026-2':[88,22,32,5,64,22,88,25,44,44,40,16,108],
+    '2026-3':[92,24,34,6,67,24,92,26,46,46,42,17,112],
+    '2026-4':[100,27,37,8,73,27,100,30,50,50,46,20,118],
+    '2026-5':[105,29,39,9,77,29,105,32,52,52,48,22,122],
+    '2026-6':[98,26,36,8,74,26,98,29,49,49,46,20,118]
+  },
+  kmg: {}  // onboarding — no completions yet
+};
+
+var _rptLmsData    = [];  // currently loaded LMS quantities
+var _rptLoadedAt   = null;
+
+/* ── Init table rows (run once) ─────────────── */
 function initReportsTab() {
   var tbody = document.getElementById('rpt-services-body');
   if (!tbody || tbody.children.length) return;
+
   _rptServices.forEach(function(s, i) {
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td style="color:var(--muted);font-size:10px">' + (i+1) + '</td>' +
-      '<td style="max-width:260px;word-break:break-word">' + s.name + '</td>' +
-      '<td style="text-align:center;color:var(--muted)">' + s.unit + '</td>' +
-      '<td style="text-align:right"><input type="number" min="0" value="' + s.qty + '" oninput="updateRptPreview()" style="width:70px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:12px;font-weight:600;text-align:right;color:var(--g2)"></td>';
+    tr.id = 'rpt-row-' + i;
+    tr.innerHTML =
+      '<td style="color:var(--muted);font-size:10px;text-align:center">' + (i+1) + '</td>' +
+      '<td style="max-width:240px;word-break:break-word;font-size:11px">' + s.en + '</td>' +
+      '<td style="text-align:center;color:var(--muted);font-size:11px">' + s.unit + '</td>' +
+      '<td class="lms-val" id="rpt-lms-' + i + '"><span class="no-data">—</span></td>' +
+      '<td class="act-input-td"><input type="number" min="0" value="" id="rpt-act-' + i + '" ' +
+        'oninput="onActInputChange(' + i + ')" ' +
+        'placeholder="—" ' +
+        'style="width:66px;border:1px solid var(--border);border-radius:4px;padding:3px 5px;font-size:12px;font-weight:600;text-align:right;color:var(--g2)">' +
+      '</td>';
     tbody.appendChild(tr);
   });
 
-  // set default month to current
+  // Set current month/year as default
   var now = new Date();
   document.getElementById('rpt-month').value = now.getMonth() + 1;
   document.getElementById('rpt-year').value = now.getFullYear();
 
   document.getElementById('rpt-company').addEventListener('change', function() {
     document.getElementById('rpt-custom-name-wrap').style.display = this.value === 'custom' ? 'block' : 'none';
-    updateRptPreview();
+    onRptParamsChange();
   });
 
+  setRptSourceBar('idle', '📋', 'Select a company and period, then click <strong>Load from LMS</strong> to auto-populate from training completions.');
+}
+
+/* ── Triggered when company / month / year changes ── */
+function onRptParamsChange() {
+  _rptLmsData = [];
+  _rptLoadedAt = null;
+  setRptSourceBar('idle', '📋', 'Parameters changed. Click <strong>Load from LMS</strong> to refresh data.');
+  // Clear LMS count column
+  _rptServices.forEach(function(_, i) {
+    document.getElementById('rpt-lms-' + i).innerHTML = '<span class="no-data">—</span>';
+    document.getElementById('rpt-row-' + i).classList.remove('row-modified');
+  });
+  document.getElementById('rpt-lms-total').textContent = '—';
   updateRptPreview();
 }
 
-function getRptValues() {
-  var compSel = document.getElementById('rpt-company').value;
-  var compName = compSel === 'custom'
-    ? (document.getElementById('rpt-custom-name').value || 'Компания')
-    : (_rptCompanyNames[compSel] || compSel);
-  var month = parseInt(document.getElementById('rpt-month').value);
-  var year = document.getElementById('rpt-year').value;
-  var avrNum = document.getElementById('rpt-avr-num').value || '1';
-  var contract = document.getElementById('rpt-contract').value || '';
-  var executor = document.getElementById('rpt-executor').value || '';
+/* ── Load from LMS (simulated API call) ────── */
+function loadFromLMS() {
+  var company = document.getElementById('rpt-company').value;
+  var month   = parseInt(document.getElementById('rpt-month').value);
+  var year    = document.getElementById('rpt-year').value;
+  var key     = year + '-' + month;
 
-  var rows = document.querySelectorAll('#rpt-services-body tr');
-  var qtys = [];
-  rows.forEach(function(tr) {
-    qtys.push(parseInt(tr.querySelector('input').value) || 0);
-  });
+  var btn = document.getElementById('rpt-load-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin">↻</span> Loading…';
+  setRptSourceBar('loading', '⏳', 'Querying LMS database for ' + _months[month-1] + ' ' + year + '…');
 
-  return {compName:compName, month:month, year:year, avrNum:avrNum, contract:contract, executor:executor, qtys:qtys};
+  // Simulate API latency (600–1200ms)
+  setTimeout(function() {
+    var compData = _systemCompletions[company] || {};
+    var lmsQtys = compData[key] || null;
+
+    btn.disabled = false;
+    btn.innerHTML = '↻ Load from LMS';
+
+    if (!lmsQtys) {
+      setRptSourceBar('idle', '⚠️', 'No completion data found for ' + _months[month-1] + ' ' + year + '. Data may not be available yet or company is onboarding.');
+      return;
+    }
+
+    _rptLmsData = lmsQtys.slice();
+    _rptLoadedAt = new Date();
+
+    // Populate LMS count column + Act Qty inputs
+    var lmsTotal = 0;
+    _rptServices.forEach(function(s, i) {
+      var qty = lmsQtys[i] || 0;
+      lmsTotal += qty;
+      var lmsCell = document.getElementById('rpt-lms-' + i);
+      lmsCell.innerHTML = qty > 0 ? '<span>' + qty + '</span>' : '<span class="no-data">0</span>';
+      var inp = document.getElementById('rpt-act-' + i);
+      inp.value = qty > 0 ? qty : '';
+      inp.dataset.lmsVal = qty;
+      document.getElementById('rpt-row-' + i).classList.remove('row-modified');
+    });
+    document.getElementById('rpt-lms-total').textContent = lmsTotal;
+
+    var timeStr = _rptLoadedAt.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+    var compName = _rptCompanyNames[company] || 'Company';
+    setRptSourceBar('loaded', '📡',
+      'LMS data loaded · <strong>' + compName + ' · ' + _months[month-1] + ' ' + year + '</strong> · ' + timeStr +
+      ' · Showing actual training completions from Moodle');
+
+    updateRptPreview();
+  }, 600 + Math.random() * 600);
 }
 
+/* ── Track manual overrides ─────────────────── */
+function onActInputChange(i) {
+  var inp = document.getElementById('rpt-act-' + i);
+  var lmsVal = parseInt(inp.dataset.lmsVal);
+  var actVal = parseInt(inp.value);
+  var row = document.getElementById('rpt-row-' + i);
+
+  if (!isNaN(lmsVal) && !isNaN(actVal) && actVal !== lmsVal) {
+    row.classList.add('row-modified');
+  } else {
+    row.classList.remove('row-modified');
+  }
+  updateRptPreview();
+}
+
+/* ── Reset Act Qty to LMS values ────────────── */
+function reloadLmsQtys() {
+  if (!_rptLmsData.length) { loadFromLMS(); return; }
+  _rptServices.forEach(function(_, i) {
+    var inp = document.getElementById('rpt-act-' + i);
+    var lmsVal = _rptLmsData[i] || 0;
+    inp.value = lmsVal > 0 ? lmsVal : '';
+    inp.dataset.lmsVal = lmsVal;
+    document.getElementById('rpt-row-' + i).classList.remove('row-modified');
+  });
+  updateRptPreview();
+}
+
+/* ── Clear all Act Qty inputs ───────────────── */
+function clearActQtys() {
+  _rptServices.forEach(function(_, i) {
+    document.getElementById('rpt-act-' + i).value = '';
+    document.getElementById('rpt-row-' + i).classList.remove('row-modified');
+  });
+  updateRptPreview();
+}
+
+/* ── Source status bar helper ───────────────── */
+function setRptSourceBar(state, icon, text) {
+  var bar = document.getElementById('rpt-source-bar');
+  bar.className = 'rpt-source-bar ' + state;
+  document.getElementById('rpt-source-icon').textContent = icon;
+  document.getElementById('rpt-source-text').innerHTML = text;
+}
+
+/* ── Collect current form values ────────────── */
+function getRptValues() {
+  var compSel  = document.getElementById('rpt-company').value;
+  var compName = compSel === 'custom'
+    ? (document.getElementById('rpt-custom-name').value || 'Company')
+    : (_rptCompanyNames[compSel] || compSel);
+  var month    = parseInt(document.getElementById('rpt-month').value);
+  var year     = document.getElementById('rpt-year').value;
+  var avrNum   = document.getElementById('rpt-avr-num').value || '1';
+  var contract = document.getElementById('rpt-contract').value || '';
+  var executor = document.getElementById('rpt-executor').value || '';
+  var qtys = _rptServices.map(function(_, i) {
+    return parseInt(document.getElementById('rpt-act-' + i).value) || 0;
+  });
+  return {compName, month, year, avrNum, contract, executor, qtys};
+}
+
+/* ── Live preview ────────────────────────────── */
 function updateRptPreview() {
   var v = getRptValues();
-  var total = v.qtys.reduce(function(s,q){return s+q;},0);
+  var actTotal = v.qtys.reduce(function(s,q){return s+q;},0);
+  var lmsTotal = _rptLmsData.reduce(function(s,q){return s+q;},0);
+  var modifiedCount = document.querySelectorAll('#rpt-services-body tr.row-modified').length;
+  var courseCount   = v.qtys.filter(function(q){return q>0;}).length;
 
-  // update total cell
-  document.getElementById('rpt-total-cell').textContent = total;
+  // Update footer totals
+  document.getElementById('rpt-total-cell').textContent = actTotal || '0';
 
-  // build preview
+  // Stats row
+  var statsRow = document.getElementById('rpt-stats-row');
+  if (actTotal > 0) {
+    statsRow.style.display = 'flex';
+    document.getElementById('rpt-stat-total').textContent = actTotal;
+    document.getElementById('rpt-stat-courses').textContent = courseCount;
+    var diff = _rptLmsData.length ? (actTotal - lmsTotal) : null;
+    document.getElementById('rpt-stat-diff').textContent  = diff !== null ? (diff >= 0 ? '+' + diff : diff) : '—';
+    document.getElementById('rpt-stat-diff').style.color  = diff === 0 ? '#059669' : (diff && diff !== 0 ? '#d97706' : 'var(--muted)');
+    document.getElementById('rpt-stat-modified').textContent = modifiedCount;
+    document.getElementById('rpt-stat-modified').style.color  = modifiedCount > 0 ? '#d97706' : 'var(--muted)';
+  } else {
+    statsRow.style.display = 'none';
+  }
+
+  // If nothing to preview
+  if (actTotal === 0) {
+    document.getElementById('rpt-preview-box').innerHTML =
+      '<div style="text-align:center;padding:30px 0;color:var(--muted)">' +
+        '<div style="font-size:32px;margin-bottom:8px">📄</div>' +
+        '<div style="font-size:12px;font-weight:600">No data loaded yet</div>' +
+        '<div style="font-size:11px;margin-top:4px">Select a company &amp; period, then load from LMS</div>' +
+      '</div>';
+    return;
+  }
+
+  var lastDay   = new Date(v.year, v.month, 0).getDate();
+  var dateRuStr = '01–' + String(lastDay).padStart(2,'0') + ' ' + _monthsRu[v.month-1] + ' ' + v.year + ' г.';
+
   var rows = '';
-  _rptServices.forEach(function(s,i) {
+  _rptServices.forEach(function(s, i) {
     var q = v.qtys[i] || 0;
     if (q === 0) return;
-    rows += '<div class="rpt-prev-row">' +
+    var lmsQ  = _rptLmsData[i] || 0;
+    var ismod = lmsQ > 0 && q !== lmsQ;
+    rows += '<div class="rpt-prev-row" style="' + (ismod ? 'background:#fffbeb;border-radius:4px' : '') + '">' +
       '<span class="rpt-prev-num">' + (i+1) + '</span>' +
-      '<span class="rpt-prev-name">' + s.name + '</span>' +
+      '<span class="rpt-prev-name">' + s.en + (ismod ? ' <span style="font-size:9px;color:#92400e;background:#fef3c7;padding:0 3px;border-radius:3px" title="LMS: ' + lmsQ + '">✎</span>' : '') + '</span>' +
       '<span class="rpt-prev-unit">' + s.unit + '</span>' +
-      '<span class="rpt-prev-qty">' + q + '</span>' +
-      '</div>';
+      '<span class="rpt-prev-qty" style="' + (ismod ? 'color:#d97706' : '') + '">' + q + '</span>' +
+    '</div>';
   });
-
-  var lastDay = new Date(v.year, v.month, 0).getDate();
-  var dateRange = '01–' + String(lastDay).padStart(2,'0') + ' ' + _monthsRod[v.month-1] + ' ' + v.year + ' г.';
 
   document.getElementById('rpt-preview-box').innerHTML =
     '<div class="rpt-preview-title">АКТ ВЫПОЛНЕННЫХ РАБОТ<br>(ОКАЗАННЫХ УСЛУГ) № ' + v.avrNum + '</div>' +
     '<div class="rpt-preview-meta">' +
-      '<div class="rpt-info-row"><span class="rpt-info-lbl">Период:</span><span class="rpt-info-val">' + _months[v.month-1] + ' ' + v.year + '</span></div>' +
-      '<div class="rpt-info-row"><span class="rpt-info-lbl">Заказчик:</span><span class="rpt-info-val">' + v.compName + '</span></div>' +
-      '<div class="rpt-info-row"><span class="rpt-info-lbl">Исполнитель:</span><span class="rpt-info-val">' + v.executor + '</span></div>' +
-      '<div class="rpt-info-row"><span class="rpt-info-lbl">Договор:</span><span class="rpt-info-val">№ ' + v.contract + '</span></div>' +
-      '<div class="rpt-info-row"><span class="rpt-info-lbl">Даты:</span><span class="rpt-info-val">' + dateRange + '</span></div>' +
+      '<div class="rpt-info-row"><span class="rpt-info-lbl">Period:</span><span class="rpt-info-val">' + _months[v.month-1] + ' ' + v.year + '</span></div>' +
+      '<div class="rpt-info-row"><span class="rpt-info-lbl">Client:</span><span class="rpt-info-val">' + v.compName + '</span></div>' +
+      '<div class="rpt-info-row"><span class="rpt-info-lbl">Provider:</span><span class="rpt-info-val">' + v.executor + '</span></div>' +
+      '<div class="rpt-info-row"><span class="rpt-info-lbl">Contract:</span><span class="rpt-info-val">No. ' + v.contract + '</span></div>' +
+      '<div class="rpt-info-row"><span class="rpt-info-lbl">Dates:</span><span class="rpt-info-val">' + dateRuStr + '</span></div>' +
     '</div>' +
-    '<div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Перечень услуг</div>' +
+    (modifiedCount > 0 ? '<div style="font-size:10px;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:5px 8px;margin-bottom:8px;color:#92400e">⚠ ' + modifiedCount + ' row(s) manually overridden vs LMS data. Marked with ✎</div>' : '') +
+    '<div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Services rendered</div>' +
     rows +
-    '<div class="rpt-prev-total"><span>ИТОГО</span><span>' + total + ' усл / час</span></div>' +
+    '<div class="rpt-prev-total"><span>TOTAL</span><span>' + actTotal + ' усл / час</span></div>' +
     '<div style="margin-top:12px;font-size:10px;color:var(--muted);border-top:1px dashed var(--border);padding-top:8px">' +
-      '✎ Исполнитель: _____________________ / ___________<br>' +
-      '✎ Заказчик: ________________________ / ___________' +
+      '✎ Service provider: _____________________ / ___________<br>' +
+      '✎ Client: ________________________ / ___________' +
     '</div>';
 }
 
-function resetRptDefaults() {
-  var rows = document.querySelectorAll('#rpt-services-body tr');
-  rows.forEach(function(tr, i) {
-    tr.querySelector('input').value = _rptServices[i].qty;
-  });
-  updateRptPreview();
-}
-
+/* ── Generate Excel (АВР) ────────────────────── */
 function generateAVR() {
   if (typeof XLSX === 'undefined') {
-    alert('Библиотека Excel загружается… Подождите несколько секунд и попробуйте снова.');
+    alert('Excel library is still loading. Please wait a moment and try again.');
     return;
   }
 
   var v = getRptValues();
-  var month = v.month, year = v.year;
+  if (v.qtys.every(function(q){return q===0;})) {
+    alert('No quantities entered. Load from LMS or enter quantities manually before generating.');
+    return;
+  }
+
+  var month = v.month, year = parseInt(v.year);
   var lastDay = new Date(year, month, 0).getDate();
-  var dateStr = '01–' + String(lastDay).padStart(2,'0') + ' ' + _monthsRod[month-1] + ' ' + year + ' г.';
-  var monthName = _months[month-1];
-  var fileName = 'АВР_' + v.avrNum + '_' + v.compName.replace(/[«»"\/\\]/g,'') + '_' + monthName + '_' + year + '.xlsx';
+  var dateStr = '01–' + String(lastDay).padStart(2,'0') + ' ' + _monthsRu[month-1] + ' ' + year + ' г.';
+  var fileName = 'AVR_' + v.avrNum + '_' + v.compName.replace(/[«»"'\/\\]/g,'').trim().replace(/\s+/g,'-') + '_' + _months[month-1] + '_' + year + '.xlsx';
 
   var wb = XLSX.utils.book_new();
   var wsData = [];
 
-  // helper to create rich cell
-  function c(v, bold, sz, align, wrap) {
-    return {v: v, t: 's', s: {
-      font: {name:'Times New Roman', sz: sz||10, bold:!!bold},
-      alignment: {horizontal: align||'left', vertical:'center', wrapText:!!wrap},
-      border: {top:{style:'thin',color:{rgb:'000000'}},bottom:{style:'thin',color:{rgb:'000000'}},
-               left:{style:'thin',color:{rgb:'000000'}},right:{style:'thin',color:{rgb:'000000'}}}
+  function c(val, bold, sz, align, wrap) {
+    return {v:val, t:'s', s:{
+      font:{name:'Times New Roman', sz:sz||10, bold:!!bold},
+      alignment:{horizontal:align||'left', vertical:'center', wrapText:!!wrap},
+      border:{top:{style:'thin',color:{rgb:'000000'}},bottom:{style:'thin',color:{rgb:'000000'}},
+              left:{style:'thin',color:{rgb:'000000'}},right:{style:'thin',color:{rgb:'000000'}}}
     }};
   }
   function cn(val, bold, sz, align) {
-    return {v: val, t: 'n', s: {
-      font: {name:'Times New Roman', sz: sz||10, bold:!!bold},
-      alignment: {horizontal: align||'right', vertical:'center'},
-      border: {top:{style:'thin',color:{rgb:'000000'}},bottom:{style:'thin',color:{rgb:'000000'}},
-               left:{style:'thin',color:{rgb:'000000'}},right:{style:'thin',color:{rgb:'000000'}}}
+    return {v:val, t:'n', s:{
+      font:{name:'Times New Roman', sz:sz||10, bold:!!bold},
+      alignment:{horizontal:align||'right', vertical:'center'},
+      border:{top:{style:'thin',color:{rgb:'000000'}},bottom:{style:'thin',color:{rgb:'000000'}},
+              left:{style:'thin',color:{rgb:'000000'}},right:{style:'thin',color:{rgb:'000000'}}}
     }};
   }
-  function blank(bold) { return c('', bold); }
+  function blank() { return c(''); }
 
-  // Row 1: title
   wsData.push([c('АКТ ВЫПОЛНЕННЫХ РАБОТ (ОКАЗАННЫХ УСЛУГ)', true, 13, 'center')]);
-  // Row 2
   wsData.push([c('№ ' + v.avrNum, true, 11, 'center')]);
-  // Row 3 blank
   wsData.push([]);
-  // Row 4-7 meta
   wsData.push([c('Исполнитель:', true, 10), c(v.executor, false, 10)]);
-  wsData.push([c('Заказчик:', true, 10), c(v.compName, false, 10)]);
-  wsData.push([c('Договор:', true, 10), c('№ ' + v.contract, false, 10)]);
-  wsData.push([c('Период:', true, 10), c(dateStr, false, 10)]);
-  // Row 8 blank
+  wsData.push([c('Заказчик:',   true, 10), c(v.compName,  false, 10)]);
+  wsData.push([c('Договор:',    true, 10), c('№ ' + v.contract, false, 10)]);
+  wsData.push([c('Период:',     true, 10), c(dateStr, false, 10)]);
   wsData.push([]);
-
-  // Row 9: header row 1
   wsData.push([
     c('№ п/п', true, 10, 'center', true),
     c('Наименование работ (услуг)', true, 10, 'center', true),
@@ -2829,42 +3008,23 @@ function generateAVR() {
     c('Единица измерения', true, 10, 'center', true),
     c('Выполнено работ (оказано услуг) — количество', true, 10, 'center', true)
   ]);
-  // Row 10: column numbers
-  wsData.push([
-    c('1', false, 10, 'center'),
-    c('2', false, 10, 'center'),
-    c('3', false, 10, 'center'),
-    c('4', false, 10, 'center'),
-    c('5', false, 10, 'center')
-  ]);
+  wsData.push([c('1',false,10,'center'),c('2',false,10,'center'),c('3',false,10,'center'),c('4',false,10,'center'),c('5',false,10,'center')]);
 
-  // Service rows
   var total = 0;
   _rptServices.forEach(function(s, i) {
     var q = v.qtys[i] || 0;
     total += q;
     wsData.push([
       cn(i+1, false, 10, 'center'),
-      c(s.name, false, 10, 'left', true),
+      c(s.ru, false, 10, 'left', true),
       c(dateStr, false, 10, 'center'),
       c(s.unit, false, 10, 'center'),
       q > 0 ? cn(q, false, 10, 'right') : c('—', false, 10, 'center')
     ]);
   });
 
-  // Total row
-  wsData.push([
-    blank(),
-    blank(),
-    c('Итого', true, 10, 'right'),
-    blank(),
-    cn(total, true, 10, 'right')
-  ]);
-
-  // Blank row
+  wsData.push([blank(), blank(), c('Итого', true, 10, 'right'), blank(), cn(total, true, 10, 'right')]);
   wsData.push([]);
-
-  // Signature area
   wsData.push([c('Исполнитель:', true, 10), c('________________________', false, 10), c('/', false, 10, 'center'), c('________________________', false, 10)]);
   wsData.push([c('', false, 9), c('(подпись)', false, 9, 'center'), c('', false, 9), c('(расшифровка подписи)', false, 9, 'center')]);
   wsData.push([]);
@@ -2872,31 +3032,15 @@ function generateAVR() {
   wsData.push([c('', false, 9), c('(подпись)', false, 9, 'center'), c('', false, 9), c('(расшифровка подписи)', false, 9, 'center')]);
 
   var ws = XLSX.utils.aoa_to_sheet(wsData);
-
-  // Column widths
-  ws['!cols'] = [
-    {wch:6}, {wch:52}, {wch:22}, {wch:10}, {wch:12}
-  ];
-
-  // Row heights
-  ws['!rows'] = [];
-  for (var ri = 0; ri < wsData.length; ri++) {
-    if (ri === 0) ws['!rows'].push({hpt:28});
-    else if (ri === 8) ws['!rows'].push({hpt:40});
-    else ws['!rows'].push({hpt:18});
-  }
-
-  // Merges: title row (A1:E1), subtitle (A2:E2)
-  ws['!merges'] = [
-    {s:{r:0,c:0}, e:{r:0,c:4}},
-    {s:{r:1,c:0}, e:{r:1,c:4}},
-  ];
+  ws['!cols'] = [{wch:6},{wch:54},{wch:22},{wch:10},{wch:12}];
+  ws['!rows'] = wsData.map(function(_, ri){ return {hpt: ri===0?28 : ri===8?40 : 18}; });
+  ws['!merges'] = [{s:{r:0,c:0},e:{r:0,c:4}},{s:{r:1,c:0},e:{r:1,c:4}}];
 
   XLSX.utils.book_append_sheet(wb, ws, 'АВР');
   XLSX.writeFile(wb, fileName);
 }
 
-// Init reports tab when it becomes active (lazy)
+/* ── Lazy init when tab becomes active ───────── */
 var _rptInited = false;
 var _origSwitchTab = window.switchTab;
 window.switchTab = function(id, el) {
