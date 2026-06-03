@@ -327,12 +327,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div class="kpi-trend dn">▲ +4 this week</div>
       <div class="kpi-drill">↗ urgent action list</div>
     </div>
-    <div class="kpi" style="--kpi-accent:#7c3aed" onclick="toggleDrill('d-eds',this)">
+    <div class="kpi" onclick="toggleDrill('d-eds',this)">
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#5b21b6,#7c3aed)"></div>
       <div class="kpi-lbl">EDS pending</div>
       <div class="kpi-val" style="color:#7c3aed">3</div>
       <div class="kpi-trend dn" style="color:#dc2626">1 critical</div>
       <div class="kpi-drill">↗ signature queue</div>
+    </div>
+    <div class="kpi" onclick="toggleDrill('d-newreg',this)">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0f766e,#059669)"></div>
+      <div class="kpi-lbl">New Registrations</div>
+      <div class="kpi-val" style="color:#059669">12</div>
+      <div class="kpi-trend dn" style="color:#d97706">без сертификатов</div>
+      <div class="kpi-drill">↗ enroll list</div>
     </div>
   </div>
 
