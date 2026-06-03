@@ -1045,11 +1045,18 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div class="card-badges"><span class="ctag" style="background:#f3e8ff;border-color:#d8b4fe;color:#5b21b6">EDS</span><span class="ctag">company-scoped</span><span class="chevron">▲</span></div>
     </div>
     <div class="card-body">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+      <!-- EDS period filter -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div class="eds-filter">
+          <span class="eds-filter-lbl">Период:</span>
+          <button class="dim-btn act" onclick="filterEDS('week',this)">Эта неделя</button>
+          <button class="dim-btn" onclick="filterEDS('month',this)">Этот месяц</button>
+          <button class="dim-btn" onclick="filterEDS('all',this)">Всё время</button>
+        </div>
         <button class="action-btn" style="background:#7c3aed;color:#fff;border-color:#7c3aed" onclick="notifyAllEDS()">📨 Уведомить всех подписантов</button>
       </div>
       <div style="overflow-x:auto">
-        <table class="dt" style="min-width:680px">
+        <table class="dt" id="eds-pending-table" style="min-width:680px">
           <thead><tr>
             <th>Doc ID</th>
             <th>Тип документа</th>
