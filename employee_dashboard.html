@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Learning — Sental LMS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g1:#0f4c81;--g2:#1d6fa4;--g3:#3b9dd4;
+  --t1:#0e6b52;--t2:#059669;--t3:#34d399;
+  --a1:#92400e;--a2:#d97706;--a3:#fbbf24;
+  --r1:#991b1b;--r2:#dc2626;--r3:#f87171;
+  --n1:#0f172a;--n2:#1e293b;--n3:#334155;--n4:#64748b;--n5:#94a3b8;--n6:#cbd5e1;--n7:#e2e8f0;--n8:#f1f5f9;--n9:#f8fafc;
+  --card:#fff;--bg:#eef2f7;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px;min-height:100vh;display:flex;flex-direction:column}
+
+/* ── Header ── */
+.header{background:var(--g1);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.logo{color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;gap:10px}
+.logo-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:2px 8px;font-size:10px;color:rgba(255,255,255,.85);font-weight:500}
+.hright{display:flex;align-items:center;gap:12px}
+.notif-btn{position:relative;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:16px;transition:background .15s}
+.notif-btn:hover{background:rgba(255,255,255,.22)}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:var(--r2);color:#fff;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--g1)}
+.user-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:4px 10px 4px 4px;cursor:pointer}
+.avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--g3),#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:10px;flex-shrink:0}
+.user-name{font-size:12px;color:#fff;font-weight:600}
+.user-dept{font-size:10px;color:rgba(255,255,255,.6)}
+
+/* ── Hero banner ── */
+.hero{background:linear-gradient(135deg,var(--g1) 0%,#1d5fa0 60%,#1a4a8c 100%);padding:20px 20px 0;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E");pointer-events:none}
+.hero-inner{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;position:relative;z-index:1}
+.hero-left{padding-bottom:20px}
+.hero-greeting{font-size:11px;color:rgba(255,255,255,.6);font-weight:500;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.hero-name{font-size:22px;font-weight:700;color:#fff;margin-bottom:3px}
+.hero-meta{font-size:12px;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:10px}
+.hero-sep{opacity:.4}
+
+/* compliance ring */
+.compliance-ring-wrap{flex-shrink:0;text-align:center;padding-bottom:14px}
+.ring-label{font-size:10px;color:rgba(255,255,255,.6);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.ring-container{position:relative;width:88px;height:88px;margin:0 auto}
+.ring-container svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.12);stroke-width:8}
+.ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .8s ease}
+.ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-pct{font-size:20px;font-weight:800;color:#fff;line-height:1}
+.ring-sub{font-size:9px;color:rgba(255,255,255,.55);margin-top:1px}
+
+/* ── KPI strip ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--card);border-bottom:1px solid var(--border)}
+.kpi{padding:12px 16px;border-right:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.kpi:last-child{border-right:none}
+.kpi-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.kpi-val{font-size:20px;font-weight:800;line-height:1}
+.kpi-lbl{font-size:10px;color:var(--muted);margin-top:1px;font-weight:500}
+
+/* ── Main layout ── */
+.page{display:grid;grid-template-columns:1fr 320px;gap:14px;padding:14px 20px;max-width:1300px;width:100%;margin:0 auto;align-items:start}
+
+/* ── Card ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.card-hdr{padding:12px 16px;border-bottom:1px solid var(--n8);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:12px;font-weight:700;color:var(--n2)}
+.card-count{background:var(--n8);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;color:var(--n3)}
+.card-body{padding:0}
+
+/* ── Course rows ── */
+.course-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--n8);cursor:pointer;transition:background .12s}
+.course-row:last-child{border-bottom:none}
+.course-row:hover{background:var(--n9)}
+.cr-status{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:1px}
+.cr-info{flex:1;min-width:0}
+.cr-name{font-size:12px;font-weight:600;color:var(--n2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cr-meta{font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:6px}
+.cr-tag{border-radius:4px;padding:1px 5px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.cr-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.cr-deadline{font-size:10px;font-weight:600}
+.cr-cert-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;color:var(--g2);cursor:pointer;display:flex;align-items:center;gap:3px;transition:all .12s}
+.cr-cert-btn:hover{background:#eff6ff;border-color:var(--g3)}
+
+/* progress bar inline */
+.cr-progress{height:3px;background:var(--n7);border-radius:2px;margin-top:4px;overflow:hidden}
+.cr-progress-fill{height:100%;border-radius:2px;transition:width .4s}
+
+/* ── Notification panel ── */
+.notif-list{display:flex;flex-direction:column}
+.notif-item{display:flex;gap:10px;padding:11px 16px;border-bottom:1px solid var(--n8);position:relative;cursor:pointer;transition:background .12s}
+.notif-item:last-child{border-bottom:none}
+.notif-item:hover{background:var(--n9)}
+.notif-item.unread::before{content:'';position:absolute;left:6px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--g2)}
+.notif-icon-wrap{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.notif-body{flex:1;min-width:0}
+.notif-title{font-size:11px;font-weight:600;color:var(--n2);line-height:1.4}
+.notif-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.notif-time{font-size:9px;color:var(--n5);white-space:nowrap;margin-top:3px}
+
+/* ── Upcoming schedule ── */
+.sched-item{display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid var(--n8);align-items:flex-start}
+.sched-item:last-child{border-bottom:none}
+.sched-date-box{width:36px;text-align:center;flex-shrink:0}
+.sched-day{font-size:18px;font-weight:800;color:var(--g2);line-height:1}
+.sched-month{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase}
+.sched-info{flex:1;min-width:0}
+.sched-name{font-size:11px;font-weight:600;color:var(--n2);line-height:1.4}
+.sched-detail{font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:5px}
+.sched-mode{border-radius:4px;padding:1px 5px;font-size:9px;font-weight:700}
+
+/* ── Empty state ── */
+.empty{padding:24px;text-align:center;color:var(--muted);font-size:11px}
+.empty-icon{font-size:28px;margin-bottom:6px}
+
+/* ── Certificate modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:800;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:#fff;border-radius:14px;width:480px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.25);transform:scale(.96);transition:transform .2s}
+.modal-overlay.open .modal-box{transform:scale(1)}
+.modal-hdr{background:linear-gradient(135deg,var(--g1),var(--g2));padding:16px 20px;border-radius:14px 14px 0 0;display:flex;align-items:flex-start;justify-content:space-between}
+.modal-title{font-size:14px;font-weight:700;color:#fff}
+.modal-sub{font-size:11px;color:rgba(255,255,255,.65);margin-top:3px}
+.modal-close{background:rgba(255,255,255,.18);border:none;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.modal-close:hover{background:rgba(255,255,255,.3)}
+.modal-body{padding:20px}
+.cert-preview{background:linear-gradient(135deg,#f8fafc,#eff6ff);border:2px solid #bfdbfe;border-radius:10px;padding:24px;text-align:center;margin-bottom:16px}
+.cert-seal{font-size:40px;margin-bottom:8px}
+.cert-course-name{font-size:14px;font-weight:700;color:var(--n2);margin-bottom:4px}
+.cert-holder{font-size:12px;color:var(--muted);margin-bottom:8px}
+.cert-meta-row{display:flex;justify-content:center;gap:20px;font-size:10px;color:var(--n3);font-weight:600}
+.cert-meta-item{display:flex;flex-direction:column;align-items:center;gap:1px}
+.cert-meta-lbl{color:var(--muted);font-weight:400}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+.btn-secondary{background:#fff;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:11px;font-weight:600;color:var(--n3);cursor:pointer}
+.btn-primary{background:var(--g1);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px}
+.btn-primary:hover{background:var(--g2)}
+
+/* ── Status colours ── */
+.s-ok{background:var(--t2)} .s-exp{background:var(--a2)} .s-ov{background:var(--r2)} .s-ip{background:var(--g3)}
+.tag-ok{background:#f0fdf4;color:#15803d} .tag-exp{background:#fffbeb;color:#b45309} .tag-ov{background:#fef2f2;color:#b91c1c} .tag-ip{background:#eff6ff;color:#1d4ed8}
+.text-ok{color:var(--t2)} .text-exp{color:var(--a2)} .text-ov{color:var(--r2)} .text-ip{color:var(--g2)}
+.icon-ok{background:#f0fdf4} .icon-exp{background:#fffbeb} .icon-ov{background:#fef2f2} .icon-ip{background:#eff6ff}
+
+/* ── Filter tabs (courses) ── */
+.filter-tabs{display:flex;gap:4px;padding:10px 16px;border-bottom:1px solid var(--n8);overflow-x:auto}
+.ftab{border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;background:#fff;transition:all .12s}
+.ftab.active{background:var(--g1);color:#fff;border-color:var(--g1)}
+.ftab:hover:not(.active){border-color:var(--g3);color:var(--g2)}
+
+@media(max-width:860px){
+  .page{grid-template-columns:1fr}
+  .kpi-strip{grid-template-columns:repeat(2,1fr)}
+  .hero-inner{flex-direction:column;align-items:flex-start}
+  .compliance-ring-wrap{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="logo">
+    Sental <span style="color:#7dd3fc">LMS</span>
+    <span class="logo-badge">My Learning</span>
+  </div>
+  <div class="hright">
+    <div class="notif-btn" onclick="openNotifPanel()" title="Notifications">
+      🔔
+      <span class="notif-badge" id="notif-badge">3</span>
+    </div>
+    <div class="user-pill">
+      <div class="avatar">AK</div>
+      <div>
+        <div class="user-name">Aigerim Kenzhebekova</div>
+        <div class="user-dept">Process Safety · Kazatomprom</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-greeting">Good morning</div>
+      <div class="hero-name">Aigerim Kenzhebekova</div>
+      <div class="hero-meta">
+        <span>Process Safety Engineer</span>
+        <span class="hero-sep">·</span>
+        <span>Kazatomprom LLP</span>
+        <span class="hero-sep">·</span>
+        <span>Employee ID: KAZ-04271</span>
+      </div>
+    </div>
+    <div class="compliance-ring-wrap">
+      <div class="ring-label">Compliance</div>
+      <div class="ring-container">
+        <svg width="88" height="88" viewBox="0 0 88 88">
+          <circle class="ring-bg" cx="44" cy="44" r="36"/>
+          <circle class="ring-fill" id="ring-fill" cx="44" cy="44" r="36"
+            stroke="#34d399"
+            stroke-dasharray="226.2"
+            stroke-dashoffset="54"/>
+        </svg>
+        <div class="ring-text">
+          <div class="ring-pct" id="ring-pct">76%</div>
+          <div class="ring-sub">compliant</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── KPI STRIP ── -->
+<div class="kpi-strip">
+  <div class="kpi">
+    <div class="kpi-icon" style="background:#f0fdf4;font-size:18px">✅</div>
+    <div>
+      <div class="kpi-val" style="color:var(--t2)">5</div>
+      <div class="kpi-lbl">Courses completed</div>
+    </div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-icon" style="background:#fffbeb;font-size:18px">⏳</div>
+    <div>
+      <div class="kpi-val" style="color:var(--a2)">2</div>
+      <div class="kpi-lbl">Expiring within 30 days</div>
+    </div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-icon" style="background:#fef2f2;font-size:18px">🚨</div>
+    <div>
+      <div class="kpi-val" style="color:var(--r2)">1</div>
+      <div class="kpi-lbl">Overdue</div>
+    </div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-icon" style="background:#eff6ff;font-size:18px">🏅</div>
+    <div>
+      <div class="kpi-val" style="color:var(--g2)">5</div>
+      <div class="kpi-lbl">Certificates earned</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE BODY ── -->
+<div class="page">
+
+  <!-- LEFT COLUMN -->
+  <div style="display:flex;flex-direction:column;gap:14px">
+
+    <!-- My Courses -->
+    <div class="card">
+      <div class="card-hdr">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="card-title">My Training Requirements</span>
+          <span class="card-count" id="courses-count">8</span>
+        </div>
+        <div style="font-size:10px;color:var(--muted)">Sorted by urgency</div>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs">
+        <span class="ftab active" onclick="filterCourses('all',this)">All (8)</span>
+        <span class="ftab" onclick="filterCourses('overdue',this)">🚨 Overdue (1)</span>
+        <span class="ftab" onclick="filterCourses('expiring',this)">⏳ Expiring (2)</span>
+        <span class="ftab" onclick="filterCourses('active',this)">✅ Active (5)</span>
+        <span class="ftab" onclick="filterCourses('inprogress',this)">📖 In progress (1)</span>
+      </div>
+
+      <div class="card-body" id="courses-list"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div style="display:flex;flex-direction:column;gap:14px">
+
+    <!-- Notifications -->
+    <div class="card">
+      <div class="card-hdr">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="card-title">Notifications</span>
+          <span class="card-count" style="background:#fef2f2;color:var(--r2)" id="unread-count">3 new</span>
+        </div>
+        <span style="font-size:10px;color:var(--g2);cursor:pointer;font-weight:600" onclick="markAllRead()">Mark all read</span>
+      </div>
+      <div class="notif-list" id="notif-list"></div>
+    </div>
+
+    <!-- Upcoming Schedule -->
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-title">Upcoming Training Sessions</span>
+        <span style="font-size:10px;color:var(--muted)">June 2026</span>
+      </div>
+      <div id="schedule-list"></div>
+    </div>
+
+    <!-- My Certificates -->
+    <div class="card">
+      <div class="card-hdr">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="card-title">My Certificates</span>
+          <span class="card-count">5</span>
+        </div>
+      </div>
+      <div id="certs-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── CERTIFICATE MODAL ── -->
+<div class="modal-overlay" id="cert-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-title" id="modal-title">Certificate</div>
+        <div class="modal-sub" id="modal-sub">Issued by Sental Education</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="cert-preview">
+        <div class="cert-seal">🏅</div>
+        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Certificate of Completion</div>
+        <div class="cert-course-name" id="cert-course-name"></div>
+        <div class="cert-holder" id="cert-holder"></div>
+        <div class="cert-meta-row">
+          <div class="cert-meta-item"><span id="cert-issued"></span><span class="cert-meta-lbl">Issued</span></div>
+          <div class="cert-meta-item"><span id="cert-expires"></span><span class="cert-meta-lbl">Expires</span></div>
+          <div class="cert-meta-item"><span id="cert-id"></span><span class="cert-meta-lbl">Cert ID</span></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal()">Close</button>
+        <button class="btn-primary">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 6l4 4 4-4M2 12h12v2H2z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Download PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Data ── */
+var EMPLOYEE = {name:'Aigerim Kenzhebekova', company:'Kazatomprom LLP', dept:'Process Safety'};
+
+var COURSES = [
+  {id:1, name:'Industrial Safety at Hazardous Facilities', mode:'offline', status:'overdue',    dueDate:'May 15, 2026',  daysLeft:-19, progress:0,   certId:null},
+  {id:2, name:'Electrical Safety (Group III)',              mode:'online',  status:'expiring',   dueDate:'Jun 14, 2026',  daysLeft:11,  progress:100, certId:'CERT-ES-0041'},
+  {id:3, name:'Working at Heights Safety',                 mode:'offline', status:'expiring',   dueDate:'Jun 28, 2026',  daysLeft:25,  progress:100, certId:'CERT-WH-0187'},
+  {id:4, name:'Fire Safety Minimum',                       mode:'online',  status:'active',     dueDate:'Sep 3, 2026',   daysLeft:92,  progress:100, certId:'CERT-FS-0312'},
+  {id:5, name:'Occupational Health & Safety',              mode:'offline', status:'active',     dueDate:'Oct 12, 2026',  daysLeft:131, progress:100, certId:'CERT-OHS-0204'},
+  {id:6, name:'Chemical Handling Safety',                  mode:'online',  status:'inprogress', dueDate:'Jul 7, 2026',   daysLeft:34,  progress:62,  certId:null},
+  {id:7, name:'Emergency Response Fundamentals',           mode:'offline', status:'active',     dueDate:'Nov 20, 2026',  daysLeft:170, progress:100, certId:'CERT-ER-0099'},
+  {id:8, name:'Radiation Safety Awareness',                mode:'online',  status:'active',     dueDate:'Dec 1, 2026',   daysLeft:181, progress:100, certId:'CERT-RS-0077'}
+];
+
+var NOTIFICATIONS = [
+  {id:1, type:'overdue', unread:true,  icon:'🚨', bg:'#fef2f2', title:'Industrial Safety course is overdue', sub:'Was due May 15 — please enrol immediately', time:'Today, 09:00'},
+  {id:2, type:'expiring',unread:true,  icon:'⏳', bg:'#fffbeb', title:'Electrical Safety expires in 11 days', sub:'Renew before Jun 14 to remain compliant',   time:'Today, 09:00'},
+  {id:3, type:'expiring',unread:true,  icon:'⏳', bg:'#fffbeb', title:'Working at Heights Safety expires Jun 28', sub:'25 days remaining — schedule renewal now',time:'Yesterday'},
+  {id:4, type:'info',    unread:false, icon:'📋', bg:'#eff6ff', title:'New course assigned: Chemical Handling', sub:'Assigned by HR · Due Jul 7, 2026',        time:'Jun 1'},
+  {id:5, type:'success', unread:false, icon:'✅', bg:'#f0fdf4', title:'Certificate issued: Radiation Safety', sub:'Valid until Dec 1, 2026 · Cert ID: CERT-RS-0077', time:'Jun 1'}
+];
+
+var SCHEDULE = [
+  {day:'10', month:'Jun', name:'Industrial Safety — Makeup Session', time:'09:00–13:00', location:'Training Centre A', mode:'offline'},
+  {day:'14', month:'Jun', name:'Electrical Safety Renewal (online)', time:'Self-paced', location:'Sental LMS Portal', mode:'online'},
+  {day:'19', month:'Jun', name:'Emergency Response Drill', time:'10:00–12:00', location:'Site B Safety Room', mode:'offline'}
+];
+
+var CERTS = COURSES.filter(function(c){return c.certId});
+
+/* ── Status config ── */
+var statusCfg = {
+  overdue:    {label:'Overdue',     cls:'ov', dot:'s-ov', tag:'tag-ov', text:'text-ov'},
+  expiring:   {label:'Expiring',    cls:'exp',dot:'s-exp',tag:'tag-exp',text:'text-exp'},
+  active:     {label:'Active',      cls:'ok', dot:'s-ok', tag:'tag-ok', text:'text-ok'},
+  inprogress: {label:'In progress', cls:'ip', dot:'s-ip', tag:'tag-ip', text:'text-ip'}
+};
+
+/* ── Render courses ── */
+function renderCourses(filter) {
+  var list = document.getElementById('courses-list');
+  var data = filter === 'all' ? COURSES : COURSES.filter(function(c){return c.status===filter});
+  if (!data.length) { list.innerHTML='<div class="empty"><div class="empty-icon">🎯</div>No courses in this category</div>'; return; }
+
+  list.innerHTML = data.map(function(c) {
+    var cfg = statusCfg[c.status];
+    var modeTag = c.mode === 'online'
+      ? '<span style="color:var(--g2);background:#eff6ff;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700">ONLINE</span>'
+      : '<span style="color:#6b21a8;background:#f5f3ff;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700">OFFLINE</span>';
+
+    var deadlineText = c.status === 'overdue'
+      ? '<span class="text-ov" style="font-size:10px;font-weight:700">'+Math.abs(c.daysLeft)+'d overdue</span>'
+      : c.status === 'expiring'
+        ? '<span class="text-exp" style="font-size:10px;font-weight:700">'+c.daysLeft+'d left</span>'
+        : c.status === 'inprogress'
+          ? '<span class="text-ip" style="font-size:10px;font-weight:700">'+c.progress+'% done</span>'
+          : '<span class="text-ok" style="font-size:10px;font-weight:600">'+c.daysLeft+'d left</span>';
+
+    var actionBtn = c.status === 'overdue'
+      ? '<button onclick="enrollNow('+c.id+')" style="background:var(--r2);color:#fff;border:none;border-radius:6px;padding:3px 9px;font-size:10px;font-weight:700;cursor:pointer">Enrol now</button>'
+      : c.status === 'inprogress'
+        ? '<button onclick="continueCourse('+c.id+')" style="background:var(--g2);color:#fff;border:none;border-radius:6px;padding:3px 9px;font-size:10px;font-weight:700;cursor:pointer">Continue</button>'
+        : c.certId
+          ? '<button class="cr-cert-btn" onclick="openCert('+c.id+')">🏅 View cert</button>'
+          : '';
+
+    var progressBar = c.status === 'inprogress'
+      ? '<div class="cr-progress"><div class="cr-progress-fill" style="width:'+c.progress+'%;background:var(--g3)"></div></div>'
+      : '';
+
+    return '<div class="course-row" data-status="'+c.status+'">' +
+      '<div class="cr-status '+cfg.dot+'"></div>' +
+      '<div class="cr-info">' +
+        '<div class="cr-name">'+c.name+'</div>' +
+        '<div class="cr-meta">' +
+          modeTag +
+          '<span class="cr-tag '+cfg.tag+'">'+cfg.label+'</span>' +
+          '<span>Due '+c.dueDate+'</span>' +
+        '</div>' +
+        progressBar +
+      '</div>' +
+      '<div class="cr-right">'+deadlineText+actionBtn+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+function filterCourses(f, el) {
+  document.querySelectorAll('.ftab').forEach(function(t){t.classList.remove('active')});
+  el.classList.add('active');
+  renderCourses(f);
+}
+
+/* ── Render notifications ── */
+function renderNotifications() {
+  var unread = NOTIFICATIONS.filter(function(n){return n.unread}).length;
+  document.getElementById('unread-count').textContent = unread ? unread+' new' : 'All read';
+  document.getElementById('unread-count').style.background = unread ? '#fef2f2' : '#f0fdf4';
+  document.getElementById('unread-count').style.color = unread ? 'var(--r2)' : 'var(--t2)';
+  document.getElementById('notif-badge').textContent = unread;
+  document.getElementById('notif-badge').style.display = unread ? 'flex' : 'none';
+
+  document.getElementById('notif-list').innerHTML = NOTIFICATIONS.map(function(n) {
+    return '<div class="notif-item'+(n.unread?' unread':'')+'" onclick="readNotif('+n.id+')">' +
+      '<div class="notif-icon-wrap" style="background:'+n.bg+'">'+n.icon+'</div>' +
+      '<div class="notif-body">' +
+        '<div class="notif-title">'+n.title+'</div>' +
+        '<div class="notif-sub">'+n.sub+'</div>' +
+        '<div class="notif-time">'+n.time+'</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function readNotif(id) {
+  NOTIFICATIONS.forEach(function(n){ if(n.id===id) n.unread=false; });
+  renderNotifications();
+}
+function markAllRead() {
+  NOTIFICATIONS.forEach(function(n){ n.unread=false; });
+  renderNotifications();
+}
+
+/* ── Render schedule ── */
+function renderSchedule() {
+  document.getElementById('schedule-list').innerHTML = SCHEDULE.length
+    ? SCHEDULE.map(function(s) {
+        var modeStyle = s.mode==='online'
+          ? 'background:#eff6ff;color:#1d4ed8'
+          : 'background:#f5f3ff;color:#6b21a8';
+        return '<div class="sched-item">' +
+          '<div class="sched-date-box"><div class="sched-day">'+s.day+'</div><div class="sched-month">'+s.month+'</div></div>' +
+          '<div class="sched-info">' +
+            '<div class="sched-name">'+s.name+'</div>' +
+            '<div class="sched-detail">' +
+              '<span class="sched-mode" style="'+modeStyle+'">'+s.mode.toUpperCase()+'</span>' +
+              '<span>'+s.time+'</span>' +
+              '<span>·</span>' +
+              '<span>'+s.location+'</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('')
+    : '<div class="empty"><div class="empty-icon">📅</div>No sessions scheduled</div>';
+}
+
+/* ── Render certificates ── */
+function renderCerts() {
+  document.getElementById('certs-list').innerHTML = CERTS.map(function(c) {
+    return '<div class="course-row" onclick="openCert('+c.id+')">' +
+      '<div style="font-size:20px;flex-shrink:0">🏅</div>' +
+      '<div class="cr-info">' +
+        '<div class="cr-name">'+c.name+'</div>' +
+        '<div class="cr-meta"><span style="font-family:monospace;font-size:10px;color:var(--muted)">'+c.certId+'</span><span>·</span><span>Expires '+c.dueDate+'</span></div>' +
+      '</div>' +
+      '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;color:var(--n5)"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+    '</div>';
+  }).join('');
+}
+
+/* ── Certificate modal ── */
+function openCert(courseId) {
+  var c = COURSES.find(function(x){return x.id===courseId});
+  if (!c || !c.certId) return;
+  var issued = new Date(c.dueDate);
+  issued.setFullYear(issued.getFullYear()-1);
+  document.getElementById('cert-course-name').textContent = c.name;
+  document.getElementById('cert-holder').textContent = 'Awarded to '+EMPLOYEE.name+' · '+EMPLOYEE.company;
+  document.getElementById('cert-issued').textContent = issued.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('cert-expires').textContent = c.dueDate;
+  document.getElementById('cert-id').textContent = c.certId;
+  document.getElementById('cert-modal').classList.add('open');
+}
+function closeModal() { document.getElementById('cert-modal').classList.remove('open'); }
+
+/* ── Quick actions ── */
+function enrollNow(id) {
+  var btn = event.target;
+  btn.textContent = 'Opening…';
+  setTimeout(function(){ btn.textContent = 'Enrolled ✓'; btn.style.background='var(--t2)'; }, 700);
+}
+function continueCourse(id) {
+  var btn = event.target;
+  btn.textContent = 'Launching…';
+  setTimeout(function(){ btn.textContent = 'Resume →'; btn.style.background='var(--t2)'; }, 700);
+}
+
+/* ── Compliance ring animation ── */
+function animateRing(pct) {
+  var circ = 2 * Math.PI * 36; // 226.2
+  var offset = circ * (1 - pct/100);
+  var fill = document.getElementById('ring-fill');
+  var color = pct >= 85 ? '#34d399' : pct >= 60 ? '#fbbf24' : '#f87171';
+  fill.style.stroke = color;
+  setTimeout(function(){ fill.style.strokeDashoffset = offset; }, 100);
+  document.getElementById('ring-pct').textContent = pct + '%';
+}
+
+/* ── Keyboard ── */
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+
+/* ── Init ── */
+renderCourses('all');
+renderNotifications();
+renderSchedule();
+renderCerts();
+animateRing(76);
+</script>
+</body>
+</html>
