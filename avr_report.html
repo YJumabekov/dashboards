@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Act of Completed Works — Sental LMS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g1:#0f4c81;--g2:#1d6fa4;--g3:#3b9dd4;
+  --t2:#059669;--a2:#d97706;--r2:#dc2626;
+  --n1:#0f172a;--n2:#1e293b;--n3:#334155;--n4:#64748b;--n5:#94a3b8;--n6:#cbd5e1;--n7:#e2e8f0;--n8:#f1f5f9;--n9:#f8fafc;
+  --card:#fff;--bg:#eef2f7;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px;min-height:100vh;display:flex;flex-direction:column}
+
+/* ── Header ── */
+.header{background:var(--g1);padding:9px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.logo{color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;gap:10px}
+.logo-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:2px 8px;font-size:10px;color:rgba(255,255,255,.85);font-weight:500}
+.hright{display:flex;align-items:center;gap:10px;font-size:11px;color:rgba(255,255,255,.7)}
+.hright a{color:rgba(255,255,255,.7);text-decoration:none;font-size:12px}
+.hright a:hover{color:#fff}
+
+/* ── Main layout ── */
+.main{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px;max-width:1400px;width:100%;margin:0 auto;align-items:start}
+
+/* ── Card ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-hdr{padding:14px 18px;border-bottom:1px solid var(--n8);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:13px;font-weight:700;color:var(--n2)}
+.card-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.card-badges{display:flex;align-items:center;gap:6px}
+.ctag{display:inline-flex;align-items:center;gap:4px;border-radius:20px;padding:3px 9px;font-size:10px;font-weight:600;border:1px solid}
+.ctag.blue{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.ctag.green{background:#f0fdf4;color:#15803d;border-color:#bbf7d0}
+.ctag.amber{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.card-body{padding:16px 18px}
+
+/* ── Form ── */
+.form-row{display:grid;gap:10px;margin-bottom:12px}
+.form-row.cols3{grid-template-columns:1fr 1fr 1fr}
+.form-row.cols2{grid-template-columns:1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.form-group input,.form-group select{border:1px solid var(--border);border-radius:6px;padding:6px 9px;font-size:12px;color:var(--n2);background:#fff;outline:none;width:100%;transition:border-color .15s}
+.form-group input:focus,.form-group select:focus{border-color:var(--g3)}
+
+/* ── Sync status ── */
+.sync-bar{display:flex;align-items:center;justify-content:space-between;background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:14px}
+.sync-info{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--t2);flex-shrink:0;box-shadow:0 0 0 2px rgba(5,150,105,.2)}
+.sync-dot.loading{background:var(--a2);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-time{font-weight:600;color:var(--n3)}
+.sync-btn{background:var(--g1);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .15s}
+.sync-btn:hover{background:var(--g2)}
+.sync-btn:disabled{background:var(--n5);cursor:default}
+
+/* ── Section label ── */
+.section-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+
+/* ── Services table ── */
+.svc-table{width:100%;border-collapse:collapse;font-size:12px}
+.svc-table thead th{background:var(--n8);padding:6px 8px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);text-align:left}
+.svc-table thead th:last-child,.svc-table thead th:nth-last-child(2){text-align:center}
+.svc-table tbody tr{border-bottom:1px solid var(--n8)}
+.svc-table tbody tr:last-child{border-bottom:none}
+.svc-table tbody td{padding:6px 8px;vertical-align:middle}
+.svc-num{color:var(--muted);font-size:10px;width:26px}
+.svc-name{color:var(--n2);line-height:1.4}
+.svc-unit{color:var(--muted);text-align:center;width:44px;font-size:11px}
+.qty-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:80px}
+.qty-input{width:70px;border:1px solid var(--border);border-radius:5px;padding:4px 6px;font-size:12px;font-weight:700;text-align:right;color:var(--g2);outline:none;transition:border-color .15s,background .15s}
+.qty-input:focus{border-color:var(--g3)}
+.qty-input.overridden{border-color:var(--a2);background:#fffdf0;color:var(--a2)}
+.override-dot{position:absolute;top:-3px;right:-3px;width:7px;height:7px;border-radius:50%;background:var(--a2);display:none}
+.qty-input.overridden ~ .override-dot{display:block}
+
+.svc-table tfoot td{padding:8px;font-size:12px;font-weight:700;color:var(--n2);border-top:2px solid var(--border)}
+.svc-table tfoot .total-val{text-align:right;color:var(--g2);font-size:14px}
+
+/* ── Bottom actions ── */
+.actions-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--n8)}
+.legend{display:flex;align-items:center;gap:12px;font-size:10px;color:var(--muted)}
+.legend-item{display:flex;align-items:center;gap:4px}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.btn-row{display:flex;gap:8px}
+.btn-reset{background:#fff;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:11px;font-weight:600;color:var(--n3);cursor:pointer;transition:all .15s}
+.btn-reset:hover{border-color:var(--n5);color:var(--n2)}
+.btn-dl{background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:opacity .15s;box-shadow:0 2px 8px rgba(15,76,129,.3)}
+.btn-dl:hover{opacity:.88}
+.btn-dl svg{flex-shrink:0}
+
+/* ── Preview ── */
+.preview-box{background:var(--n9);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.6;min-height:200px}
+.preview-title{font-size:14px;font-weight:700;color:var(--n1);text-align:center;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--n2)}
+.preview-meta{margin-bottom:12px;display:flex;flex-direction:column;gap:3px}
+.meta-row{display:flex;gap:8px;font-size:11px}
+.meta-lbl{color:var(--muted);min-width:80px;font-weight:600}
+.meta-val{color:var(--n2)}
+.prev-section-lbl{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.prev-row{display:flex;align-items:baseline;gap:6px;padding:3px 0;border-bottom:1px solid var(--n7);font-size:11px}
+.prev-row:last-of-type{border-bottom:none}
+.prev-num{color:var(--muted);min-width:18px;font-size:10px}
+.prev-name{flex:1;color:var(--n2)}
+.prev-unit{color:var(--muted);font-size:10px;margin-right:4px}
+.prev-qty{font-weight:700;color:var(--g2);min-width:32px;text-align:right}
+.prev-total{display:flex;justify-content:space-between;font-weight:700;font-size:12px;color:var(--n1);border-top:2px solid var(--n2);margin-top:8px;padding-top:8px}
+.prev-sign{margin-top:12px;padding-top:8px;border-top:1px dashed var(--border);font-size:10px;color:var(--muted);line-height:2}
+
+/* ── Auto-load skeleton ── */
+.skeleton{display:inline-block;background:linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:4px;height:12px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .main{grid-template-columns:1fr;max-width:680px}
+  .form-row.cols3{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    Sental <span style="color:#7dd3fc">LMS</span>
+    <span class="logo-badge">Analytics</span>
+  </div>
+  <div class="hright">
+    <a href="/">← Back to dashboards</a>
+    <span>Act of Completed Works Generator</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- LEFT: Settings -->
+  <div class="card">
+    <div class="card-hdr">
+      <div>
+        <div class="card-title">Report Settings</div>
+        <div class="card-sub">Select period and company — quantities are loaded automatically from LMS</div>
+      </div>
+      <div class="card-badges">
+        <span class="ctag blue">ACW / Excel</span>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <!-- Period + Company -->
+      <div class="form-row cols3">
+        <div class="form-group">
+          <label>Company (Client)</label>
+          <select id="rpt-company" onchange="onCompanyOrPeriodChange()">
+            <option value="kaz">Kazatomprom LLP</option>
+            <option value="arc">ArcelorMittal Kazakhstan</option>
+            <option value="mash">TOO MashStroy</option>
+            <option value="kmg">KazMunayGas</option>
+            <option value="custom">— Enter manually —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Month</label>
+          <select id="rpt-month" onchange="onCompanyOrPeriodChange()">
+            <option value="1">January</option><option value="2">February</option>
+            <option value="3">March</option><option value="4">April</option>
+            <option value="5">May</option><option value="6">June</option>
+            <option value="7">July</option><option value="8">August</option>
+            <option value="9">September</option><option value="10">October</option>
+            <option value="11">November</option><option value="12">December</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Year</label>
+          <select id="rpt-year" onchange="onCompanyOrPeriodChange()">
+            <option>2024</option><option>2025</option><option selected>2026</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Custom name -->
+      <div id="custom-name-wrap" style="display:none" class="form-row">
+        <div class="form-group">
+          <label>Company name</label>
+          <input type="text" id="rpt-custom-name" placeholder="Enter organisation name" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <!-- ACW # + contract + executor -->
+      <div class="form-row cols3">
+        <div class="form-group">
+          <label>ACW Number</label>
+          <input type="text" id="rpt-acw-num" value="1" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Contract Number</label>
+          <input type="text" id="rpt-contract" value="001/2025" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Contractor</label>
+          <input type="text" id="rpt-executor" value='TOO "Sental Education"' oninput="updatePreview()">
+        </div>
+      </div>
+
+      <!-- Sync status bar -->
+      <div class="sync-bar">
+        <div class="sync-info">
+          <div class="sync-dot" id="sync-dot"></div>
+          <span id="sync-status-text">Data synced from LMS</span>
+          &nbsp;·&nbsp;
+          <span class="sync-time" id="sync-time"></span>
+        </div>
+        <button class="sync-btn" id="sync-btn" onclick="syncFromLMS(true)">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M14 8A6 6 0 1 1 8 2a6 6 0 0 1 4.24 1.76L14 2v4h-4l1.59-1.59A4 4 0 1 0 12 8" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Sync from LMS
+        </button>
+      </div>
+
+      <!-- Services table -->
+      <div class="section-lbl">Services performed</div>
+      <table class="svc-table">
+        <thead>
+          <tr>
+            <th style="width:26px">#</th>
+            <th>Service name</th>
+            <th style="width:44px;text-align:center">Unit</th>
+            <th style="width:80px;text-align:center">Qty</th>
+          </tr>
+        </thead>
+        <tbody id="svc-body"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="text-align:right;font-size:11px;color:var(--n3);font-weight:600">TOTAL:</td>
+            <td class="total-val" id="total-cell">0</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="actions-row">
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--g2)"></div>
+            <span>From LMS</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--a2)"></div>
+            <span>Manually overridden</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-reset" onclick="resetToLMS()">↺ Reset to LMS data</button>
+          <button class="btn-dl" onclick="generateExcel()">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 6l4 4 4-4M2 12h12v2H2z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Download Excel (ACW)
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: Preview -->
+  <div class="card">
+    <div class="card-hdr">
+      <div>
+        <div class="card-title">Report Preview</div>
+        <div class="card-sub">Live preview of the Excel file content</div>
+      </div>
+      <div class="card-badges">
+        <span class="ctag green">live preview</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="preview-box" id="preview-box">
+        <div style="color:var(--muted);font-size:12px;text-align:center;padding:40px 0">Loading preview…</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+/* ── Course catalogue ── */
+var COURSES = [
+  {id:'ind_safe_off',  name:'Industrial Safety at Hazardous Facilities (offline)',  unit:'svc'},
+  {id:'ind_safe_on',   name:'Industrial Safety at Hazardous Facilities (online)',   unit:'svc'},
+  {id:'fire_off',      name:'Fire Safety Minimum (offline)',                         unit:'svc'},
+  {id:'fire_on',       name:'Fire Safety Minimum (online)',                          unit:'svc'},
+  {id:'ohs_off',       name:'Occupational Health & Safety (offline)',                unit:'svc'},
+  {id:'ohs_on',        name:'Occupational Health & Safety (online)',                 unit:'svc'},
+  {id:'elec_off',      name:'Electrical Safety (offline)',                           unit:'svc'},
+  {id:'elec_on',       name:'Electrical Safety (online)',                            unit:'svc'},
+  {id:'crane_off',     name:'Floor-Operated Crane Operator (offline)',               unit:'svc'},
+  {id:'rigging_off',   name:'Rigger / Slinger (offline)',                            unit:'svc'},
+  {id:'height_off',    name:'Working at Heights Safety (offline)',                   unit:'svc'},
+  {id:'height_on',     name:'Working at Heights Safety (online)',                    unit:'svc'},
+  {id:'coord',         name:'Training Coordinator Services',                         unit:'hr'}
+];
+
+/* ── Mock LMS data per company ──
+   Base completions per course; vary by month with a seeded formula.
+   In production this would be an API call to IOMAD / Moodle.         */
+var LMS_BASE = {
+  kaz:  [140,34,48,10,100,34,144,37,69,69,65,30,152],
+  arc:  [210,52,70,18,160,48,190,55,90,88,95,42,180],
+  mash: [80, 20,35, 6, 60,22, 90,28,45,40,50,18,120],
+  kmg:  [0,  0, 0,  0,  0, 0,  0, 0, 0, 0, 0, 0,  0]
+};
+
+var _lmsValues = [];   // last synced values per course index
+var _syncTime  = null;
+
+/* deterministic monthly variation ±15% using month+year as seed */
+function monthlyVariation(base, courseIdx, month, year) {
+  if (base === 0) return 0;
+  var seed = (courseIdx * 37 + month * 13 + year * 7) % 100;
+  var pct = (seed - 50) * 0.003; // -15% to +15%
+  return Math.max(0, Math.round(base * (1 + pct)));
+}
+
+function getLMSData(companyId, month, year) {
+  var base = LMS_BASE[companyId];
+  if (!base) return COURSES.map(function() { return 0; });
+  return base.map(function(b, i) {
+    return monthlyVariation(b, i, month, year);
+  });
+}
+
+/* ── Build table ── */
+function buildTable() {
+  var tbody = document.getElementById('svc-body');
+  tbody.innerHTML = '';
+  COURSES.forEach(function(c, i) {
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td class="svc-num">' + (i+1) + '</td>' +
+      '<td class="svc-name">' + c.name + '</td>' +
+      '<td class="svc-unit">' + c.unit + '</td>' +
+      '<td class="svc-unit" style="width:80px"><div class="qty-wrap">' +
+        '<input type="number" min="0" class="qty-input" id="qty-' + i + '" value="0"' +
+        ' oninput="onQtyInput(' + i + ')">' +
+        '<div class="override-dot" id="dot-' + i + '"></div>' +
+      '</div></td>';
+    tbody.appendChild(tr);
+  });
+}
+
+/* ── Sync from LMS (simulated) ── */
+function syncFromLMS(manual) {
+  var comp = document.getElementById('rpt-company').value;
+  var month = parseInt(document.getElementById('rpt-month').value);
+  var year = parseInt(document.getElementById('rpt-year').value);
+  if (comp === 'custom') { updatePreview(); return; }
+
+  var dot = document.getElementById('sync-dot');
+  var txt = document.getElementById('sync-status-text');
+  var btn = document.getElementById('sync-btn');
+  dot.classList.add('loading');
+  txt.textContent = 'Syncing from LMS…';
+  btn.disabled = true;
+
+  setTimeout(function() {
+    _lmsValues = getLMSData(comp, month, year);
+    _lmsValues.forEach(function(v, i) {
+      var inp = document.getElementById('qty-' + i);
+      if (inp) {
+        inp.value = v;
+        inp.classList.remove('overridden');
+        document.getElementById('dot-' + i).style.display = 'none';
+      }
+    });
+    _syncTime = new Date();
+    dot.classList.remove('loading');
+    txt.textContent = 'Data synced from LMS';
+    document.getElementById('sync-time').textContent = formatTime(_syncTime);
+    btn.disabled = false;
+    updatePreview();
+  }, 600 + Math.random() * 400);
+}
+
+function onCompanyOrPeriodChange() {
+  var comp = document.getElementById('rpt-company').value;
+  document.getElementById('custom-name-wrap').style.display = comp === 'custom' ? 'block' : 'none';
+  syncFromLMS(false);
+}
+
+function onQtyInput(idx) {
+  var inp = document.getElementById('qty-' + idx);
+  var dot = document.getElementById('dot-' + idx);
+  var lmsVal = (_lmsValues && _lmsValues[idx] !== undefined) ? _lmsValues[idx] : null;
+  var isOverridden = lmsVal !== null && parseInt(inp.value) !== lmsVal;
+  inp.classList.toggle('overridden', isOverridden);
+  dot.style.display = isOverridden ? 'block' : 'none';
+  updatePreview();
+}
+
+function resetToLMS() {
+  if (!_lmsValues || !_lmsValues.length) return;
+  _lmsValues.forEach(function(v, i) {
+    var inp = document.getElementById('qty-' + i);
+    if (inp) {
+      inp.value = v;
+      inp.classList.remove('overridden');
+      document.getElementById('dot-' + i).style.display = 'none';
+    }
+  });
+  updatePreview();
+}
+
+/* ── Helpers ── */
+function formatTime(d) {
+  if (!d) return '';
+  return d.toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var MONTHS_OF = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function getCompanyName() {
+  var sel = document.getElementById('rpt-company').value;
+  var names = {kaz:'Kazatomprom LLP',arc:'ArcelorMittal Kazakhstan',mash:'TOO MashStroy',kmg:'KazMunayGas'};
+  return sel === 'custom' ? (document.getElementById('rpt-custom-name').value || 'Company') : (names[sel] || sel);
+}
+
+function getQtys() {
+  return COURSES.map(function(_, i) {
+    return parseInt(document.getElementById('qty-' + i).value) || 0;
+  });
+}
+
+/* ── Live preview ── */
+function updatePreview() {
+  var month = parseInt(document.getElementById('rpt-month').value);
+  var year = document.getElementById('rpt-year').value;
+  var acwNum = document.getElementById('rpt-acw-num').value || '1';
+  var contract = document.getElementById('rpt-contract').value || '';
+  var executor = document.getElementById('rpt-executor').value || '';
+  var compName = getCompanyName();
+  var qtys = getQtys();
+  var total = qtys.reduce(function(s,q){return s+q;},0);
+
+  document.getElementById('total-cell').textContent = total;
+
+  var lastDay = new Date(year, month, 0).getDate();
+  var dateRange = '01–' + String(lastDay).padStart(2,'0') + ' ' + MONTHS_OF[month-1] + ' ' + year;
+
+  var rows = '';
+  var displayIdx = 0;
+  COURSES.forEach(function(c, i) {
+    var q = qtys[i];
+    if (q === 0) return;
+    displayIdx++;
+    rows += '<div class="prev-row">' +
+      '<span class="prev-num">' + displayIdx + '</span>' +
+      '<span class="prev-name">' + c.name + '</span>' +
+      '<span class="prev-unit">' + c.unit + '</span>' +
+      '<span class="prev-qty">' + q + '</span>' +
+    '</div>';
+  });
+
+  document.getElementById('preview-box').innerHTML =
+    '<div class="preview-title">ACT OF COMPLETED WORKS<br>(SERVICES RENDERED) No. ' + acwNum + '</div>' +
+    '<div class="preview-meta">' +
+      '<div class="meta-row"><span class="meta-lbl">Period:</span><span class="meta-val">' + MONTHS[month-1] + ' ' + year + '</span></div>' +
+      '<div class="meta-row"><span class="meta-lbl">Client:</span><span class="meta-val">' + compName + '</span></div>' +
+      '<div class="meta-row"><span class="meta-lbl">Contractor:</span><span class="meta-val">' + executor + '</span></div>' +
+      '<div class="meta-row"><span class="meta-lbl">Contract:</span><span class="meta-val">No. ' + contract + '</span></div>' +
+      '<div class="meta-row"><span class="meta-lbl">Dates:</span><span class="meta-val">' + dateRange + '</span></div>' +
+    '</div>' +
+    '<div class="prev-section-lbl">List of services</div>' +
+    (rows || '<div style="color:var(--muted);font-size:11px;padding:8px 0">No services with non-zero quantity.</div>') +
+    '<div class="prev-total"><span>TOTAL</span><span>' + total + ' svc / hr</span></div>' +
+    '<div class="prev-sign">' +
+      '✎ Contractor: _____________________ / ___________<br>' +
+      '✎ Client:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_____________________ / ___________' +
+    '</div>';
+}
+
+/* ── Excel generation ── */
+function generateExcel() {
+  if (typeof XLSX === 'undefined') {
+    alert('Excel library is loading — please wait a few seconds and try again.');
+    return;
+  }
+  var month = parseInt(document.getElementById('rpt-month').value);
+  var year = document.getElementById('rpt-year').value;
+  var acwNum = document.getElementById('rpt-acw-num').value || '1';
+  var contract = document.getElementById('rpt-contract').value || '';
+  var executor = document.getElementById('rpt-executor').value || '';
+  var compName = getCompanyName();
+  var qtys = getQtys();
+  var total = qtys.reduce(function(s,q){return s+q;},0);
+  var lastDay = new Date(year, month, 0).getDate();
+  var dateStr = '01–' + String(lastDay).padStart(2,'0') + ' ' + MONTHS_OF[month-1] + ' ' + year;
+  var fileName = 'ACW_' + acwNum + '_' + compName.replace(/[«»"\/\\]/g,'') + '_' + MONTHS[month-1] + '_' + year + '.xlsx';
+
+  function c(val, bold, sz, align, wrap) {
+    return {v: val, t:'s', s:{
+      font:{name:'Times New Roman',sz:sz||10,bold:!!bold},
+      alignment:{horizontal:align||'left',vertical:'center',wrapText:!!wrap},
+      border:{top:{style:'thin',color:{rgb:'000000'}},bottom:{style:'thin',color:{rgb:'000000'}},
+              left:{style:'thin',color:{rgb:'000000'}},right:{style:'thin',color:{rgb:'000000'}}}
+    }};
+  }
+  function cn(val, bold, sz, align) {
+    return {v:val, t:'n', s:{
+      font:{name:'Times New Roman',sz:sz||10,bold:!!bold},
+      alignment:{horizontal:align||'right',vertical:'center'},
+      border:{top:{style:'thin',color:{rgb:'000000'}},bottom:{style:'thin',color:{rgb:'000000'}},
+              left:{style:'thin',color:{rgb:'000000'}},right:{style:'thin',color:{rgb:'000000'}}}
+    }};
+  }
+  function blank() { return c(''); }
+
+  var wsData = [];
+  wsData.push([c('ACT OF COMPLETED WORKS (SERVICES RENDERED)', true, 13, 'center')]);
+  wsData.push([c('No. ' + acwNum, true, 11, 'center')]);
+  wsData.push([]);
+  wsData.push([c('Contractor:', true), c(executor)]);
+  wsData.push([c('Client:', true), c(compName)]);
+  wsData.push([c('Contract:', true), c('No. ' + contract)]);
+  wsData.push([c('Period:', true), c(dateStr)]);
+  wsData.push([]);
+  wsData.push([
+    c('No.', true, 10, 'center', true),
+    c('Service name', true, 10, 'center', true),
+    c('Date of service', true, 10, 'center', true),
+    c('Unit', true, 10, 'center', true),
+    c('Quantity', true, 10, 'center', true)
+  ]);
+  wsData.push([c('1',false,10,'center'),c('2',false,10,'center'),c('3',false,10,'center'),c('4',false,10,'center'),c('5',false,10,'center')]);
+
+  COURSES.forEach(function(s, i) {
+    var q = qtys[i] || 0;
+    total += 0; // already summed above
+    wsData.push([
+      cn(i+1, false, 10, 'center'),
+      c(s.name, false, 10, 'left', true),
+      c(dateStr, false, 10, 'center'),
+      c(s.unit, false, 10, 'center'),
+      q > 0 ? cn(q, false, 10, 'right') : c('—', false, 10, 'center')
+    ]);
+  });
+
+  wsData.push([blank(), blank(), c('Total', true, 10, 'right'), blank(), cn(total, true, 10, 'right')]);
+  wsData.push([]);
+  wsData.push([c('Contractor:', true), c('________________________'), c('/'), c('________________________')]);
+  wsData.push([c('', false, 9), c('(signature)', false, 9, 'center'), c(''), c('(full name)', false, 9, 'center')]);
+  wsData.push([]);
+  wsData.push([c('Client:', true), c('________________________'), c('/'), c('________________________')]);
+  wsData.push([c('', false, 9), c('(signature)', false, 9, 'center'), c(''), c('(full name)', false, 9, 'center')]);
+
+  var ws = XLSX.utils.aoa_to_sheet(wsData);
+  ws['!cols'] = [{wch:6},{wch:52},{wch:22},{wch:10},{wch:12}];
+  ws['!rows'] = wsData.map(function(_, ri) { return ri===0?{hpt:28}:ri===8?{hpt:40}:{hpt:18}; });
+  ws['!merges'] = [{s:{r:0,c:0},e:{r:0,c:4}},{s:{r:1,c:0},e:{r:1,c:4}}];
+
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'ACW');
+  XLSX.writeFile(wb, fileName);
+}
+
+/* ── Init ── */
+(function() {
+  var now = new Date();
+  document.getElementById('rpt-month').value = now.getMonth() + 1;
+  document.getElementById('rpt-year').value = now.getFullYear();
+  buildTable();
+  syncFromLMS(false);
+
+  document.getElementById('rpt-company').addEventListener('change', function() {
+    document.getElementById('custom-name-wrap').style.display = this.value === 'custom' ? 'block' : 'none';
+  });
+})();
+</script>
+</body>
+</html>
