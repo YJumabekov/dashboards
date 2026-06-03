@@ -299,13 +299,30 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div class="notif-list" id="notif-list"></div>
     </div>
 
-    <!-- Upcoming Schedule -->
+    <!-- Status Pie Chart -->
     <div class="card">
       <div class="card-hdr">
-        <span class="card-title">Upcoming Training Sessions</span>
-        <span style="font-size:10px;color:var(--muted)">June 2026</span>
+        <span class="card-title">Training Status Overview</span>
+        <span style="font-size:10px;color:var(--muted)">8 courses total</span>
       </div>
-      <div id="schedule-list"></div>
+      <div class="pie-wrap">
+        <div class="pie-svg-wrap">
+          <svg id="pie-svg" width="110" height="110" viewBox="0 0 110 110"></svg>
+        </div>
+        <div class="pie-legend" id="pie-legend"></div>
+      </div>
+    </div>
+
+    <!-- Courses In Progress -->
+    <div class="card">
+      <div class="card-hdr">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="card-title">Enrolled / In Progress</span>
+          <span class="card-count" id="ip-count">0</span>
+        </div>
+        <span style="font-size:10px;color:var(--muted)">Progress this month</span>
+      </div>
+      <div id="ip-list"></div>
     </div>
 
     <!-- My Certificates -->
