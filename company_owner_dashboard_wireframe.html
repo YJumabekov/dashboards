@@ -2284,6 +2284,137 @@ function drawForecastChart() {
   el.innerHTML = html;
 }
 
+/* ── REGISTRATION GROWTH CHART ──────────────── */
+var _regPeriod = '1y';
+var _regData = {
+  '3m': {
+    labels:['Mar','Apr','May'],
+    kaz:[14,18,16], arc:[22,28,24], mash:[10,14,12]
+  },
+  '1y': {
+    labels:['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'],
+    kaz:[12,14,18,20,10,8,6,16,19,17,15,14],
+    arc:[18,22,28,31,20,15,10,24,28,26,22,20],
+    mash:[8,10,14,15,9,7,5,12,14,13,11,10]
+  },
+  '2y': {
+    labels:['Jun24','Sep24','Dec24','Mar25','Jun25','Sep25','Dec25','Mar26','May26'],
+    kaz:[8,11,7,10,12,20,6,17,14],
+    arc:[12,16,10,15,18,31,10,26,20],
+    mash:[5,7,5,8,8,15,5,13,10]
+  },
+  'all': {
+    labels:['2022','2023','2024','Q1-25','Q2-25','Q3-25','Q4-25','2026 YTD'],
+    kaz:[85,110,140,28,35,50,20,45],
+    arc:[0,60,180,40,50,70,25,65],
+    mash:[0,0,90,22,28,35,15,32]
+  }
+};
+
+function setRegPeriod(p, btn) {
+  _regPeriod = p;
+  ['3m','1y','2y','all'].forEach(function(k){
+    var el = document.getElementById('reg-'+k);
+    if (el) el.classList.toggle('active', k===p);
+  });
+  drawRegChart();
+}
+
+function drawRegChart() {
+  var el = document.getElementById('reg-chart-container');
+  if (!el) return;
+  var d = _regData[_regPeriod];
+  var cols = ['#3b82c4','#dc2626','#d97706'];
+  var H = 110, PAD = 28;
+  var W = el.offsetWidth || 520;
+  var n = d.labels.length;
+  var grp = 3, gap = 3, bw = Math.max(6, Math.floor((W - PAD*2 - (n-1)*8) / n / grp) - 1);
+
+  var maxV = 0;
+  d.kaz.concat(d.arc).concat(d.mash).forEach(function(v){if(v>maxV)maxV=v;});
+  if (!maxV) maxV = 1;
+
+  var html = '<svg width="100%" height="'+(H+22)+'" viewBox="0 0 '+W+' '+(H+22)+'" style="overflow:visible;display:block">';
+
+  // Grid
+  [0, Math.round(maxV*0.5), maxV].forEach(function(v){
+    var y = H - (v/maxV)*H + 4;
+    html += '<line x1="'+PAD+'" y1="'+y.toFixed(1)+'" x2="'+(W-8)+'" y2="'+y.toFixed(1)+'" stroke="#e2e8f0" stroke-width="0.8"/>';
+    html += '<text x="'+(PAD-3)+'" y="'+(y+3).toFixed(1)+'" text-anchor="end" font-size="8" fill="#94a3b8">'+v+'</text>';
+  });
+
+  d.labels.forEach(function(lbl, i) {
+    var groupW = grp*bw + (grp-1)*gap;
+    var x0 = PAD + i * (groupW + 8);
+    [d.kaz[i], d.arc[i], d.mash[i]].forEach(function(v, ci) {
+      var bh = (v/maxV)*H;
+      var x = x0 + ci*(bw+gap);
+      var y = H+4 - bh;
+      html += '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw+'" height="'+Math.max(1,bh).toFixed(1)+'" fill="'+cols[ci]+'" rx="1" style="cursor:pointer" onmouseenter="showTip(this,\''+lbl+' — '+['Kazatomprom','ArcelorMittal','MashStroy'][ci]+': '+v+' new registrations\')" onmouseleave="hideTip()"/>';
+    });
+    var labelX = x0 + groupW/2;
+    html += '<text x="'+labelX.toFixed(1)+'" y="'+(H+16)+'" text-anchor="middle" font-size="8" fill="#94a3b8">'+lbl+'</text>';
+  });
+
+  html += '</svg>';
+  el.innerHTML = html;
+}
+
+/* ── HEATMAP PER COMPANY ─────────────────────── */
+var _hmData = {
+  all: {
+    rows:['Workers','ITR','Management'],
+    cols:['Almaty HQ','Karaganda','Atyrau Depot','Astana'],
+    data:[[65,58,71,80],[82,75,77,91],[88,85,90,95]]
+  },
+  kaz: {
+    rows:['Workers','ITR','Management'],
+    cols:['Almaty HQ','Karaganda','Atyrau Depot'],
+    data:[[88,85,90],[91,89,92],[95,94,97]]
+  },
+  arc: {
+    rows:['Workers','ITR','Management'],
+    cols:['Karaganda','Almaty HQ','Atyrau Depot'],
+    data:[[52,60,65],[68,72,74],[80,82,85]]
+  },
+  mash: {
+    rows:['Workers','ITR','Management'],
+    cols:['Almaty HQ','Astana'],
+    data:[[68,74],[78,83],[88,91]]
+  }
+};
+
+function setHeatmap(co, btn) {
+  ['all','kaz','arc','mash'].forEach(function(k){
+    var el = document.getElementById('hm-'+k);
+    if (el) el.classList.toggle('active', k===co);
+  });
+  renderHeatmap(co);
+}
+
+function renderHeatmap(co) {
+  var el = document.getElementById('heatmap-container');
+  if (!el) return;
+  var d = _hmData[co] || _hmData.all;
+  var label = {all:'All companies combined',kaz:'Kazatomprom LLP',arc:'ArcelorMittal',mash:'TOO MashStroy'}[co];
+
+  var html = '<div style="font-size:10px;color:var(--g2);font-weight:600;margin-bottom:6px">📊 '+label+'</div>';
+  html += '<div class="heatmap"><table><thead><tr><th></th>';
+  d.cols.forEach(function(c){ html += '<th>'+c+'</th>'; });
+  html += '</tr></thead><tbody>';
+  d.rows.forEach(function(r, ri) {
+    html += '<tr><td class="row-head">'+r+'</td>';
+    d.data[ri].forEach(function(v, ci) {
+      var cls = v>=80?'hm-g':v>=70?'hm-a':'hm-r';
+      html += '<td class="'+cls+'" style="cursor:pointer" onmouseenter="showTip(this,\''+r+' · '+d.cols[ci]+' — '+v+'%\\n'+
+        (v>=80?'✅ Meets target':'v>=70?"⚠ At risk — needs attention":"🔴 Critical — immediate action"')+'\\nClick → employee list\')" onmouseleave="hideTip()" onclick="showListModal(\''+r+' at '+d.cols[ci]+' — '+label+'\',\'comp-arc\')">'+v+'%</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  el.innerHTML = html;
+}
+
 /* ── EDS NOTIFY ──────────────────────────────── */
 function notifySignatory(role, company, docId) {
   var btn = event.target;
