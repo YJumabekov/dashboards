@@ -570,20 +570,22 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <!-- ═══ COMPLIANCE TAB ════════════════════════════════════════════════════════ -->
 <div class="content" id="tab-compliance">
+  <!-- Единая карточка compliance с переключением измерения -->
   <div class="card-grid g2">
     <div class="card exp" onclick="toggleCard(this)">
       <div class="card-hdr">
-        <div><div class="card-title">Expired &amp; expiring — multi-dimension view</div><div class="card-sub">Switch between dept, location, position</div></div>
+        <div><div class="card-title">Expired &amp; expiring — разбивка</div><div class="card-sub">Переключайте измерение: подразделение / локация / должность</div></div>
         <div class="card-badges"><span class="ctag b">Grouped bar</span><span class="chevron">▲</span></div>
       </div>
       <div class="card-body">
         <div class="dim-sw">
-          <button class="dim-btn act">By department</button>
-          <button class="dim-btn">By location</button>
-          <button class="dim-btn">By position</button>
+          <button class="dim-btn act" onclick="switchExpView('dept',this)">By department</button>
+          <button class="dim-btn" onclick="switchExpView('loc',this)">By location</button>
+          <button class="dim-btn" onclick="switchExpView('pos',this)">By position</button>
         </div>
-        <div class="bar-chart">
-          <div style="display:flex;gap:8px;margin-bottom:6px;font-size:10px"><span style="color:#dc2626">■ Expired now</span><span style="color:#d97706">■ Expiring &lt;30d</span></div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;font-size:10px"><span style="color:#dc2626">■ Expired</span><span style="color:#d97706">■ Expiring &lt;30d</span></div>
+        <!-- by dept -->
+        <div id="exp-view-dept" class="bar-chart">
           <div class="bar-row"><span class="bar-lbl">Workers</span>
             <div style="flex:1;display:flex;flex-direction:column;gap:2px">
               <div class="bar-track" style="height:13px" onclick="sendPrompt('List expired Workers employees sorted by most overdue')"><div class="bar-fill" style="width:56%;background:#dc2626;height:13px"><span style="font-size:9px">10 expired</span></div></div>
@@ -603,22 +605,71 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
             </div>
           </div>
         </div>
+        <!-- by location -->
+        <div id="exp-view-loc" class="bar-chart" style="display:none">
+          <div class="bar-row"><span class="bar-lbl">Karaganda</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:61%;background:#dc2626;height:13px"><span style="font-size:9px">7 expired</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:68%;background:#d97706;height:13px"><span style="font-size:9px">14 expiring</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row"><span class="bar-lbl">Atyrau</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:44%;background:#dc2626;height:13px"><span style="font-size:9px">5 expired</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:55%;background:#d97706;height:13px"><span style="font-size:9px">10 expiring</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row"><span class="bar-lbl">Almaty HQ</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:22%;background:#dc2626;height:13px"><span style="font-size:9px">4 expired</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:39%;background:#d97706;height:13px"><span style="font-size:9px">15 expiring</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row"><span class="bar-lbl">Astana</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:11%;background:#dc2626;height:13px"><span style="font-size:9px">2 exp</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:17%;background:#d97706;height:13px"><span style="font-size:9px">3 expiring</span></div></div>
+            </div>
+          </div>
+        </div>
+        <!-- by position -->
+        <div id="exp-view-pos" class="bar-chart" style="display:none">
+          <div class="bar-row"><span class="bar-lbl">Rigger</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:70%;background:#dc2626;height:13px"><span style="font-size:9px">expired</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:80%;background:#d97706;height:13px"><span style="font-size:9px">expiring</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row"><span class="bar-lbl">Welder</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:55%;background:#dc2626;height:13px"><span style="font-size:9px">expired</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:65%;background:#d97706;height:13px"><span style="font-size:9px">expiring</span></div></div>
+            </div>
+          </div>
+          <div class="bar-row"><span class="bar-lbl">Inspector</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:30%;background:#dc2626;height:13px"><span style="font-size:9px">expired</span></div></div>
+              <div class="bar-track" style="height:13px"><div class="bar-fill" style="width:45%;background:#d97706;height:13px"><span style="font-size:9px">expiring</span></div></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <!-- Non-compliance by course — остаётся как отдельная карточка (другой тип вопроса) -->
     <div class="card exp" onclick="toggleCard(this)">
       <div class="card-hdr">
-        <div><div class="card-title">Non-compliance by course</div><div class="card-sub">% enrolled without valid doc · descending</div></div>
+        <div><div class="card-title">Non-compliance by course</div><div class="card-sub">% сотрудников без действующего документа по курсу</div></div>
         <div class="card-badges"><span class="ctag b">Horizontal bar</span><span class="chevron">▲</span></div>
       </div>
       <div class="card-body">
         <div class="bar-chart">
-          <div class="bar-row"><span class="bar-lbl">Working at Heights</span><div class="bar-track" onclick="sendPrompt('List TOO MashStroy employees missing valid Working at Heights certification')"><div class="bar-fill" style="width:78%;background:#dc2626"><span>78%</span></div></div></div>
-          <div class="bar-row"><span class="bar-lbl">Chemical Handling</span><div class="bar-track"><div class="bar-fill" style="width:58%;background:#dc2626"><span>58%</span></div></div></div>
-          <div class="bar-row"><span class="bar-lbl">First Aid L1</span><div class="bar-track"><div class="bar-fill" style="width:36%;background:#d97706"><span>36%</span></div></div></div>
-          <div class="bar-row"><span class="bar-lbl">Fire Safety L1</span><div class="bar-track"><div class="bar-fill" style="width:27%;background:#d97706"><span>27%</span></div></div></div>
-          <div class="bar-row"><span class="bar-lbl">Electrical Safety</span><div class="bar-track"><div class="bar-fill" style="width:15%;background:#059669"><span>15%</span></div></div></div>
+          <div class="bar-row"><span class="bar-lbl">Working at Heights</span><div class="bar-track" onclick="sendPrompt('List TOO MashStroy employees missing valid Working at Heights certification')"><div class="bar-fill" style="width:78%;background:#dc2626"><span>78%</span></div></div><span class="bar-val" style="color:#dc2626">78%</span></div>
+          <div class="bar-row"><span class="bar-lbl">Chemical Handling</span><div class="bar-track"><div class="bar-fill" style="width:58%;background:#dc2626"><span>58%</span></div></div><span class="bar-val" style="color:#dc2626">58%</span></div>
+          <div class="bar-row"><span class="bar-lbl">First Aid L1</span><div class="bar-track"><div class="bar-fill" style="width:36%;background:#d97706"><span>36%</span></div></div><span class="bar-val" style="color:#d97706">36%</span></div>
+          <div class="bar-row"><span class="bar-lbl">Fire Safety L1</span><div class="bar-track"><div class="bar-fill" style="width:27%;background:#d97706"><span>27%</span></div></div><span class="bar-val" style="color:#d97706">27%</span></div>
+          <div class="bar-row"><span class="bar-lbl">Electrical Safety</span><div class="bar-track"><div class="bar-fill" style="width:15%;background:#059669"><span>15%</span></div></div><span class="bar-val" style="color:#059669">15%</span></div>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click → employee list for that course</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click bar → список сотрудников без действующего документа по этому курсу</div>
       </div>
     </div>
   </div>
