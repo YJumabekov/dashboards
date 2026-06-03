@@ -2429,6 +2429,7 @@ document.addEventListener('DOMContentLoaded', function() {
   drawForecastChart();
   drawRegChart();
   renderHeatmap('all');
+  renderNonCompliance('all', document.querySelector('#nc-company-switch .dim-btn'));
   window.addEventListener('resize', function() { drawForecastChart(); drawRegChart(); });
   document.querySelectorAll('.card-title').forEach(function(el) {
     var tip = sectionTips[el.textContent.trim()];
