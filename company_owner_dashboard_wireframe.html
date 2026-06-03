@@ -1662,38 +1662,50 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <!-- LEFT: Configuration -->
     <div class="card expanded">
       <div class="card-hdr" onclick="toggleCard(this.closest('.card'))">
-        <div><div class="card-title">Настройки отчёта</div><div class="card-sub">Выберите период, компанию и введите данные</div></div>
-        <div class="card-badges"><span class="ctag blue">АВР / Excel</span><span class="chevron">▲</span></div>
+        <div>
+          <div class="card-title">Act of Completed Works — Report Configuration</div>
+          <div class="card-sub">Select company &amp; period → load from LMS → review &amp; download Excel</div>
+        </div>
+        <div class="card-badges"><span class="ctag blue">АВР / Excel</span><span class="ctag">auto-populate</span><span class="chevron">▲</span></div>
       </div>
       <div class="card-body">
 
-        <!-- Period + Company selectors -->
+        <!-- Source status bar -->
+        <div class="rpt-source-bar idle" id="rpt-source-bar">
+          <span class="rpt-source-icon" id="rpt-source-icon">📋</span>
+          <span class="rpt-source-text" id="rpt-source-text">Select a company and period, then click <strong>Load from LMS</strong> to auto-populate quantities from training completions.</span>
+          <button class="rpt-load-btn" id="rpt-load-btn" onclick="loadFromLMS()">
+            ↻ Load from LMS
+          </button>
+        </div>
+
+        <!-- Company + Period selectors -->
         <div class="rpt-form">
           <div class="rpt-field">
-            <label>Компания (заказчик)</label>
-            <select id="rpt-company" onchange="updateRptPreview()">
+            <label>Client company</label>
+            <select id="rpt-company" onchange="onRptParamsChange()">
               <option value="kaz">Kazatomprom LLP</option>
               <option value="arc">ArcelorMittal Kazakhstan</option>
-              <option value="mash">ТОО МашСтрой</option>
-              <option value="kmg">КазМунайГаз</option>
-              <option value="custom">— Ввести вручную —</option>
+              <option value="mash">TOO MashStroy</option>
+              <option value="kmg">KazMunayGas</option>
+              <option value="custom">— Enter manually —</option>
             </select>
           </div>
           <div class="rpt-field">
-            <label>Месяц</label>
-            <select id="rpt-month" onchange="updateRptPreview()">
-              <option value="1">Январь</option><option value="2">Февраль</option>
-              <option value="3">Март</option><option value="4">Апрель</option>
-              <option value="5">Май</option><option value="6">Июнь</option>
-              <option value="7">Июль</option><option value="8">Август</option>
-              <option value="9">Сентябрь</option><option value="10">Октябрь</option>
-              <option value="11">Ноябрь</option><option value="12">Декабрь</option>
+            <label>Month</label>
+            <select id="rpt-month" onchange="onRptParamsChange()">
+              <option value="1">January</option><option value="2">February</option>
+              <option value="3">March</option><option value="4">April</option>
+              <option value="5">May</option><option value="6">June</option>
+              <option value="7">July</option><option value="8">August</option>
+              <option value="9">September</option><option value="10">October</option>
+              <option value="11">November</option><option value="12">December</option>
             </select>
           </div>
           <div class="rpt-field">
-            <label>Год</label>
-            <select id="rpt-year" onchange="updateRptPreview()">
-              <option>2024</option><option selected>2025</option><option>2026</option>
+            <label>Year</label>
+            <select id="rpt-year" onchange="onRptParamsChange()">
+              <option>2024</option><option>2025</option><option selected>2026</option>
             </select>
           </div>
         </div>
@@ -1701,54 +1713,58 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <!-- Custom company name field -->
         <div id="rpt-custom-name-wrap" style="display:none;margin-bottom:12px">
           <div class="rpt-field">
-            <label>Наименование компании</label>
-            <input type="text" id="rpt-custom-name" placeholder="Введите название организации" oninput="updateRptPreview()">
+            <label>Company name (manual)</label>
+            <input type="text" id="rpt-custom-name" placeholder="Enter company name…" oninput="updateRptPreview()">
           </div>
         </div>
 
-        <!-- AVR number + contract fields -->
+        <!-- Act Number + Contract + Provider -->
         <div class="rpt-form" style="margin-bottom:14px">
           <div class="rpt-field">
-            <label>Номер АВР</label>
+            <label>Act number</label>
             <input type="text" id="rpt-avr-num" value="1" oninput="updateRptPreview()">
           </div>
           <div class="rpt-field">
-            <label>Номер договора</label>
+            <label>Contract number</label>
             <input type="text" id="rpt-contract" value="001/2025" oninput="updateRptPreview()">
           </div>
           <div class="rpt-field">
-            <label>Исполнитель</label>
-            <input type="text" id="rpt-executor" value='ТОО "Sental Education"' oninput="updateRptPreview()">
+            <label>Service provider</label>
+            <input type="text" id="rpt-executor" value='TOO "Sental Education"' oninput="updateRptPreview()">
           </div>
         </div>
 
-        <div class="rpt-section-hdr">Объём оказанных услуг</div>
+        <div class="rpt-section-hdr">Volume of services rendered</div>
 
-        <!-- Services quantity table -->
+        <!-- Services table: №, Service Name, Unit, LMS Count, Act Qty -->
         <table class="rpt-qty-table" id="rpt-services-tbl">
           <thead>
             <tr>
-              <th style="width:28px">№</th>
-              <th>Наименование работ (услуг)</th>
-              <th style="width:50px;text-align:center">Ед.</th>
-              <th style="width:70px;text-align:right">Кол-во</th>
+              <th style="width:26px">№</th>
+              <th>Service / Course name</th>
+              <th style="width:44px;text-align:center">Unit</th>
+              <th class="lms-col" style="width:72px;text-align:right" title="Completions recorded in LMS for the selected period">LMS count</th>
+              <th style="width:72px;text-align:right">Act qty</th>
             </tr>
           </thead>
-          <tbody id="rpt-services-body">
-          </tbody>
+          <tbody id="rpt-services-body"></tbody>
           <tfoot>
             <tr>
-              <td colspan="3" style="text-align:right;font-size:11px;color:var(--n2)">ИТОГО:</td>
-              <td style="text-align:right;color:var(--g2)" id="rpt-total-cell">0</td>
+              <td colspan="3" style="text-align:right;font-size:11px;color:var(--n2)">TOTAL:</td>
+              <td style="text-align:right;color:var(--muted);font-size:11px" id="rpt-lms-total">—</td>
+              <td style="text-align:right;color:var(--g2);font-weight:700" id="rpt-total-cell">0</td>
             </tr>
           </tfoot>
         </table>
 
-        <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center">
-          <button class="action-btn" onclick="resetRptDefaults()" style="font-size:11px">↺ Сбросить к примеру</button>
+        <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;gap:6px">
+            <button class="action-btn" onclick="reloadLmsQtys()" style="font-size:11px" title="Reset Act Qty to LMS values">↺ Reset to LMS</button>
+            <button class="action-btn" onclick="clearActQtys()" style="font-size:11px;color:var(--muted)">✕ Clear all</button>
+          </div>
           <button class="rpt-dl-btn" onclick="generateAVR()">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 6l4 4 4-4M2 12h12v2H2z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Скачать Excel (АВР)
+            Download Excel (Act)
           </button>
         </div>
       </div>
@@ -1757,12 +1773,35 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <!-- RIGHT: Preview -->
     <div class="card expanded">
       <div class="card-hdr" onclick="toggleCard(this.closest('.card'))">
-        <div><div class="card-title">Предпросмотр отчёта</div><div class="card-sub">Содержание Excel-файла</div></div>
+        <div><div class="card-title">Act Preview</div><div class="card-sub">Live preview of the Excel document contents</div></div>
         <div class="card-badges"><span class="ctag">live preview</span><span class="chevron">▲</span></div>
       </div>
       <div class="card-body">
+        <!-- Stats summary -->
+        <div class="rpt-stats-row" id="rpt-stats-row" style="display:none">
+          <div class="rpt-stat-chip">
+            <span class="rpt-stat-val" id="rpt-stat-total">0</span>
+            <span class="rpt-stat-lbl">Total services</span>
+          </div>
+          <div class="rpt-stat-chip">
+            <span class="rpt-stat-val" id="rpt-stat-courses">0</span>
+            <span class="rpt-stat-lbl">Course types</span>
+          </div>
+          <div class="rpt-stat-chip">
+            <span class="rpt-stat-val" id="rpt-stat-diff" style="color:var(--muted)">—</span>
+            <span class="rpt-stat-lbl">vs LMS count</span>
+          </div>
+          <div class="rpt-stat-chip">
+            <span class="rpt-stat-val" id="rpt-stat-modified" style="color:var(--muted)">0</span>
+            <span class="rpt-stat-lbl">Overridden rows</span>
+          </div>
+        </div>
         <div class="rpt-preview-box" id="rpt-preview-box">
-          <!-- filled by JS -->
+          <div style="text-align:center;padding:30px 0;color:var(--muted)">
+            <div style="font-size:32px;margin-bottom:8px">📄</div>
+            <div style="font-size:12px;font-weight:600">No data loaded yet</div>
+            <div style="font-size:11px;margin-top:4px">Select a company &amp; period, then load from LMS</div>
+          </div>
         </div>
       </div>
     </div>
