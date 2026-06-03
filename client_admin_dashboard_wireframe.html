@@ -1062,4 +1062,46 @@ function switchOvTab(tab,el){
   document.querySelectorAll('.ov-tab').forEach(function(t){t.classList.remove('act');});
   if(el)el.classList.add('act');
 }
+
+/* ── Compliance snapshot dimension switcher ────── */
+function switchCompSnap(dim, el) {
+  ['dept','loc','pos'].forEach(function(d){
+    var el2 = document.getElementById('comp-snap-'+d);
+    if(el2) el2.style.display = d===dim ? 'flex' : 'none';
+  });
+  document.querySelectorAll('#comp-snap-sw .dim-btn').forEach(function(b){b.classList.remove('act');});
+  if(el) el.classList.add('act');
+}
+
+/* ── Expired/Expiring view switcher ─────────────── */
+function switchExpView(dim, el) {
+  ['dept','loc','pos'].forEach(function(d){
+    var el2 = document.getElementById('exp-view-'+d);
+    if(el2) el2.style.display = d===dim ? 'flex' : 'none';
+  });
+  if(el) {
+    el.closest('.dim-sw').querySelectorAll('.dim-btn').forEach(function(b){b.classList.remove('act');});
+    el.classList.add('act');
+  }
+}
+
+/* ── EDS notify ─────────────────────────────────── */
+function notifyEDSSigner(name, docId, btn) {
+  if(event) event.stopPropagation();
+  var orig = btn.innerHTML;
+  btn.innerHTML = '✓ Отправлено!';
+  btn.style.background = '#7c3aed';
+  btn.style.color = '#fff';
+  btn.style.borderColor = '#7c3aed';
+  setTimeout(function(){ btn.innerHTML=orig; btn.style.background=''; btn.style.color=''; btn.style.borderColor=''; }, 2500);
+}
+
+function notifyAllEDS() {
+  if(event) event.stopPropagation();
+  var btn = event.target;
+  var orig = btn.innerHTML;
+  btn.innerHTML = '✓ Все уведомлены!';
+  btn.disabled = true;
+  setTimeout(function(){ btn.innerHTML=orig; btn.disabled=false; }, 3000);
+}
 </script>
