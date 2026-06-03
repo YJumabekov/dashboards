@@ -795,6 +795,107 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 </div>
 
+<!-- ═══ EDS QUEUE TAB ════════════════════════════════════════════════════════ -->
+<div class="content" id="tab-eds">
+  <!-- Summary mini-cards -->
+  <div class="mini-cards">
+    <div class="mini-card rc">
+      <div class="mini-val" style="color:#dc2626">1</div>
+      <div class="mini-lbl" style="color:#991b1b">Критично (&gt;5 дней)</div>
+      <div class="mini-sub">Требует немедленного действия</div>
+    </div>
+    <div class="mini-card ac">
+      <div class="mini-val" style="color:#d97706">1</div>
+      <div class="mini-lbl" style="color:#92400e">Срочно (2–5 дней)</div>
+      <div class="mini-sub">Отправьте напоминание сегодня</div>
+    </div>
+    <div class="mini-card bc">
+      <div class="mini-val" style="color:#1d4ed8">1</div>
+      <div class="mini-lbl" style="color:#1e40af">В норме (&lt;2 дней)</div>
+      <div class="mini-sub">Всё под контролем</div>
+    </div>
+  </div>
+
+  <div class="card exp" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">Документы, ожидающие ЭЦП — TOO MashStroy</div><div class="card-sub">Только документы вашей компании · Критично &gt;5d · Срочно 2–5d · Норма &lt;2d</div></div>
+      <div class="card-badges"><span class="ctag" style="background:#f3e8ff;border-color:#d8b4fe;color:#5b21b6">EDS</span><span class="ctag">company-scoped</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+        <button class="action-btn" style="background:#7c3aed;color:#fff;border-color:#7c3aed" onclick="notifyAllEDS()">📨 Уведомить всех подписантов</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="dt" style="min-width:680px">
+          <thead><tr>
+            <th>Doc ID</th>
+            <th>Тип документа</th>
+            <th>Период / Описание</th>
+            <th>Ожидает подписи от</th>
+            <th>Должность</th>
+            <th>Дней ожидания</th>
+            <th>Статус</th>
+            <th>Действие</th>
+          </tr></thead>
+          <tbody>
+            <tr class="cr">
+              <td style="font-family:monospace;font-size:11px;font-weight:600">#EDS-2055</td>
+              <td>АВР (Акт выполненных работ)</td>
+              <td style="color:var(--muted)">Апрель 2026</td>
+              <td style="font-weight:600">Sultanova B.K.</td>
+              <td><span class="loc-pill">HR Director</span></td>
+              <td style="color:#dc2626;font-weight:700">7d</td>
+              <td><span class="badge r">Критично</span></td>
+              <td><button class="action-btn urg" onclick="notifyEDSSigner('Sultanova B.K.','#EDS-2055',this)">📨 Уведомить</button></td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:11px;font-weight:600">#EDS-2061</td>
+              <td>Протокол обучения</td>
+              <td style="color:var(--muted)">Март 2026 — Группа 12</td>
+              <td style="font-weight:600">Tokayeva M.S.</td>
+              <td><span class="loc-pill">HSE Lead</span></td>
+              <td style="color:#d97706;font-weight:700">3d</td>
+              <td><span class="badge a">Срочно</span></td>
+              <td><button class="action-btn" onclick="notifyEDSSigner('Tokayeva M.S.','#EDS-2061',this)">📨 Уведомить</button></td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:11px;font-weight:600">#EDS-2068</td>
+              <td>Акт проверки знаний</td>
+              <td style="color:var(--muted)">Май 2026 — Электробезопасность</td>
+              <td style="font-weight:600">Seisenov B.K.</td>
+              <td><span class="loc-pill">Dept Head</span></td>
+              <td style="color:#059669;font-weight:700">1d</td>
+              <td><span class="badge g">Норма</span></td>
+              <td><button class="action-btn" onclick="notifyEDSSigner('Seisenov B.K.','#EDS-2068',this)">📨 Уведомить</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="footer-note">Все документы привязаны к tenant TOO MashStroy в IOMAD · История подписей доступна в архиве</div>
+    </div>
+  </div>
+
+  <!-- EDS History -->
+  <div class="card exp" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title">История подписанных документов</div><div class="card-sub">Последние 5 подписанных — только ваша компания</div></div>
+      <div class="card-badges"><span class="ctag">архив</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <table class="dt">
+        <thead><tr><th>Doc ID</th><th>Тип</th><th>Период</th><th>Подписал</th><th>Дата подписи</th><th>Статус</th></tr></thead>
+        <tbody>
+          <tr><td style="font-family:monospace;font-size:11px">#EDS-2048</td><td>АВР</td><td style="color:var(--muted)">Март 2026</td><td>Sultanova B.K.</td><td style="color:#059669">28 Mar 2026</td><td><span class="badge g">Подписан</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:11px">#EDS-2039</td><td>Протокол обучения</td><td style="color:var(--muted)">Февраль 2026</td><td>Tokayeva M.S.</td><td style="color:#059669">15 Feb 2026</td><td><span class="badge g">Подписан</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:11px">#EDS-2031</td><td>АВР</td><td style="color:var(--muted)">Январь 2026</td><td>Sultanova B.K.</td><td style="color:#059669">04 Feb 2026</td><td><span class="badge g">Подписан</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:11px">#EDS-2019</td><td>Акт проверки знаний</td><td style="color:var(--muted)">Декабрь 2025</td><td>Seisenov B.K.</td><td style="color:#059669">22 Dec 2025</td><td><span class="badge g">Подписан</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:11px">#EDS-2011</td><td>Протокол обучения</td><td style="color:var(--muted)">Ноябрь 2025</td><td>Tokayeva M.S.</td><td style="color:#059669">30 Nov 2025</td><td><span class="badge g">Подписан</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ EMPLOYEE PROFILE OVERLAY ════════════════════════════════════════════ -->
 <div id="overlay-root" style="display:none">
   <div class="overlay-backdrop">
