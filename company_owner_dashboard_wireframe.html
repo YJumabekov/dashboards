@@ -2310,6 +2310,33 @@ var listData = {
   'nc-fire-kaz':      [{name:'Abilov D.K.',issue:'Expiring in 19d',status:'amber'}]
 };
 
+/* ── NON-COMPLIANCE BY COURSE — dynamic render ─── */
+var _ncData = {
+  all:  [{course:'Working at Heights', pct:78, key:'heights'},{course:'Chemical Handling', pct:58, key:'chemical'},{course:'First Aid L1', pct:38, key:'firstaid'},{course:'Fire Safety L1', pct:30, key:'fire'},{course:'Electrical Safety', pct:18, key:'electrical'}],
+  arc:  [{course:'Working at Heights', pct:84, key:'heights'},{course:'Chemical Handling', pct:67, key:'chemical'},{course:'First Aid L1', pct:42, key:'firstaid'},{course:'Fire Safety L1', pct:35, key:'fire'},{course:'Electrical Safety', pct:22, key:'electrical'}],
+  mash: [{course:'Working at Heights', pct:71, key:'heights'},{course:'Chemical Handling', pct:41, key:'chemical'},{course:'Fire Safety L1', pct:55, key:'fire'},{course:'Electrical Safety', pct:38, key:'electrical'}],
+  kaz:  [{course:'Working at Heights', pct:29, key:'heights'},{course:'Electrical Safety', pct:24, key:'electrical'},{course:'Fire Safety L1', pct:12, key:'fire'}]
+};
+
+function renderNonCompliance(company, btn) {
+  document.querySelectorAll('#nc-company-switch .dim-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  var rows = _ncData[company] || _ncData.all;
+  var max = rows[0] ? rows[0].pct : 100;
+  var chart = document.getElementById('nc-bar-chart');
+  chart.innerHTML = rows.map(function(r) {
+    var color = r.pct >= 60 ? '#dc2626' : r.pct >= 30 ? '#d97706' : '#059669';
+    var listKey = 'nc-' + r.key + '-' + company;
+    return '<div class="bar-row">' +
+      '<span class="bar-label" style="width:130px">' + r.course + '</span>' +
+      '<div class="bar-track" onclick="showListModal(\'Non-compliant: ' + r.course + ' (' + (company==='all'?'all companies':company.toUpperCase()) + ')\',\'' + listKey + '\')" ' +
+        'onmouseenter="showTip(this,\'' + r.pct + '% without valid doc — click to see employees\')" onmouseleave="hideTip()">' +
+        '<div class="bar-fill" style="width:' + Math.round(r.pct/max*100) + '%;background:' + color + '"><span>' + r.pct + '%</span></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
 function showListModal(title, key) {
   document.getElementById('list-modal-title').textContent = title;
   var rows = listData[key];
