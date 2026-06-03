@@ -599,13 +599,17 @@ function openCert(courseId) {
 function closeModal() { document.getElementById('cert-modal').classList.remove('open'); }
 
 /* ── Quick actions ── */
-function enrollNow(id) {
-  var btn = event.target;
-  btn.textContent = 'Opening…';
-  setTimeout(function(){ btn.textContent = 'Enrolled ✓'; btn.style.background='var(--t2)'; }, 700);
+function notifyAdmin(id, btn) {
+  btn = btn || event.target;
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  setTimeout(function(){
+    btn.textContent = '✓ Admin notified';
+    btn.style.background = 'var(--t2)';
+  }, 800);
 }
-function continueCourse(id) {
-  var btn = event.target;
+function continueCourse(id, btn) {
+  btn = btn || event.target;
   btn.textContent = 'Launching…';
   setTimeout(function(){ btn.textContent = 'Resume →'; btn.style.background='var(--t2)'; }, 700);
 }
