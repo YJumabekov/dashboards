@@ -389,6 +389,54 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="footer-note">↑ Click any employee name to open full profile overlay. Showing 4 of 18.</div>
   </div>
 
+  <!-- DRILL: EDS Queue -->
+  <div class="drill" id="d-eds">
+    <div class="drill-title">EDS queue — documents pending signature (TOO MashStroy) <span class="drill-close" onclick="closeDrill('d-eds')">×</span></div>
+    <div class="drill-sub">Документы, ожидающие электронной подписи от уполномоченных лиц вашей компании · ОК &lt;2d · Срочно 2–5d · Критично &gt;5d</div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+      <button class="action-btn" style="background:#7c3aed;color:#fff;border-color:#7c3aed;font-size:11px" onclick="notifyAllEDS()">📨 Уведомить всех подписантов</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="dt">
+        <thead><tr>
+          <th>Doc ID</th>
+          <th>Тип документа</th>
+          <th>Ожидает подписи от</th>
+          <th>Дней ожидания</th>
+          <th>Статус</th>
+          <th>Действие</th>
+        </tr></thead>
+        <tbody>
+          <tr class="cr">
+            <td style="font-family:monospace;font-size:11px">#EDS-2055</td>
+            <td>АВР № 4 / Апрель 2026</td>
+            <td style="font-weight:600">HR Director — Sultanova B.K.</td>
+            <td style="color:#dc2626;font-weight:700">7d</td>
+            <td><span class="badge r">Критично</span></td>
+            <td><button class="action-btn urg" onclick="notifyEDSSigner('Sultanova B.K.','#EDS-2055',this)">📨 Уведомить</button></td>
+          </tr>
+          <tr>
+            <td style="font-family:monospace;font-size:11px">#EDS-2061</td>
+            <td>Протокол обучения / Март 2026</td>
+            <td style="font-weight:600">HSE Lead — Tokayeva M.S.</td>
+            <td style="color:#d97706;font-weight:700">3d</td>
+            <td><span class="badge a">Срочно</span></td>
+            <td><button class="action-btn" onclick="notifyEDSSigner('Tokayeva M.S.','#EDS-2061',this)">📨 Уведомить</button></td>
+          </tr>
+          <tr>
+            <td style="font-family:monospace;font-size:11px">#EDS-2068</td>
+            <td>Акт проверки знаний / Май 2026</td>
+            <td style="font-weight:600">Dept Head — Seisenov B.K.</td>
+            <td style="color:#059669;font-weight:700">1d</td>
+            <td><span class="badge g">OK</span></td>
+            <td><button class="action-btn" onclick="notifyEDSSigner('Seisenov B.K.','#EDS-2068',this)">📨 Уведомить</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer-note">Только документы, относящиеся к TOO MashStroy · Полная история подписей доступна во вкладке EDS Queue</div>
+  </div>
+
   <!-- CHARTS ROW -->
   <div class="card-grid g2">
     <!-- Compliance by dept -->
