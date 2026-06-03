@@ -591,46 +591,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
-  <!-- CHARTS ROW — merged compliance + stacked bar -->
-  <div class="card-grid g2">
-    <!-- Compliance snapshot — single card with dimension switcher -->
-    <div class="card exp" onclick="toggleCard(this)">
-      <div class="card-hdr">
-        <div><div class="card-title">Compliance snapshot</div><div class="card-sub">By department, location or position · 80% target</div></div>
-        <div class="card-badges"><span class="ctag b">Horizontal bar</span><span class="chevron">▲</span></div>
-      </div>
-      <div class="card-body">
-        <div class="dim-sw" id="comp-snap-sw">
-          <button class="dim-btn act" onclick="switchCompSnap('dept',this)">By department</button>
-          <button class="dim-btn" onclick="switchCompSnap('loc',this)">By location</button>
-          <button class="dim-btn" onclick="switchCompSnap('pos',this)">By position</button>
-        </div>
-        <!-- dept view -->
-        <div id="comp-snap-dept" class="bar-chart">
-          <div class="bar-row"><span class="bar-lbl">Management</span><div class="bar-track" onclick="sendPrompt('Show Management department employee compliance list for TOO MashStroy')"><div class="bar-fill" style="width:90%;background:#059669"><span>90%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#059669">90%</span></div>
-          <div class="bar-row"><span class="bar-lbl">ITR</span><div class="bar-track"><div class="bar-fill" style="width:79%;background:#d97706"><span>79%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#d97706">79%</span></div>
-          <div class="bar-row"><span class="bar-lbl">Workers</span><div class="bar-track"><div class="bar-fill" style="width:68%;background:#dc2626"><span>68%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#dc2626">68%</span></div>
-        </div>
-        <!-- location view -->
-        <div id="comp-snap-loc" class="bar-chart" style="display:none">
-          <div class="bar-row"><span class="bar-lbl">Astana Office</span><div class="bar-track"><div class="bar-fill" style="width:88%;background:#059669"><span>88%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#059669">88%</span></div>
-          <div class="bar-row"><span class="bar-lbl">Almaty HQ</span><div class="bar-track"><div class="bar-fill" style="width:76%;background:#d97706"><span>76%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#d97706">76%</span></div>
-          <div class="bar-row"><span class="bar-lbl">Atyrau Depot</span><div class="bar-track" onclick="sendPrompt('Show Atyrau Depot employee compliance list')"><div class="bar-fill" style="width:69%;background:#dc2626"><span>69%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#dc2626">69%</span></div>
-          <div class="bar-row"><span class="bar-lbl">Karaganda Site</span><div class="bar-track"><div class="bar-fill" style="width:61%;background:#dc2626"><span>61%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#dc2626">61%</span></div>
-        </div>
-        <!-- position view -->
-        <div id="comp-snap-pos" class="bar-chart" style="display:none">
-          <div class="bar-row"><span class="bar-lbl">HSE Lead</span><div class="bar-track"><div class="bar-fill" style="width:92%;background:#059669"><span>92%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#059669">92%</span></div>
-          <div class="bar-row"><span class="bar-lbl">Engineer</span><div class="bar-track"><div class="bar-fill" style="width:81%;background:#059669"><span>81%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#059669">81%</span></div>
-          <div class="bar-row"><span class="bar-lbl">Inspector</span><div class="bar-track"><div class="bar-fill" style="width:74%;background:#d97706"><span>74%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#d97706">74%</span></div>
-          <div class="bar-row"><span class="bar-lbl">Welder</span><div class="bar-track"><div class="bar-fill" style="width:63%;background:#dc2626"><span>63%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#dc2626">63%</span></div>
-          <div class="bar-row"><span class="bar-lbl">Rigger</span><div class="bar-track"><div class="bar-fill" style="width:56%;background:#dc2626"><span>56%</span></div><div class="ref-line" style="left:80%"></div></div><span class="bar-val" style="color:#dc2626">56%</span></div>
-        </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:6px">▏ Reference = 80% target · Click any bar → employee list filtered</div>
-      </div>
-    </div>
-  </div><!-- /card-grid g2 compliance snapshot -->
-
   <!-- Heatmap + stacked bar -->
   <div class="card-grid g2">
     <div class="card exp" onclick="toggleCard(this)">
