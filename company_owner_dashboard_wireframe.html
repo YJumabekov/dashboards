@@ -934,50 +934,59 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 
   <div class="card-grid cols2">
-    <div class="card expanded" onclick="toggleCard(this)">
-      <div class="card-hdr">
-        <div><div class="card-title">Expired &amp; expiring by company</div><div class="card-sub">Two bars per company · Absolute counts</div></div>
+    <!-- Expired & expiring — By company only -->
+    <div class="card expanded">
+      <div class="card-hdr" onclick="toggleCard(this.closest('.card'))">
+        <div><div class="card-title">Expired &amp; expiring by company</div><div class="card-sub">Click any bar to see the employee list</div></div>
         <div class="card-badges"><span class="ctag blue">Grouped bar</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
       </div>
       <div class="card-body">
-        <div class="dim-switch"><button class="dim-btn active">By company</button><button class="dim-btn">By dept</button><button class="dim-btn">By location</button></div>
-        <div class="bar-chart">
-          <div class="bar-row"><span class="bar-label" style="width:100px">ArcelorMittal</span>
-            <div style="flex:1;display:flex;flex-direction:column;gap:3px">
-              <div class="bar-track" style="height:14px" onclick="sendPrompt('List ArcelorMittal expired employees sorted by most overdue')"><div class="bar-fill" style="width:62%;background:#dc2626;height:14px"><span style="font-size:9px">38 expired</span></div></div>
-              <div class="bar-track" style="height:14px"><div class="bar-fill" style="width:45%;background:#d97706;height:14px"><span style="font-size:9px">27 expiring</span></div></div>
+        <div class="bar-chart" style="gap:12px">
+          <div class="bar-row">
+            <span class="bar-label" style="width:110px;font-weight:600">ArcelorMittal</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <div class="bar-track" style="height:20px" onclick="showListModal('Expired — ArcelorMittal (38 employees)','expired-arc')" onmouseenter="showTip(this,'38 employees with expired documents\nClick to see full list')" onmouseleave="hideTip()"><div class="bar-fill" style="width:62%;background:#dc2626;height:20px"><span style="font-size:10px">38 expired</span></div></div>
+              <div class="bar-track" style="height:20px" onclick="showListModal('Expiring <30d — ArcelorMittal (27 employees)','expiring-arc')" onmouseenter="showTip(this,'27 employees expiring within 30 days\nClick to see full list')" onmouseleave="hideTip()"><div class="bar-fill" style="width:45%;background:#d97706;height:20px"><span style="font-size:10px">27 expiring</span></div></div>
             </div>
           </div>
-          <div class="bar-row"><span class="bar-label" style="width:100px">TOO MashStroy</span>
-            <div style="flex:1;display:flex;flex-direction:column;gap:3px">
-              <div class="bar-track" style="height:14px"><div class="bar-fill" style="width:40%;background:#dc2626;height:14px"><span style="font-size:9px">24 expired</span></div></div>
-              <div class="bar-track" style="height:14px"><div class="bar-fill" style="width:55%;background:#d97706;height:14px"><span style="font-size:9px">33 expiring</span></div></div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:110px;font-weight:600">TOO MashStroy</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <div class="bar-track" style="height:20px" onclick="showListModal('Expired — TOO MashStroy (24 employees)','expired-mash')" onmouseenter="showTip(this,'24 employees with expired documents\nClick to see full list')" onmouseleave="hideTip()"><div class="bar-fill" style="width:40%;background:#dc2626;height:20px"><span style="font-size:10px">24 expired</span></div></div>
+              <div class="bar-track" style="height:20px" onclick="showListModal('Expiring <30d — TOO MashStroy (33 employees)','expiring-mash')" onmouseenter="showTip(this,'33 employees expiring within 30 days\nClick to see full list')" onmouseleave="hideTip()"><div class="bar-fill" style="width:55%;background:#d97706;height:20px"><span style="font-size:10px">33 expiring</span></div></div>
             </div>
           </div>
-          <div class="bar-row"><span class="bar-label" style="width:100px">Kazatomprom</span>
-            <div style="flex:1;display:flex;flex-direction:column;gap:3px">
-              <div class="bar-track" style="height:14px"><div class="bar-fill" style="width:20%;background:#dc2626;height:14px"><span style="font-size:9px">12 expired</span></div></div>
-              <div class="bar-track" style="height:14px"><div class="bar-fill" style="width:37%;background:#d97706;height:14px"><span style="font-size:9px">22 expiring</span></div></div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:110px;font-weight:600">Kazatomprom</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <div class="bar-track" style="height:20px" onclick="showListModal('Expired — Kazatomprom (12 employees)','expired-kaz')" onmouseenter="showTip(this,'12 employees with expired documents\nClick to see full list')" onmouseleave="hideTip()"><div class="bar-fill" style="width:20%;background:#dc2626;height:20px"><span style="font-size:10px">12 expired</span></div></div>
+              <div class="bar-track" style="height:20px" onclick="showListModal('Expiring <30d — Kazatomprom (22 employees)','expiring-kaz')" onmouseenter="showTip(this,'22 employees expiring within 30 days\nClick to see full list')" onmouseleave="hideTip()"><div class="bar-fill" style="width:37%;background:#d97706;height:20px"><span style="font-size:10px">22 expiring</span></div></div>
             </div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;margin-top:8px;font-size:10px"><span style="color:#dc2626">■ Expired now</span><span style="color:#d97706">■ Expiring &lt;30d</span></div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:10px;color:var(--muted)">
+          <span><span style="display:inline-block;width:10px;height:10px;background:#dc2626;border-radius:2px;margin-right:4px;vertical-align:middle"></span>Expired now</span>
+          <span><span style="display:inline-block;width:10px;height:10px;background:#d97706;border-radius:2px;margin-right:4px;vertical-align:middle"></span>Expiring &lt;30d</span>
+          <span style="margin-left:auto">↑ Click any bar → employee list</span>
+        </div>
       </div>
     </div>
-    <div class="card expanded" onclick="toggleCard(this)">
-      <div class="card-hdr">
-        <div><div class="card-title">Non-compliance by course type</div><div class="card-sub">% enrolled without valid doc · Descending</div></div>
+
+    <!-- Non-compliance by course type — with By company filter -->
+    <div class="card expanded">
+      <div class="card-hdr" onclick="toggleCard(this.closest('.card'))">
+        <div><div class="card-title">Non-compliance by course type</div><div class="card-sub">% enrolled without valid doc · Click bar → employee list</div></div>
         <div class="card-badges"><span class="ctag blue">Horizontal bar</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
       </div>
       <div class="card-body">
-        <div class="bar-chart">
-          <div class="bar-row"><span class="bar-label">Working at Heights</span><div class="bar-track" onclick="sendPrompt('List all employees with expired/missing Working at Heights certification')"><div class="bar-fill" style="width:78%;background:#dc2626"><span>78%</span></div></div></div>
-          <div class="bar-row"><span class="bar-label">Chemical Handling</span><div class="bar-track"><div class="bar-fill" style="width:58%;background:#dc2626"><span>58%</span></div></div></div>
-          <div class="bar-row"><span class="bar-label">First Aid L1</span><div class="bar-track"><div class="bar-fill" style="width:38%;background:#d97706"><span>38%</span></div></div></div>
-          <div class="bar-row"><span class="bar-label">Fire Safety L1</span><div class="bar-track"><div class="bar-fill" style="width:30%;background:#d97706"><span>30%</span></div></div></div>
-          <div class="bar-row"><span class="bar-label">Electrical Safety</span><div class="bar-track"><div class="bar-fill" style="width:18%;background:#059669"><span>18%</span></div></div></div>
+        <div class="dim-switch" id="nc-company-switch">
+          <button class="dim-btn active" onclick="renderNonCompliance('all',this)">All companies</button>
+          <button class="dim-btn" onclick="renderNonCompliance('arc',this)">ArcelorMittal</button>
+          <button class="dim-btn" onclick="renderNonCompliance('mash',this)">MashStroy</button>
+          <button class="dim-btn" onclick="renderNonCompliance('kaz',this)">Kazatomprom</button>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click → employees without valid doc for that course</div>
+        <div class="bar-chart" id="nc-bar-chart"></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">↑ Click any bar → employees without valid doc for that course</div>
       </div>
     </div>
   </div>
