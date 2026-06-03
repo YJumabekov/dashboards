@@ -765,32 +765,32 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 </div>
 
-<!-- ═══ NEW STAFF TAB ══════════════════════════════════════════════════════ -->
-<div class="content" id="tab-newstaff">
+<!-- ═══ NEW REGISTRATION TAB ══════════════════════════════════════════════ -->
+<div class="content" id="tab-newreg">
   <div class="card exp" onclick="toggleCard(this)">
     <div class="card-hdr">
-      <div><div class="card-title">New staff without certifications — by location</div><div class="card-sub">Hired 30+ days ago · zero active documents · your company only</div></div>
+      <div><div class="card-title">New registrations without certifications — by location</div><div class="card-sub">Зарегистрированы 30+ дней назад · нет ни одного действующего документа · только ваша компания</div></div>
       <div class="card-badges"><span class="ctag" style="background:#fee2e2;border-color:#fca5a5;color:#991b1b">risk panel</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
     </div>
     <div class="card-body">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
-        <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;padding:10px;text-align:center"><div style="font-size:22px;font-weight:700;color:#dc2626">12</div><div style="font-size:10px;color:#991b1b;font-weight:600">Total at risk</div></div>
+        <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;padding:10px;text-align:center"><div style="font-size:22px;font-weight:700;color:#dc2626">12</div><div style="font-size:10px;color:#991b1b;font-weight:600">Всего без сертификатов</div></div>
         <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--n2)">5</div><div style="font-size:10px;color:var(--muted)">Karaganda Site</div></div>
         <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--n2)">4</div><div style="font-size:10px;color:var(--muted)">Almaty HQ</div></div>
         <div style="background:var(--n8);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--n2)">3</div><div style="font-size:10px;color:var(--muted)">Atyrau Depot</div></div>
       </div>
       <div style="overflow-x:auto">
         <table class="dt" style="min-width:580px">
-          <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Position</th><th>Hire date</th><th>Days in</th><th>Courses needed</th><th>EDS</th><th>Action</th></tr></thead>
+          <thead><tr><th>Сотрудник</th><th>Подразделение</th><th>Локация</th><th>Должность</th><th>Дата регистрации</th><th>Дней в системе</th><th>Курсов требуется</th><th>EDS</th><th>Действие</th></tr></thead>
           <tbody>
-            <tr><td><a class="emp-link" onclick="openOverlay('Abenov K.S.','AK','Workers','Karaganda Site','Welder','Working at Heights')">Abenov K.S.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Welder</td><td>22 Mar 2026</td><td style="color:#dc2626;font-weight:700">43d</td><td>3 courses</td><td><span class="badge r">1 pending</span></td><td><button class="action-btn enroll">Enroll</button></td></tr>
-            <tr><td><a class="emp-link" onclick="openOverlay('Zhaksybekov N.T.','ZN','Workers','Almaty HQ','Electrician','Electrical Safety')">Zhaksybekov N.T.</a></td><td>Workers</td><td><span class="loc-pill">Almaty HQ</span></td><td>Electrician</td><td>01 Apr 2026</td><td style="color:#dc2626;font-weight:700">33d</td><td>4 courses</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
-            <tr><td><a class="emp-link" onclick="openOverlay('Mukhanova A.R.','MA','ITR','Almaty HQ','Engineer','Radiation Safety')">Mukhanova A.R.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Engineer</td><td>03 Apr 2026</td><td style="color:#d97706;font-weight:700">31d</td><td>2 courses</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
-            <tr><td><a class="emp-link" onclick="openOverlay('Dusipov T.K.','DT','Workers','Atyrau Depot','Rigger','Working at Heights')">Dusipov T.K.</a></td><td>Workers</td><td><span class="loc-pill">Atyrau</span></td><td>Rigger</td><td>05 Apr 2026</td><td style="color:#d97706;font-weight:700">29d</td><td>3 courses</td><td>—</td><td><button class="action-btn enroll">Enroll</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Abenov K.S.','AK','Workers','Karaganda Site','Welder','Working at Heights')">Abenov K.S.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Welder</td><td>22 Mar 2026</td><td style="color:#dc2626;font-weight:700">43d</td><td>3 курса</td><td><span class="badge r">1 ожидает</span></td><td><button class="action-btn enroll">Записать</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Zhaksybekov N.T.','ZN','Workers','Almaty HQ','Electrician','Electrical Safety')">Zhaksybekov N.T.</a></td><td>Workers</td><td><span class="loc-pill">Almaty HQ</span></td><td>Electrician</td><td>01 Apr 2026</td><td style="color:#dc2626;font-weight:700">33d</td><td>4 курса</td><td>—</td><td><button class="action-btn enroll">Записать</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Mukhanova A.R.','MA','ITR','Almaty HQ','Engineer','Radiation Safety')">Mukhanova A.R.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Engineer</td><td>03 Apr 2026</td><td style="color:#d97706;font-weight:700">31d</td><td>2 курса</td><td>—</td><td><button class="action-btn enroll">Записать</button></td></tr>
+            <tr><td><a class="emp-link" onclick="openOverlay('Dusipov T.K.','DT','Workers','Atyrau Depot','Rigger','Working at Heights')">Dusipov T.K.</a></td><td>Workers</td><td><span class="loc-pill">Atyrau</span></td><td>Rigger</td><td>05 Apr 2026</td><td style="color:#d97706;font-weight:700">29d</td><td>3 курса</td><td>—</td><td><button class="action-btn enroll">Записать</button></td></tr>
           </tbody>
         </table>
       </div>
-      <div class="footer-note">↑ Employee name → profile overlay. Enroll button links to Moodle enrolment. Showing 4 of 12. · mdl_user WHERE timecreated ≤ NOW()−30d AND no sental_document_versions AND companyid=this_company</div>
+      <div class="footer-note">↑ Имя сотрудника → профиль. Кнопка "Записать" → запись в Moodle. Показано 4 из 12. · mdl_user WHERE timecreated ≤ NOW()−30d AND нет sental_document_versions AND companyid=this_company</div>
     </div>
   </div>
 </div>
