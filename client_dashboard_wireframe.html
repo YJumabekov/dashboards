@@ -1830,4 +1830,9 @@ function notifyAllEDS() {
   btn.disabled = true;
   setTimeout(function(){ btn.innerHTML=orig; btn.disabled=false; }, 3000);
 }
+
+/* ── Init on page load ───────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  renderViolTable();  // render full violations table from data
+});
 </script>
