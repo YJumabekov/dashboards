@@ -2584,4 +2584,260 @@ function notifyAllSignatories() {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeEP(); closeCR(); closeDoc(); closeList(); closeModal(); }
 });
+
+/* ── REPORTS TAB ─────────────────────────────── */
+var _rptServices = [
+  {name:'Промышленная безопасность на опасных производственных объектах (офлайн)', unit:'усл', qty:142},
+  {name:'Промышленная безопасность на опасных производственных объектах (онлайн)',  unit:'усл', qty:34},
+  {name:'Пожарно-технический минимум (офлайн)',                                     unit:'усл', qty:48},
+  {name:'Пожарно-технический минимум (онлайн)',                                     unit:'усл', qty:10},
+  {name:'Безопасность и охрана труда (офлайн)',                                     unit:'усл', qty:100},
+  {name:'Безопасность и охрана труда (онлайн)',                                     unit:'усл', qty:34},
+  {name:'Электробезопасность (офлайн)',                                             unit:'усл', qty:144},
+  {name:'Электробезопасность (онлайн)',                                             unit:'усл', qty:37},
+  {name:'Оператор крана, управляемого с пола (офлайн)',                             unit:'усл', qty:69},
+  {name:'Стропальщик (офлайн)',                                                     unit:'усл', qty:69},
+  {name:'Техника безопасности при работе на высоте (офлайн)',                       unit:'усл', qty:65},
+  {name:'Техника безопасности при работе на высоте (онлайн)',                       unit:'усл', qty:30},
+  {name:'Оказание услуг координатора по обучению',                                  unit:'час', qty:152}
+];
+
+var _rptCompanyNames = {
+  kaz:  'Kazatomprom LLP',
+  arc:  'ArcelorMittal Kazakhstan',
+  mash: 'ТОО «МашСтрой»',
+  kmg:  'ТОО «КазМунайГаз»'
+};
+
+var _months = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+var _monthsRod = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+
+function initReportsTab() {
+  var tbody = document.getElementById('rpt-services-body');
+  if (!tbody || tbody.children.length) return;
+  _rptServices.forEach(function(s, i) {
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td style="color:var(--muted);font-size:10px">' + (i+1) + '</td>' +
+      '<td style="max-width:260px;word-break:break-word">' + s.name + '</td>' +
+      '<td style="text-align:center;color:var(--muted)">' + s.unit + '</td>' +
+      '<td style="text-align:right"><input type="number" min="0" value="' + s.qty + '" oninput="updateRptPreview()" style="width:70px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:12px;font-weight:600;text-align:right;color:var(--g2)"></td>';
+    tbody.appendChild(tr);
+  });
+
+  // set default month to current
+  var now = new Date();
+  document.getElementById('rpt-month').value = now.getMonth() + 1;
+  document.getElementById('rpt-year').value = now.getFullYear();
+
+  document.getElementById('rpt-company').addEventListener('change', function() {
+    document.getElementById('rpt-custom-name-wrap').style.display = this.value === 'custom' ? 'block' : 'none';
+    updateRptPreview();
+  });
+
+  updateRptPreview();
+}
+
+function getRptValues() {
+  var compSel = document.getElementById('rpt-company').value;
+  var compName = compSel === 'custom'
+    ? (document.getElementById('rpt-custom-name').value || 'Компания')
+    : (_rptCompanyNames[compSel] || compSel);
+  var month = parseInt(document.getElementById('rpt-month').value);
+  var year = document.getElementById('rpt-year').value;
+  var avrNum = document.getElementById('rpt-avr-num').value || '1';
+  var contract = document.getElementById('rpt-contract').value || '';
+  var executor = document.getElementById('rpt-executor').value || '';
+
+  var rows = document.querySelectorAll('#rpt-services-body tr');
+  var qtys = [];
+  rows.forEach(function(tr) {
+    qtys.push(parseInt(tr.querySelector('input').value) || 0);
+  });
+
+  return {compName:compName, month:month, year:year, avrNum:avrNum, contract:contract, executor:executor, qtys:qtys};
+}
+
+function updateRptPreview() {
+  var v = getRptValues();
+  var total = v.qtys.reduce(function(s,q){return s+q;},0);
+
+  // update total cell
+  document.getElementById('rpt-total-cell').textContent = total;
+
+  // build preview
+  var rows = '';
+  _rptServices.forEach(function(s,i) {
+    var q = v.qtys[i] || 0;
+    if (q === 0) return;
+    rows += '<div class="rpt-prev-row">' +
+      '<span class="rpt-prev-num">' + (i+1) + '</span>' +
+      '<span class="rpt-prev-name">' + s.name + '</span>' +
+      '<span class="rpt-prev-unit">' + s.unit + '</span>' +
+      '<span class="rpt-prev-qty">' + q + '</span>' +
+      '</div>';
+  });
+
+  var lastDay = new Date(v.year, v.month, 0).getDate();
+  var dateRange = '01–' + String(lastDay).padStart(2,'0') + ' ' + _monthsRod[v.month-1] + ' ' + v.year + ' г.';
+
+  document.getElementById('rpt-preview-box').innerHTML =
+    '<div class="rpt-preview-title">АКТ ВЫПОЛНЕННЫХ РАБОТ<br>(ОКАЗАННЫХ УСЛУГ) № ' + v.avrNum + '</div>' +
+    '<div class="rpt-preview-meta">' +
+      '<div class="rpt-info-row"><span class="rpt-info-lbl">Период:</span><span class="rpt-info-val">' + _months[v.month-1] + ' ' + v.year + '</span></div>' +
+      '<div class="rpt-info-row"><span class="rpt-info-lbl">Заказчик:</span><span class="rpt-info-val">' + v.compName + '</span></div>' +
+      '<div class="rpt-info-row"><span class="rpt-info-lbl">Исполнитель:</span><span class="rpt-info-val">' + v.executor + '</span></div>' +
+      '<div class="rpt-info-row"><span class="rpt-info-lbl">Договор:</span><span class="rpt-info-val">№ ' + v.contract + '</span></div>' +
+      '<div class="rpt-info-row"><span class="rpt-info-lbl">Даты:</span><span class="rpt-info-val">' + dateRange + '</span></div>' +
+    '</div>' +
+    '<div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Перечень услуг</div>' +
+    rows +
+    '<div class="rpt-prev-total"><span>ИТОГО</span><span>' + total + ' усл / час</span></div>' +
+    '<div style="margin-top:12px;font-size:10px;color:var(--muted);border-top:1px dashed var(--border);padding-top:8px">' +
+      '✎ Исполнитель: _____________________ / ___________<br>' +
+      '✎ Заказчик: ________________________ / ___________' +
+    '</div>';
+}
+
+function resetRptDefaults() {
+  var rows = document.querySelectorAll('#rpt-services-body tr');
+  rows.forEach(function(tr, i) {
+    tr.querySelector('input').value = _rptServices[i].qty;
+  });
+  updateRptPreview();
+}
+
+function generateAVR() {
+  if (typeof XLSX === 'undefined') {
+    alert('Библиотека Excel загружается… Подождите несколько секунд и попробуйте снова.');
+    return;
+  }
+
+  var v = getRptValues();
+  var month = v.month, year = v.year;
+  var lastDay = new Date(year, month, 0).getDate();
+  var dateStr = '01–' + String(lastDay).padStart(2,'0') + ' ' + _monthsRod[month-1] + ' ' + year + ' г.';
+  var monthName = _months[month-1];
+  var fileName = 'АВР_' + v.avrNum + '_' + v.compName.replace(/[«»"\/\\]/g,'') + '_' + monthName + '_' + year + '.xlsx';
+
+  var wb = XLSX.utils.book_new();
+  var wsData = [];
+
+  // helper to create rich cell
+  function c(v, bold, sz, align, wrap) {
+    return {v: v, t: 's', s: {
+      font: {name:'Times New Roman', sz: sz||10, bold:!!bold},
+      alignment: {horizontal: align||'left', vertical:'center', wrapText:!!wrap},
+      border: {top:{style:'thin',color:{rgb:'000000'}},bottom:{style:'thin',color:{rgb:'000000'}},
+               left:{style:'thin',color:{rgb:'000000'}},right:{style:'thin',color:{rgb:'000000'}}}
+    }};
+  }
+  function cn(val, bold, sz, align) {
+    return {v: val, t: 'n', s: {
+      font: {name:'Times New Roman', sz: sz||10, bold:!!bold},
+      alignment: {horizontal: align||'right', vertical:'center'},
+      border: {top:{style:'thin',color:{rgb:'000000'}},bottom:{style:'thin',color:{rgb:'000000'}},
+               left:{style:'thin',color:{rgb:'000000'}},right:{style:'thin',color:{rgb:'000000'}}}
+    }};
+  }
+  function blank(bold) { return c('', bold); }
+
+  // Row 1: title
+  wsData.push([c('АКТ ВЫПОЛНЕННЫХ РАБОТ (ОКАЗАННЫХ УСЛУГ)', true, 13, 'center')]);
+  // Row 2
+  wsData.push([c('№ ' + v.avrNum, true, 11, 'center')]);
+  // Row 3 blank
+  wsData.push([]);
+  // Row 4-7 meta
+  wsData.push([c('Исполнитель:', true, 10), c(v.executor, false, 10)]);
+  wsData.push([c('Заказчик:', true, 10), c(v.compName, false, 10)]);
+  wsData.push([c('Договор:', true, 10), c('№ ' + v.contract, false, 10)]);
+  wsData.push([c('Период:', true, 10), c(dateStr, false, 10)]);
+  // Row 8 blank
+  wsData.push([]);
+
+  // Row 9: header row 1
+  wsData.push([
+    c('№ п/п', true, 10, 'center', true),
+    c('Наименование работ (услуг)', true, 10, 'center', true),
+    c('Дата выполнения работ (оказания услуг)', true, 10, 'center', true),
+    c('Единица измерения', true, 10, 'center', true),
+    c('Выполнено работ (оказано услуг) — количество', true, 10, 'center', true)
+  ]);
+  // Row 10: column numbers
+  wsData.push([
+    c('1', false, 10, 'center'),
+    c('2', false, 10, 'center'),
+    c('3', false, 10, 'center'),
+    c('4', false, 10, 'center'),
+    c('5', false, 10, 'center')
+  ]);
+
+  // Service rows
+  var total = 0;
+  _rptServices.forEach(function(s, i) {
+    var q = v.qtys[i] || 0;
+    total += q;
+    wsData.push([
+      cn(i+1, false, 10, 'center'),
+      c(s.name, false, 10, 'left', true),
+      c(dateStr, false, 10, 'center'),
+      c(s.unit, false, 10, 'center'),
+      q > 0 ? cn(q, false, 10, 'right') : c('—', false, 10, 'center')
+    ]);
+  });
+
+  // Total row
+  wsData.push([
+    blank(),
+    blank(),
+    c('Итого', true, 10, 'right'),
+    blank(),
+    cn(total, true, 10, 'right')
+  ]);
+
+  // Blank row
+  wsData.push([]);
+
+  // Signature area
+  wsData.push([c('Исполнитель:', true, 10), c('________________________', false, 10), c('/', false, 10, 'center'), c('________________________', false, 10)]);
+  wsData.push([c('', false, 9), c('(подпись)', false, 9, 'center'), c('', false, 9), c('(расшифровка подписи)', false, 9, 'center')]);
+  wsData.push([]);
+  wsData.push([c('Заказчик:', true, 10), c('________________________', false, 10), c('/', false, 10, 'center'), c('________________________', false, 10)]);
+  wsData.push([c('', false, 9), c('(подпись)', false, 9, 'center'), c('', false, 9), c('(расшифровка подписи)', false, 9, 'center')]);
+
+  var ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Column widths
+  ws['!cols'] = [
+    {wch:6}, {wch:52}, {wch:22}, {wch:10}, {wch:12}
+  ];
+
+  // Row heights
+  ws['!rows'] = [];
+  for (var ri = 0; ri < wsData.length; ri++) {
+    if (ri === 0) ws['!rows'].push({hpt:28});
+    else if (ri === 8) ws['!rows'].push({hpt:40});
+    else ws['!rows'].push({hpt:18});
+  }
+
+  // Merges: title row (A1:E1), subtitle (A2:E2)
+  ws['!merges'] = [
+    {s:{r:0,c:0}, e:{r:0,c:4}},
+    {s:{r:1,c:0}, e:{r:1,c:4}},
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, 'АВР');
+  XLSX.writeFile(wb, fileName);
+}
+
+// Init reports tab when it becomes active (lazy)
+var _rptInited = false;
+var _origSwitchTab = window.switchTab;
+window.switchTab = function(id, el) {
+  _origSwitchTab(id, el);
+  if (id === 'reports' && !_rptInited) {
+    _rptInited = true;
+    initReportsTab();
+  }
+};
 </script>
