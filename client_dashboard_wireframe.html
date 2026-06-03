@@ -1108,109 +1108,77 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 </div>
 
-<!-- ═══ EMPLOYEE PROFILE OVERLAY ════════════════════════════════════════════ -->
-<div id="overlay-root" style="display:none">
-  <div class="overlay-backdrop">
-    <div class="bg-table-area">
-      <div class="bg-table-title">Compliance table — click any employee name to open profile</div>
-      <table class="bg-dt">
-        <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Course</th><th>Days</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr class="sel-row"><td><a class="bg-emp-link">Omarov K.D.</a></td><td>Workers</td><td>Karaganda</td><td>Fire Safety L1</td><td style="color:#f87171;font-weight:700">−38d</td><td><span class="badge r">Expired</span></td></tr>
-          <tr><td><a class="bg-emp-link" onclick="openOverlay('Dzhaksybekov A.','DA','ITR','Almaty HQ','Engineer','Radiation Safety')">Dzhaksybekov A.</a></td><td>ITR</td><td>Almaty HQ</td><td>Radiation Safety</td><td style="color:#f87171;font-weight:700">−21d</td><td><span class="badge r">Expired</span></td></tr>
-          <tr><td><a class="bg-emp-link" onclick="openOverlay('Akhmetov A.K.','AK','ITR','Almaty HQ','Inspector','Fire Safety L1')">Akhmetov A.K.</a></td><td>ITR</td><td>Almaty HQ</td><td>Fire Safety L1</td><td style="color:#d97706;font-weight:700">3d</td><td><span class="badge a">Expiring</span></td></tr>
-          <tr><td><a class="bg-emp-link" onclick="openOverlay('Bekova D.S.','BD','Workers','Atyrau Depot','Welder','Chemical Handling')">Bekova D.S.</a></td><td>Workers</td><td>Atyrau</td><td>Chemical Handling</td><td style="color:#d97706;font-weight:700">10d</td><td><span class="badge a">Expiring</span></td></tr>
-          <tr><td><a class="bg-emp-link" onclick="openOverlay('Muratov T.A.','MT','Workers','Karaganda Site','Rigger','Working at Heights')">Muratov T.A.</a></td><td>Workers</td><td>Karaganda</td><td>Working at Heights</td><td style="color:#d97706;font-weight:700">14d</td><td><span class="badge a">Expiring</span></td></tr>
-        </tbody>
-      </table>
+<!-- ═══ EMPLOYEE PROFILE DRAWER ══════════════════════════════════════════════ -->
+<div id="emp-drawer-overlay" class="emp-drawer-overlay" onclick="if(event.target===this)closeOverlay()">
+  <div class="emp-drawer">
+
+    <!-- Header: photo + name + compliance summary -->
+    <div class="emp-dr-hdr">
+      <div class="emp-dr-hdr-top">
+        <div class="emp-photo-wrap">
+          <div class="emp-photo-circle" id="dr-photo">OK</div>
+          <div class="emp-photo-status" id="dr-photo-status" style="background:#dc2626"></div>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="emp-dr-name" id="dr-name">Omarov K.D.</div>
+          <div class="emp-dr-sub" id="dr-sub">TOO MashStroy · Workers · Karaganda Site<br>Mechanic Grade 3</div>
+          <div class="emp-dr-id" id="dr-id">ID: MS-0381</div>
+        </div>
+        <button class="emp-dr-close" onclick="closeOverlay()">×</button>
+      </div>
+      <div id="dr-comp-badge" class="emp-dr-comp-badge">🔴 1 expired · ⚠ 1 expiring</div>
     </div>
-    <div class="overlay-panel" id="ov-panel">
-      <div class="ov-hdr">
-        <span class="ov-close" onclick="closeOverlay()">×</span>
-        <div class="ov-avatar" id="ov-avatar">OK</div>
-        <div class="ov-name" id="ov-name">Omarov K.D.</div>
-        <div class="ov-meta" id="ov-meta">TOO MashStroy · Workers · Karaganda Site<br>Mechanic · ID: MS-0381</div>
-      </div>
-      <div class="ov-tabs">
-        <div class="ov-tab act" onclick="switchOvTab('certs',this)">Certificates</div>
-        <div class="ov-tab" onclick="switchOvTab('courses',this)">Courses</div>
-        <div class="ov-tab" onclick="switchOvTab('info',this)">Info</div>
-        <div class="ov-tab" onclick="switchOvTab('history',this)">History</div>
-      </div>
 
-      <div class="ov-body" id="ov-certs">
-        <div class="ov-section">
-          <div class="ov-section-title">Certificate status</div>
-          <div class="cert-row"><div class="cert-dot" style="background:#dc2626"></div><span class="cert-name">Fire Safety L1</span><span style="font-size:10px;color:var(--muted)">Protocol</span><span class="cert-days" style="color:#dc2626">−38d</span><span class="badge r" style="margin-left:4px;font-size:9px">Expired</span></div>
-          <div class="cert-row"><div class="cert-dot" style="background:#d97706"></div><span class="cert-name">Working at Heights</span><span style="font-size:10px;color:var(--muted)">License</span><span class="cert-days" style="color:#d97706">18d</span><span class="badge a" style="margin-left:4px;font-size:9px">Expiring</span></div>
-          <div class="cert-row"><div class="cert-dot" style="background:#059669"></div><span class="cert-name">First Aid L1</span><span style="font-size:10px;color:var(--muted)">Protocol</span><span class="cert-days" style="color:#059669">142d</span><span class="badge g" style="margin-left:4px;font-size:9px">Active</span></div>
-          <div class="cert-row"><div class="cert-dot" style="background:#059669"></div><span class="cert-name">Chemical Handling</span><span style="font-size:10px;color:var(--muted)">Certificate</span><span class="cert-days" style="color:#059669">210d</span><span class="badge g" style="margin-left:4px;font-size:9px">Active</span></div>
-        </div>
-        <div class="ov-section">
-          <div class="ov-section-title">Certificate validity timeline</div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Bar = validity period · Red line = today</div>
-          <div style="margin-bottom:5px"><div style="font-size:10px;color:var(--n3);margin-bottom:2px">Fire Safety L1</div><div style="height:8px;background:var(--n7);border-radius:4px;position:relative"><div style="position:absolute;left:0;width:85%;height:100%;background:#dc2626;border-radius:4px;opacity:.7"></div><div style="position:absolute;left:88%;top:-2px;bottom:-2px;width:2px;background:var(--n2)"></div></div></div>
-          <div style="margin-bottom:5px"><div style="font-size:10px;color:var(--n3);margin-bottom:2px">Working at Heights</div><div style="height:8px;background:var(--n7);border-radius:4px;position:relative"><div style="position:absolute;left:5%;width:78%;height:100%;background:#d97706;border-radius:4px;opacity:.7"></div><div style="position:absolute;left:88%;top:-2px;bottom:-2px;width:2px;background:var(--n2)"></div></div></div>
-          <div style="margin-bottom:5px"><div style="font-size:10px;color:var(--n3);margin-bottom:2px">First Aid L1</div><div style="height:8px;background:var(--n7);border-radius:4px;position:relative"><div style="position:absolute;left:10%;width:55%;height:100%;background:#059669;border-radius:4px;opacity:.7"></div><div style="position:absolute;left:88%;top:-2px;bottom:-2px;width:2px;background:var(--n2)"></div></div></div>
-          <div style="font-size:9px;color:var(--muted);margin-top:4px">▏ Today · ■ Valid period</div>
-        </div>
-      </div>
-
-      <div class="ov-body" id="ov-courses" style="display:none">
-        <div class="ov-section">
-          <div class="ov-section-title">Course progress</div>
-          <div class="prog-row"><span class="prog-name">Electrical Safety</span><div class="prog-track"><div class="prog-fill" style="width:100%;background:#059669"></div></div><span class="prog-pct" style="color:#059669">100%</span><span class="badge g" style="font-size:9px;margin-left:4px">Done</span></div>
-          <div class="prog-row"><span class="prog-name">First Aid L1</span><div class="prog-track"><div class="prog-fill" style="width:100%;background:#059669"></div></div><span class="prog-pct" style="color:#059669">100%</span><span class="badge g" style="font-size:9px;margin-left:4px">Done</span></div>
-          <div class="prog-row"><span class="prog-name">Fire Safety L1</span><div class="prog-track"><div class="prog-fill" style="width:100%;background:#059669"></div></div><span class="prog-pct" style="color:#059669">100%</span><span class="badge g" style="font-size:9px;margin-left:4px">Done</span></div>
-          <div class="prog-row"><span class="prog-name">Working at Heights</span><div class="prog-track"><div class="prog-fill" style="width:0%;background:#3b9dd4"></div></div><span class="prog-pct" style="color:#94a3b8">0%</span><button class="action-btn" style="font-size:10px;padding:2px 7px;margin-left:4px">Start</button></div>
-          <div class="prog-row"><span class="prog-name">Chemical Handling Adv.</span><div class="prog-track"><div class="prog-fill" style="width:0%;background:#3b9dd4"></div></div><span class="prog-pct" style="color:#94a3b8">0%</span><button class="action-btn" style="font-size:10px;padding:2px 7px;margin-left:4px">Start</button></div>
-        </div>
-      </div>
-
-      <div class="ov-body" id="ov-info" style="display:none">
-        <div class="ov-section">
-          <div class="ov-section-title">Employee information</div>
-          <div class="info-row"><span class="info-lbl">Full name</span><span class="info-val">Omarov Kairat Darenovich</span></div>
-          <div class="info-row"><span class="info-lbl">Employee ID</span><span class="info-val">MS-0381</span></div>
-          <div class="info-row"><span class="info-lbl">Email</span><span class="info-val" style="color:var(--g2)">k.omarov@mashs.kz</span></div>
-          <div class="info-row"><span class="info-lbl">Department</span><span class="info-val">Workers</span></div>
-          <div class="info-row"><span class="info-lbl">Location</span><span class="info-val">Karaganda Site</span></div>
-          <div class="info-row"><span class="info-lbl">Position</span><span class="info-val">Mechanic</span></div>
-          <div class="info-row"><span class="info-lbl">Hire date</span><span class="info-val">14 Mar 2022</span></div>
-          <div class="info-row"><span class="info-lbl">Line manager</span><span class="info-val">Seisenov B.K. (Foreman)</span></div>
-          <div class="info-row"><span class="info-lbl">Manager email</span><span class="info-val" style="color:var(--g2)">b.seisenov@mashs.kz</span></div>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
-          <button class="ov-btn" onclick="sendPrompt('Open Moodle user profile for Omarov K.D. MS-0381')">View in Moodle ↗</button>
-        </div>
-      </div>
-
-      <div class="ov-body" id="ov-history" style="display:none">
-        <div class="ov-section">
-          <div class="ov-section-title">Certificate history</div>
-          <div class="timeline-row"><div class="tl-dot" style="background:#059669"></div><span class="tl-date">14 Mar 2024</span><span class="tl-ev">Fire Safety L1 Protocol issued — valid 1 year</span></div>
-          <div class="timeline-row"><div class="tl-dot" style="background:#d97706"></div><span class="tl-date">14 Feb 2025</span><span class="tl-ev">Auto-reminder sent (30d warning)</span></div>
-          <div class="timeline-row"><div class="tl-dot" style="background:#dc2626"></div><span class="tl-date">14 Mar 2025</span><span class="tl-ev">Certificate expired — no action taken</span></div>
-          <div class="timeline-row"><div class="tl-dot" style="background:#059669"></div><span class="tl-date">22 May 2025</span><span class="tl-ev">Working at Heights License issued — valid 1 year</span></div>
-        </div>
-        <div class="ov-section" style="margin-top:8px">
-          <div class="ov-section-title">Audit log (last 5 actions)</div>
-          <div class="info-row"><span class="info-lbl">25 Apr 2026</span><span class="info-val">Urgent reminder sent by Aizhan K.</span></div>
-          <div class="info-row"><span class="info-lbl">10 Mar 2026</span><span class="info-val">Certificate expired (Fire Safety L1)</span></div>
-          <div class="info-row"><span class="info-lbl">09 Feb 2026</span><span class="info-val">Auto-reminder triggered (30d warning)</span></div>
-          <div class="info-row"><span class="info-lbl">14 Mar 2024</span><span class="info-val">Certificate issued by Coordinator</span></div>
-        </div>
-      </div>
-
-      <div class="ov-actions">
-        <button class="ov-btn urg" onclick="sendPrompt('Send urgent renewal reminder to Omarov K.D. MS-0381 for expired Fire Safety L1 protocol')">Urgent reminder ↗</button>
-        <button class="ov-btn" onclick="sendPrompt('Schedule Fire Safety L1 retraining for Omarov K.D. at Karaganda Site')">Schedule retraining ↗</button>
-        <button class="ov-btn" onclick="sendPrompt('Enroll Omarov K.D. in Working at Heights refresher course')">Enroll in course ↗</button>
-        <button class="ov-btn" onclick="sendPrompt('Open full Moodle admin profile for user MS-0381')">View in Moodle ↗</button>
-      </div>
+    <!-- Tabs -->
+    <div class="emp-dr-tabs">
+      <div class="emp-dr-tab act" onclick="switchDrTab('docs',this)">📄 Documents</div>
+      <div class="emp-dr-tab" onclick="switchDrTab('courses',this)">📚 Courses</div>
+      <div class="emp-dr-tab" onclick="switchDrTab('info',this)">👤 Info</div>
+      <div class="emp-dr-tab" onclick="switchDrTab('history',this)">🕓 History</div>
     </div>
-  </div>
-</div>
+
+    <!-- Scrollable body -->
+    <div class="emp-dr-body">
+
+      <!-- DOCUMENTS TAB -->
+      <div id="dr-docs">
+        <div class="emp-dr-section">
+          <div class="emp-dr-section-title">Certificates, Protocols &amp; Licences</div>
+          <div id="dr-docs-list"><!-- rendered by JS --></div>
+        </div>
+      </div>
+
+      <!-- COURSES TAB -->
+      <div id="dr-courses" style="display:none">
+        <div class="emp-dr-section">
+          <div class="emp-dr-section-title">Course completion</div>
+          <div id="dr-courses-list"><!-- rendered by JS --></div>
+        </div>
+      </div>
+
+      <!-- INFO TAB -->
+      <div id="dr-info" style="display:none">
+        <div class="emp-dr-section">
+          <div class="emp-dr-section-title">Employee information</div>
+          <div id="dr-info-list"><!-- rendered by JS --></div>
+        </div>
+      </div>
+
+      <!-- HISTORY TAB -->
+      <div id="dr-history" style="display:none">
+        <div class="emp-dr-section">
+          <div class="emp-dr-section-title">Document history &amp; audit log</div>
+          <div id="dr-history-list"><!-- rendered by JS --></div>
+        </div>
+      </div>
+
+    </div><!-- /emp-dr-body -->
+
+    <!-- Footer actions -->
+    <div class="emp-dr-actions" id="dr-actions"><!-- rendered by JS --></div>
+
+  </div><!-- /emp-drawer -->
+</div><!-- /emp-drawer-overlay -->
 
 <script>
 var currentOvTab='certs';
