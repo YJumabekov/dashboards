@@ -1293,6 +1293,138 @@ function switchOvTab(tab,el){
   if(el)el.classList.add('act');
 }
 
+/* ── Compliance TARGET WIDGET ────────────────────── */
+var _curCompliance = 72;
+var _totalStaff = 270;
+var _monthlyGain = 3; // % per month at current pace
+
+function updateTargetWidget() {
+  var raw = document.getElementById('cmp-target-val').value;
+  var target = Math.min(100, Math.max(50, parseInt(raw) || 80));
+  var cur = _curCompliance;
+  var gap = cur - target;
+  var barColor = cur >= target ? '#059669' : (gap > -5 ? '#d97706' : '#dc2626');
+  var barPct = Math.min(100, cur);
+  var targetPct = Math.min(100, target);
+
+  // Update bar
+  var bar = document.getElementById('cmp-bar');
+  bar.style.width = barPct + '%';
+  bar.style.background = barColor;
+  bar.querySelector('span').textContent = cur + '%';
+
+  // Update target line
+  var line = document.getElementById('cmp-tline');
+  var lbl  = document.getElementById('cmp-tlabel');
+  line.style.left = targetPct + '%';
+  lbl.textContent = 'цель ' + target + '%';
+
+  // Update stats
+  var gapEl = document.getElementById('cmp-gap-val');
+  var needEl = document.getElementById('cmp-need-val');
+  var paceEl = document.getElementById('cmp-pace-val');
+  var achEl  = document.getElementById('cmp-achieved');
+
+  if (cur >= target) {
+    gapEl.textContent = '+' + (cur - target) + ' п.п.';
+    gapEl.style.color = '#059669';
+    needEl.textContent = '0';
+    needEl.style.color = '#059669';
+    paceEl.closest('.cmp-stat').style.display = 'none';
+    achEl.style.display = 'flex';
+  } else {
+    var gapVal = target - cur;
+    var needed = Math.ceil((_totalStaff * (target - cur)) / 100);
+    var months = _monthlyGain > 0 ? Math.ceil(gapVal / _monthlyGain) : '∞';
+    gapEl.textContent = '−' + gapVal + ' п.п.';
+    gapEl.style.color = '#dc2626';
+    needEl.textContent = needed;
+    needEl.style.color = '#dc2626';
+    paceEl.textContent = '~' + months + ' мес';
+    paceEl.closest('.cmp-stat').style.display = 'flex';
+    achEl.style.display = 'none';
+  }
+
+  // Sync trend chart target line (y = 118 - (target-60)/40*108, clamped)
+  var trendY = Math.max(10, Math.min(118, 118 - ((target - 60) / 40) * 108));
+  var tl = document.getElementById('trend-target-line');
+  var tt = document.getElementById('trend-target-txt');
+  if (tl) { tl.setAttribute('y1', trendY); tl.setAttribute('y2', trendY); }
+  if (tt) { tt.setAttribute('y', trendY - 4); tt.textContent = 'цель ' + target + '%'; }
+}
+
+function setPreset(val) {
+  document.getElementById('cmp-target-val').value = val;
+  updateTargetWidget();
+}
+
+/* ── BULK ACTIONS ────────────────────────────────── */
+function toggleAllCb(master) {
+  document.querySelectorAll('#viol-tbody .cb-row').forEach(function(cb) {
+    var row = cb.closest('tr');
+    if (row.style.display !== 'none') cb.checked = master.checked;
+  });
+  updateBulkBar();
+}
+
+function updateBulkBar() {
+  var checked = document.querySelectorAll('#viol-tbody .cb-row:checked').length;
+  var bar = document.getElementById('bulk-bar');
+  document.getElementById('bulk-count').textContent = checked;
+  bar.classList.toggle('show', checked > 0);
+}
+
+function clearBulk() {
+  document.querySelectorAll('#viol-tbody .cb-row').forEach(function(cb){ cb.checked = false; });
+  document.getElementById('cb-all').checked = false;
+  updateBulkBar();
+}
+
+function bulkRemind() {
+  var n = document.querySelectorAll('#viol-tbody .cb-row:checked').length;
+  var btn = event.target;
+  var orig = btn.innerHTML;
+  btn.innerHTML = '✓ Отправлено ' + n + ' напоминаний!';
+  btn.style.background = '#059669';
+  setTimeout(function(){ btn.innerHTML=orig; btn.style.background='#d97706'; clearBulk(); }, 2800);
+}
+
+function bulkSchedule() {
+  var n = document.querySelectorAll('#viol-tbody .cb-row:checked').length;
+  var btn = event.target;
+  var orig = btn.innerHTML;
+  btn.innerHTML = '✓ Запланировано для ' + n + ' сотрудников';
+  btn.disabled = true;
+  setTimeout(function(){ btn.innerHTML=orig; btn.disabled=false; clearBulk(); }, 2800);
+}
+
+function filterViolTable() {
+  var status = document.querySelector('#tab-compliance select').value;
+  var search = (document.getElementById('viol-search')||{}).value || '';
+  search = search.toLowerCase();
+  document.querySelectorAll('#viol-tbody tr').forEach(function(tr) {
+    var sMatch = status === 'all' || tr.dataset.status === status;
+    var qMatch = !search || tr.dataset.name.toLowerCase().includes(search) || tr.dataset.course.toLowerCase().includes(search);
+    tr.style.display = (sMatch && qMatch) ? '' : 'none';
+  });
+  // reset master checkbox
+  document.getElementById('cb-all').checked = false;
+  updateBulkBar();
+}
+
+/* ── EDS PERIOD FILTER ───────────────────────────── */
+function filterEDS(period, btn) {
+  // Update buttons
+  document.querySelectorAll('.eds-filter .dim-btn').forEach(function(b){ b.classList.remove('act'); });
+  if(btn) btn.classList.add('act');
+  // Filter rows: "week"=≤7d, "month"=≤30d, "all"=all
+  var limit = period === 'week' ? 7 : period === 'month' ? 30 : 9999;
+  document.querySelectorAll('#eds-pending-body tr').forEach(function(tr) {
+    var d = parseInt(tr.dataset.days) || 0;
+    tr.style.display = d <= limit ? '' : 'none';
+  });
+}
+
 /* ── Compliance snapshot dimension switcher ────── */
 function switchCompSnap(dim, el) {
   ['dept','loc','pos'].forEach(function(d){
