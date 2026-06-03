@@ -846,31 +846,82 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
-  <!-- Always-visible compliance table -->
+  <!-- Always-visible compliance table with BULK ACTIONS -->
   <div class="card">
     <div class="card-hdr" style="cursor:default">
-      <div><div class="card-title">All compliance violations — live employee table</div><div class="card-sub">Filtered by global filters · Row click → certificate history · Employee name → profile overlay</div></div>
-      <div class="card-badges"><span class="ctag b">Persistent table</span><span class="ctag">interactive</span></div>
+      <div><div class="card-title">All compliance violations — live employee table</div><div class="card-sub">☑ Выберите строки для массовых действий · Имя → профиль</div></div>
+      <div class="card-badges"><span class="ctag b">Bulk actions</span><span class="ctag">interactive</span></div>
     </div>
     <div class="card-body">
-      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-        <select class="fsel"><option>All statuses</option><option>Expired only</option><option>Expiring only</option></select>
+      <!-- Filters -->
+      <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
+        <select class="fsel" onchange="filterViolTable()"><option value="all">All statuses</option><option value="exp">Expired only</option><option value="expiring">Expiring only</option></select>
         <select class="fsel"><option>All doc types</option><option>Certificate</option><option>Protocol</option><option>License</option></select>
-        <input type="text" placeholder="Search name or course..." style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;flex:1;min-width:140px;outline:none;color:var(--text)">
+        <input type="text" id="viol-search" placeholder="Поиск по имени или курсу…" oninput="filterViolTable()" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;flex:1;min-width:140px;outline:none;color:var(--text)">
+      </div>
+      <!-- Bulk action bar — shown when ≥1 checkbox selected -->
+      <div class="bulk-bar" id="bulk-bar">
+        <span>Выбрано:</span>
+        <span class="bulk-count" id="bulk-count">0</span>
+        <span>сотрудников</span>
+        <div style="flex:1"></div>
+        <button class="action-btn" style="background:#d97706;color:#fff;border-color:#d97706;font-size:11px" onclick="bulkRemind()">📨 Отправить напоминание выбранным</button>
+        <button class="action-btn" style="font-size:11px" onclick="bulkSchedule()">📅 Запланировать обучение</button>
+        <button class="action-btn" style="font-size:11px;color:#dc2626;border-color:#fca5a5" onclick="clearBulk()">✕ Снять выбор</button>
       </div>
       <div style="overflow-x:auto">
-        <table class="dt" style="min-width:680px">
-          <thead><tr><th>Employee</th><th>Dept</th><th>Location</th><th>Position</th><th>Course</th><th>Doc type</th><th>Expiry</th><th>Days</th><th>Status</th><th>Action</th></tr></thead>
-          <tbody>
-            <tr class="cr"><td><a class="emp-link" onclick="openOverlay('Omarov K.D.','OK','Workers','Karaganda Site','Mechanic','Fire Safety L1')">Omarov K.D.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Mechanic</td><td>Fire Safety L1</td><td><span class="badge n">Certif.</span></td><td style="color:var(--muted)">2026…</td><td class="ov-r" style="font-weight:700">−38d</td><td><span class="badge r">Expired</span></td><td><button class="action-btn urg" onclick="event.stopPropagation()">Urgent</button></td></tr>
-            <tr class="cr"><td><a class="emp-link" onclick="openOverlay('Dzhaksybekov A.','DA','ITR','Almaty HQ','Engineer','Radiation Safety')">Dzhaksybekov A.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Engineer</td><td>Radiation Safety</td><td><span class="badge n">Protocol</span></td><td style="color:var(--muted)">2026…</td><td class="ov-r" style="font-weight:700">−21d</td><td><span class="badge r">Expired</span></td><td><button class="action-btn urg" onclick="event.stopPropagation()">Urgent</button></td></tr>
-            <tr><td><a class="emp-link" onclick="openOverlay('Akhmetov A.K.','AK','ITR','Almaty HQ','Inspector','Fire Safety L1')">Akhmetov A.K.</a></td><td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Inspector</td><td>Fire Safety L1</td><td><span class="badge n">Certif.</span></td><td style="color:var(--muted)">2026…</td><td class="ov-r" style="font-weight:700">3d</td><td><span class="badge a">Expiring</span></td><td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td></tr>
-            <tr><td><a class="emp-link" onclick="openOverlay('Bekova D.S.','BD','Workers','Atyrau Depot','Welder','Chemical Handling')">Bekova D.S.</a></td><td>Workers</td><td><span class="loc-pill">Atyrau</span></td><td>Welder</td><td>Chemical Handling</td><td><span class="badge n">Protocol</span></td><td style="color:var(--muted)">2026…</td><td class="ov-a" style="font-weight:700">10d</td><td><span class="badge a">Expiring</span></td><td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td></tr>
-            <tr><td><a class="emp-link" onclick="openOverlay('Muratov T.A.','MT','Workers','Karaganda Site','Rigger','Working at Heights')">Muratov T.A.</a></td><td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Rigger</td><td>Working at Heights</td><td><span class="badge n">License</span></td><td style="color:var(--muted)">2026…</td><td class="ov-a" style="font-weight:700">14d</td><td><span class="badge a">Expiring</span></td><td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td></tr>
+        <table class="dt" id="viol-table" style="min-width:720px">
+          <thead><tr>
+            <th style="width:32px"><input type="checkbox" class="cb-all" id="cb-all" onclick="toggleAllCb(this)" title="Выбрать всё"></th>
+            <th>Сотрудник</th><th>Подразделение</th><th>Локация</th><th>Курс</th><th>Тип</th><th>Просрочка / Осталось</th><th>Статус</th><th>Действие</th>
+          </tr></thead>
+          <tbody id="viol-tbody">
+            <tr class="cr" data-status="exp" data-name="Omarov K.D." data-course="Fire Safety L1">
+              <td onclick="event.stopPropagation()"><input type="checkbox" class="cb-row" onchange="updateBulkBar()"></td>
+              <td><a class="emp-link" onclick="openOverlay('Omarov K.D.','OK','Workers','Karaganda Site','Mechanic','Fire Safety L1')">Omarov K.D.</a></td>
+              <td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Fire Safety L1</td><td><span class="badge n">Certif.</span></td>
+              <td class="ov-r" style="font-weight:700">−38d</td><td><span class="badge r">Expired</span></td>
+              <td><button class="action-btn urg" onclick="event.stopPropagation()">Urgent</button></td>
+            </tr>
+            <tr class="cr" data-status="exp" data-name="Dzhaksybekov A." data-course="Radiation Safety">
+              <td onclick="event.stopPropagation()"><input type="checkbox" class="cb-row" onchange="updateBulkBar()"></td>
+              <td><a class="emp-link" onclick="openOverlay('Dzhaksybekov A.','DA','ITR','Almaty HQ','Engineer','Radiation Safety')">Dzhaksybekov A.</a></td>
+              <td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Radiation Safety</td><td><span class="badge n">Protocol</span></td>
+              <td class="ov-r" style="font-weight:700">−21d</td><td><span class="badge r">Expired</span></td>
+              <td><button class="action-btn urg" onclick="event.stopPropagation()">Urgent</button></td>
+            </tr>
+            <tr data-status="exp" data-name="Zhaksylyk B.N." data-course="Chemical Handling">
+              <td onclick="event.stopPropagation()"><input type="checkbox" class="cb-row" onchange="updateBulkBar()"></td>
+              <td><a class="emp-link" onclick="openOverlay('Zhaksylyk B.N.','ZB','Workers','Atyrau Depot','Electrician','Chemical Handling')">Zhaksylyk B.N.</a></td>
+              <td>Workers</td><td><span class="loc-pill">Atyrau</span></td><td>Chemical Handling</td><td><span class="badge n">Protocol</span></td>
+              <td class="ov-r" style="font-weight:700">−14d</td><td><span class="badge r">Expired</span></td>
+              <td><button class="action-btn urg" onclick="event.stopPropagation()">Urgent</button></td>
+            </tr>
+            <tr data-status="expiring" data-name="Akhmetov A.K." data-course="Fire Safety L1">
+              <td onclick="event.stopPropagation()"><input type="checkbox" class="cb-row" onchange="updateBulkBar()"></td>
+              <td><a class="emp-link" onclick="openOverlay('Akhmetov A.K.','AK','ITR','Almaty HQ','Inspector','Fire Safety L1')">Akhmetov A.K.</a></td>
+              <td>ITR</td><td><span class="loc-pill">Almaty HQ</span></td><td>Fire Safety L1</td><td><span class="badge n">Certif.</span></td>
+              <td class="ov-r" style="font-weight:700">3d</td><td><span class="badge a">Expiring</span></td>
+              <td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td>
+            </tr>
+            <tr data-status="expiring" data-name="Bekova D.S." data-course="Chemical Handling">
+              <td onclick="event.stopPropagation()"><input type="checkbox" class="cb-row" onchange="updateBulkBar()"></td>
+              <td><a class="emp-link" onclick="openOverlay('Bekova D.S.','BD','Workers','Atyrau Depot','Welder','Chemical Handling')">Bekova D.S.</a></td>
+              <td>Workers</td><td><span class="loc-pill">Atyrau</span></td><td>Chemical Handling</td><td><span class="badge n">Protocol</span></td>
+              <td class="ov-a" style="font-weight:700">10d</td><td><span class="badge a">Expiring</span></td>
+              <td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td>
+            </tr>
+            <tr data-status="expiring" data-name="Muratov T.A." data-course="Working at Heights">
+              <td onclick="event.stopPropagation()"><input type="checkbox" class="cb-row" onchange="updateBulkBar()"></td>
+              <td><a class="emp-link" onclick="openOverlay('Muratov T.A.','MT','Workers','Karaganda Site','Rigger','Working at Heights')">Muratov T.A.</a></td>
+              <td>Workers</td><td><span class="loc-pill">Karaganda</span></td><td>Working at Heights</td><td><span class="badge n">License</span></td>
+              <td class="ov-a" style="font-weight:700">14d</td><td><span class="badge a">Expiring</span></td>
+              <td><button class="action-btn" onclick="event.stopPropagation()">Schedule</button></td>
+            </tr>
           </tbody>
         </table>
       </div>
-      <div class="footer-note">↑ Employee name = clickable link → opens profile overlay. Row click → certificate history. Showing 5 of 60.</div>
+      <div class="footer-note">↑ Имя → профиль сотрудника · Checkbox → массовые действия · Showing 6 of 60.</div>
     </div>
   </div>
 </div>
