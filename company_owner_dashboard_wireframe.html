@@ -1143,6 +1143,65 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       </div>
     </div>
   </div>
+  <!-- Course ratings & feedback -->
+  <div class="card expanded" onclick="toggleCard(this)">
+    <div class="card-hdr">
+      <div><div class="card-title" onmouseenter="showTip(this,'Post-course ratings submitted by employees after completing each course.\nScale: 1–5 stars. NPS: Net Promoter Score (−100 to +100).\nLow ratings flag courses that may need content revision.')" onmouseleave="hideTip()">Course ratings & feedback</div><div class="card-sub">Post-completion employee evaluations · Average rating · NPS · Latest comments</div></div>
+      <div class="card-badges"><span class="ctag blue">Feedback</span><span class="ctag">interactive</span><span class="chevron">▲</span></div>
+    </div>
+    <div class="card-body">
+      <div style="overflow-x:auto">
+        <table class="drill-table">
+          <thead><tr>
+            <th onmouseenter="showTip(this,'Click course name to see full course details.')" onmouseleave="hideTip()">Course <span class="ti">ⓘ</span></th>
+            <th onmouseenter="showTip(this,'Average star rating (1–5) from post-completion survey.\n⭐⭐⭐⭐⭐ = 5.0 · Below 3.5 needs review.')" onmouseleave="hideTip()">Rating <span class="ti">ⓘ</span></th>
+            <th onmouseenter="showTip(this,'Number of reviews submitted after course completion.')" onmouseleave="hideTip()">Reviews <span class="ti">ⓘ</span></th>
+            <th onmouseenter="showTip(this,'Net Promoter Score: % who recommend minus % who would not.\nPositive = good · Below 0 = urgent content review needed.')" onmouseleave="hideTip()">NPS <span class="ti">ⓘ</span></th>
+            <th>Latest feedback</th>
+            <th onmouseenter="showTip(this,'% of employees who say the course was useful for their actual job.')" onmouseleave="hideTip()">Relevance <span class="ti">ⓘ</span></th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="course-link" onclick="showCourseInfo('electrical')">Electrical Safety</span></td>
+              <td><span style="color:#059669;font-weight:700" onmouseenter="showTip(this,'4.7 / 5.0 — Excellent\n145 reviews collected\nTop score on the platform')" onmouseleave="hideTip()">⭐ 4.7</span></td>
+              <td>145</td>
+              <td><span class="badge green">+62</span></td>
+              <td style="font-size:10px;color:var(--muted);max-width:180px">"Clear explanations, practical examples" — Engineer, Kazatomprom</td>
+              <td><span style="color:#059669;font-weight:600">91%</span></td>
+            </tr>
+            <tr>
+              <td><span class="course-link" onclick="showCourseInfo('firesafety')">Fire Safety L1</span></td>
+              <td><span style="color:#059669;font-weight:700" onmouseenter="showTip(this,'4.3 / 5.0 — Good\n380 reviews collected')" onmouseleave="hideTip()">⭐ 4.3</span></td>
+              <td>380</td>
+              <td><span class="badge green">+44</span></td>
+              <td style="font-size:10px;color:var(--muted);max-width:180px">"Good content, a bit long. Videos could be shorter." — Worker, ArcelorMittal</td>
+              <td><span style="color:#059669;font-weight:600">87%</span></td>
+            </tr>
+            <tr>
+              <td><span class="course-link" onclick="showCourseInfo('heights')">Working at Heights</span></td>
+              <td><span style="color:#d97706;font-weight:700" onmouseenter="showTip(this,'3.6 / 5.0 — Below average\n210 reviews collected\nContent may need update')" onmouseleave="hideTip()">⭐ 3.6</span></td>
+              <td>210</td>
+              <td><span class="badge amber">+12</span></td>
+              <td style="font-size:10px;color:var(--muted);max-width:180px">"Outdated safety procedures shown. Needs update for 2024 regulations." — Rigger, ArcelorMittal</td>
+              <td><span style="color:#d97706;font-weight:600">64%</span></td>
+            </tr>
+            <tr>
+              <td><span class="course-link" onclick="showCourseInfo('chemical')">Chemical Handling</span></td>
+              <td><span style="color:#dc2626;font-weight:700" onmouseenter="showTip(this,'2.8 / 5.0 — Poor\n115 reviews collected\n⚠ Urgent content review needed!')" onmouseleave="hideTip()">⭐ 2.8</span></td>
+              <td>115</td>
+              <td><span class="badge red">−18</span></td>
+              <td style="font-size:10px;color:var(--muted);max-width:180px">"Too theoretical, no practical exercises. Hard to understand without prior knowledge." — Welder, MashStroy</td>
+              <td><span style="color:#dc2626;font-weight:600">38%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;margin-top:10px;font-size:11px">
+        <strong style="color:#c2410c">⚠ Action required:</strong> Chemical Handling rated 2.8/5 with NPS −18. 38% relevance score suggests major content mismatch. Recommend content review and update before next training cycle.
+      </div>
+    </div>
+  </div>
+
   <div class="card expanded" onclick="toggleCard(this)">
     <div class="card-hdr">
       <div><div class="card-title">Completion rate trend — 12 months by company</div><div class="card-sub">One line per company · Y: 0–100% · Tension 0.3</div></div>
