@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "dashboard",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "3030"],
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ".claude/serve.ps1", "-Port", "3030"],
       "port": 3030
     }
   ]
