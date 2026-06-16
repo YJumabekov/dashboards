@@ -347,3 +347,65 @@ $tabs += @{
 }
 
 Write-Host "Content data loaded: $($tabs.Count) tabs"
+
+# ===================== BUILD document.xml BODY =====================
+$script:bmId = 1
+$docPrCounter = 100
+$imgRelMap = @{}   # imageKey -> rId
+$nextImgRelId = 10
+
+$body = ""
+
+# ---- Title page / front matter ----
+$body += "<w:p><w:pPr><w:jc w:val=`"center`"/><w:spacing w:after=`"80`"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii=`"Arial`" w:hAnsi=`"Arial`"/><w:b/><w:sz w:val=`"56`"/><w:color w:val=`"1F4E79`"/></w:rPr><w:t>Sental LMS Analytics</w:t></w:r></w:p>"
+$body += "<w:p><w:pPr><w:jc w:val=`"center`"/><w:spacing w:after=`"600`"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii=`"Arial`" w:hAnsi=`"Arial`"/><w:sz w:val=`"32`"/><w:color w:val=`"44546A`"/></w:rPr><w:t>Dashboard Calculation Formulas - Developer Reference</w:t></w:r></w:p>"
+$body += Para "This document is a screenshot-to-formula reference for every chart, KPI card, and table in the Company Owner Dashboard wireframe (company_owner_dashboard_wireframe.html). The wireframe uses mock data throughout; screenshots show the visual layout only. Every Formula and Data Source / Filter cell below is transcribed verbatim from the wireframe's own tooltip and drill-down text, so it can be implemented directly against a real database." $false $null 20 120
+$body += Para "Each section pairs one dashboard screenshot with a table covering every element visible in it. Where a block has no real calculation (e.g. the Server tab's config status panel), the Formula column says so explicitly rather than inventing one." $false $null 20 300
+
+$body += Para "Contents" $true $null 24 160
+foreach ($tab in $tabs) {
+  $body += InternalLink $tab.anchor $tab.title
+}
+$body += PageBreak
+
+# ---- Tabs ----
+$firstTab = $true
+foreach ($tab in $tabs) {
+  if (-not $firstTab) { $body += PageBreak }
+  $firstTab = $false
+  $body += H1 $tab.title $tab.anchor
+  if ($tab.intro) { $body += Para $tab.intro $false "595959" 20 200 }
+
+  foreach ($blk in $tab.blocks) {
+    $body += H2 $blk.h2
+
+    if ($blk.image) {
+      if (-not $imgRelMap.ContainsKey($blk.image)) {
+        $imgRelMap[$blk.image] = "rId$nextImgRelId"
+        $nextImgRelId++
+      }
+      $relId = $imgRelMap[$blk.image]
+      $hEmu = ImgEmuHeight $blk.image
+      $docPrCounter++
+      $body += ImageParagraph $relId $displayWidthEmu $hEmu $blk.image $docPrCounter
+    }
+
+    # column widths: first column narrower, rest share remainder evenly (table width = 9 * 700 = 9 inches max; use 6.3in content width = 9072 dxa)
+    $tableWidthDxa = [int](6.3 * 1440)
+    $nCols = $blk.headers.Length
+    if ($nCols -eq 4) { $colWidths = @(2200,2300,2300,2272) }
+    elseif ($nCols -eq 5) { $colWidths = @(1800,1700,1900,1900,1772) }
+    elseif ($nCols -eq 6) { $colWidths = @(1500,1300,1700,1700,1372,1500) }
+    elseif ($nCols -eq 2) { $colWidths = @(3500,5572) }
+    else { $colWidths = @(1..$nCols | ForEach-Object { [int]($tableWidthDxa / $nCols) }) }
+    # adjust last to make exact sum
+    $sum = ($colWidths | Measure-Object -Sum).Sum
+    $colWidths[-1] += ($tableWidthDxa - $sum)
+
+    $body += TableXml $blk.headers $blk.rows $colWidths
+
+    if ($blk.note) { $body += Para $blk.note $false "595959" 18 200 }
+  }
+}
+
+Write-Host "Body XML generated: $($body.Length) chars, $($imgRelMap.Count) images referenced"
