@@ -426,7 +426,7 @@ $contentTypes = @"
 <Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>
 </Types>
 "@
-Set-Content -Path "$build\[Content_Types].xml" -Value $contentTypes -Encoding UTF8 -NoNewline
+Set-Content -LiteralPath "$build\[Content_Types].xml" -Value $contentTypes -Encoding UTF8 -NoNewline
 
 # ---- _rels/.rels ----
 $rootRels = @"
