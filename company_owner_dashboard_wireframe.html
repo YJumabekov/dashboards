@@ -3160,3 +3160,21 @@ window.switchTab = function(id, el) {
   }
 };
 </script>
+
+<!-- Deep-link bootstrap for documentation screenshots: #tab=<id>&drill=<id>&load=1 -->
+<script>
+(function () {
+  var params = {};
+  location.hash.replace(/^#/, '').split('&').forEach(function (p) {
+    var kv = p.split('=');
+    if (kv[0]) params[kv[0]] = kv[1];
+  });
+  if (!params.tab) return;
+  var order = ['kpi','overview','compliance','turnover','training','proctoring','forecast','server','reports'];
+  var idx = order.indexOf(params.tab);
+  var tabEl = idx >= 0 ? document.querySelectorAll('.tab')[idx] : null;
+  switchTab(params.tab, tabEl);
+  if (params.drill) toggleDrill(params.drill, null);
+  if (params.load === '1') setTimeout(function () { loadFromLMS(); }, 150);
+})();
+</script>
