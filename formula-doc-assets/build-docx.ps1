@@ -103,3 +103,21 @@ function InternalLink([string]$anchor, [string]$text) {
 }
 
 Write-Host "Helpers loaded."
+
+# ===================== IMAGE DIMS (px) =====================
+$imgDims = @{
+  '01_kpi_default'=@{w=1440;h=521}; '02_kpi_drill_comp'=@{w=1440;h=447}; '03_kpi_drill_eds'=@{w=1440;h=515};
+  '04_kpi_drill_server'=@{w=1440;h=529}; '05_overview'=@{w=1440;h=1061}; '06_compliance'=@{w=1440;h=1327};
+  '07_turnover'=@{w=1440;h=645}; '08_training'=@{w=1440;h=933}; '09_proctoring'=@{w=1440;h=693};
+  '10_forecast'=@{w=1440;h=1037}; '11_server'=@{w=1440;h=1241}; '12_reports_empty'=@{w=1440;h=997};
+  '13_reports_loaded'=@{w=1440;h=997}
+}
+$EMU_PER_IN = 914400
+$displayWidthEmu = [long](6.3 * $EMU_PER_IN)
+
+function ImgEmuHeight([string]$key) {
+  $d = $imgDims[$key]
+  return [long]($displayWidthEmu * ($d.h / $d.w))
+}
+
+Write-Host "Image dims loaded: $($imgDims.Count) entries"
