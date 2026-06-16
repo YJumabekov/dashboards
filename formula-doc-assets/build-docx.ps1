@@ -2,7 +2,9 @@
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 
-$root    = "C:\Users\YJuma\OneDrive\Документы\Claude Code\Dashboards"
+$assets  = Split-Path -Parent $PSScriptRoot -ErrorAction SilentlyContinue
+if (-not $assets) { $assets = $PSScriptRoot }
+$root    = Split-Path -Parent $assets
 $assets  = "$root\formula-doc-assets"
 $trimmed = "$assets\trimmed"
 $build   = "$assets\docx-build"
