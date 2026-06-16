@@ -2,10 +2,8 @@
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 
-$assets  = Split-Path -Parent $PSScriptRoot -ErrorAction SilentlyContinue
-if (-not $assets) { $assets = $PSScriptRoot }
+$assets  = $PSScriptRoot
 $root    = Split-Path -Parent $assets
-$assets  = "$root\formula-doc-assets"
 $trimmed = "$assets\trimmed"
 $build   = "$assets\docx-build"
 $outFile = "$root\Sental_Dashboard_Formulas.docx"
