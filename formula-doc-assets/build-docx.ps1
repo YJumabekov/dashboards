@@ -409,3 +409,143 @@ foreach ($tab in $tabs) {
 }
 
 Write-Host "Body XML generated: $($body.Length) chars, $($imgRelMap.Count) images referenced"
+
+# ===================== STATIC PARTS =====================
+
+# ---- [Content_Types].xml ----
+$contentTypes = @"
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Default Extension="png" ContentType="image/png"/>
+<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+<Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
+<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>
+<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>
+</Types>
+"@
+Set-Content -Path "$build\[Content_Types].xml" -Value $contentTypes -Encoding UTF8 -NoNewline
+
+# ---- _rels/.rels ----
+$rootRels = @"
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/>
+<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/>
+</Relationships>
+"@
+Set-Content -Path "$build\_rels\.rels" -Value $rootRels -Encoding UTF8 -NoNewline
+
+# ---- docProps/core.xml ----
+$core = @"
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<dc:title>Sental Dashboard Calculation Formulas</dc:title>
+<dc:creator>Claude</dc:creator>
+<cp:lastModifiedBy>Claude</cp:lastModifiedBy>
+</cp:coreProperties>
+"@
+Set-Content -Path "$build\docProps\core.xml" -Value $core -Encoding UTF8 -NoNewline
+
+# ---- docProps/app.xml ----
+$app = @"
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties">
+<Application>Sental Docs Generator</Application>
+</Properties>
+"@
+Set-Content -Path "$build\docProps\app.xml" -Value $app -Encoding UTF8 -NoNewline
+
+# ---- word/settings.xml ----
+$settings = @"
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:updateFields w:val="true"/>
+<w:defaultTabStop w:val="720"/>
+</w:settings>
+"@
+Set-Content -Path "$build\word\settings.xml" -Value $settings -Encoding UTF8 -NoNewline
+
+# ---- word/styles.xml ----
+$styles = @"
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:docDefaults>
+<w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="20"/></w:rPr></w:rPrDefault>
+</w:docDefaults>
+<w:style w:type="paragraph" w:default="1" w:styleId="Normal">
+<w:name w:val="Normal"/>
+<w:qFormat/>
+</w:style>
+<w:style w:type="paragraph" w:styleId="Heading1">
+<w:name w:val="heading 1"/>
+<w:basedOn w:val="Normal"/>
+<w:next w:val="Normal"/>
+<w:qFormat/>
+<w:pPr><w:spacing w:before="240" w:after="240"/><w:outlineLvl w:val="0"/></w:pPr>
+<w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:b/><w:sz w:val="36"/><w:color w:val="1F4E79"/></w:rPr>
+</w:style>
+<w:style w:type="paragraph" w:styleId="Heading2">
+<w:name w:val="heading 2"/>
+<w:basedOn w:val="Normal"/>
+<w:next w:val="Normal"/>
+<w:qFormat/>
+<w:pPr><w:spacing w:before="200" w:after="140"/><w:outlineLvl w:val="1"/></w:pPr>
+<w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:b/><w:sz w:val="26"/><w:color w:val="2E5395"/></w:rPr>
+</w:style>
+<w:style w:type="character" w:styleId="Hyperlink">
+<w:name w:val="Hyperlink"/>
+<w:basedOn w:val="DefaultParagraphFont"/>
+<w:rPr><w:color w:val="1155CC"/><w:u w:val="single"/></w:rPr>
+</w:style>
+<w:style w:type="character" w:default="1" w:styleId="DefaultParagraphFont">
+<w:name w:val="Default Paragraph Font"/>
+</w:style>
+</w:styles>
+"@
+Set-Content -Path "$build\word\styles.xml" -Value $styles -Encoding UTF8 -NoNewline
+
+# ---- word/_rels/document.xml.rels ----
+$docRelsItems = @()
+$docRelsItems += '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+$docRelsItems += '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>'
+foreach ($key in $imgRelMap.Keys) {
+  $rid = $imgRelMap[$key]
+  $docRelsItems += "<Relationship Id=`"$rid`" Type=`"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image`" Target=`"media/$key.png`"/>"
+}
+$docRels = "<?xml version=`"1.0`" encoding=`"UTF-8`" standalone=`"yes`"?>`n<Relationships xmlns=`"http://schemas.openxmlformats.org/package/2006/relationships`">`n" + ($docRelsItems -join "`n") + "`n</Relationships>"
+Set-Content -Path "$build\word\_rels\document.xml.rels" -Value $docRels -Encoding UTF8 -NoNewline
+
+# ---- word/document.xml ----
+$documentXml = @"
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<w:body>
+$body
+<w:sectPr>
+<w:pgSz w:w="12240" w:h="15840"/>
+<w:pgMar w:top="1440" w:right="1080" w:bottom="1440" w:left="1080" w:header="720" w:footer="720" w:gutter="0"/>
+</w:sectPr>
+</w:body>
+</w:document>
+"@
+Set-Content -Path "$build\word\document.xml" -Value $documentXml -Encoding UTF8 -NoNewline
+
+Write-Host "Static XML parts written."
+
+# ===================== COPY IMAGES =====================
+foreach ($key in $imgRelMap.Keys) {
+  Copy-Item -Path "$trimmed\$key.png" -Destination "$build\word\media\$key.png" -Force
+}
+Write-Host "Copied $($imgRelMap.Count) images into word/media."
+
+# ===================== ZIP INTO .DOCX =====================
+if (Test-Path $outFile) { Remove-Item $outFile -Force }
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::CreateFromDirectory($build, $outFile, [System.IO.Compression.CompressionLevel]::Optimal, $false)
+
+Write-Host "DONE: $outFile"
+Write-Host "Size: $([Math]::Round((Get-Item $outFile).Length / 1MB, 2)) MB"
