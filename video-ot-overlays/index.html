@@ -18,23 +18,26 @@
   НАСТРОЙКА ТАЙМИНГА:
     Найдите секцию "=== ТАЙМИНГИ ===" в <script> ниже.
     Все значения в секундах от начала видео.
-    Если видео длиннее или короче — измените T.duration и отдельные метки.
+    Если видео длиннее или короче — измените data-duration и отдельные метки.
 -->
 <head>
 <meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: transparent;
+  overflow: hidden;
+}
 
 body {
   width: 1920px;
   height: 1080px;
-  overflow: hidden;
-  background: transparent;
   font-family: 'Arial Black', Arial, sans-serif;
 }
 
-/* ── Базовый скрытый слой ────────────────────────────── */
-.layer { position: absolute; opacity: 0; pointer-events: none; }
+.clip { position: absolute; opacity: 0; pointer-events: none; }
 
 /* ── Нижняя треть ────────────────────────────────────── */
 .lt {
@@ -43,11 +46,7 @@ body {
   display: flex;
   align-items: stretch;
 }
-.lt-accent {
-  width: 6px;
-  background: #C0392B;
-  flex-shrink: 0;
-}
+.lt-accent { width: 6px; background: #C0392B; flex-shrink: 0; }
 .lt-body { display: flex; flex-direction: column; }
 .lt-name {
   background: #C0392B;
@@ -78,26 +77,9 @@ body {
   gap: 22px;
   transform: translateY(-120px);
 }
-.ch-num {
-  font-size: 56px;
-  font-weight: 900;
-  color: #C0392B;
-  line-height: 1;
-  min-width: 68px;
-}
-.ch-divider {
-  width: 4px;
-  height: 56px;
-  background: #C0392B;
-  flex-shrink: 0;
-}
-.ch-text {
-  font-size: 28px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-}
+.ch-num { font-size: 56px; font-weight: 900; color: #C0392B; line-height: 1; min-width: 68px; }
+.ch-divider { width: 4px; height: 56px; background: #C0392B; flex-shrink: 0; }
+.ch-text { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: 4px; text-transform: uppercase; }
 
 /* ── Принцип-баннер (нижняя красная полоса) ─────────── */
 .principle {
@@ -109,139 +91,71 @@ body {
   gap: 18px;
   transform: translateY(120px);
 }
-.pr-label {
-  font-size: 13px;
-  color: rgba(255,255,255,0.65);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
+.pr-label { font-size: 13px; color: rgba(255,255,255,0.65); letter-spacing: 3px; text-transform: uppercase; white-space: nowrap; }
 .pr-divider { width: 2px; height: 36px; background: rgba(255,255,255,0.35); flex-shrink: 0; }
-.pr-text {
-  font-size: 26px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.3px;
-}
+.pr-text { font-size: 26px; font-weight: 700; color: #fff; }
 
 /* ── Бейдж барьера (левая сторона) ──────────────────── */
 .barrier {
   left: 72px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateX(-220px) translateY(-50%);
 }
 .b-ghost {
-  position: absolute;
-  top: -48px;
-  left: -16px;
-  font-size: 180px;
-  font-weight: 900;
+  position: absolute; top: -48px; left: -16px;
+  font-size: 180px; font-weight: 900;
   color: rgba(255,255,255,0.05);
-  line-height: 1;
-  pointer-events: none;
-  user-select: none;
+  line-height: 1; pointer-events: none; user-select: none;
 }
-.b-inner {
-  position: relative;
-  background: #C0392B;
-  padding: 16px 28px;
-  clip-path: inset(0 100% 0 0);
-}
-.b-small {
-  font-size: 12px;
-  color: rgba(255,255,255,0.65);
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  margin-bottom: 5px;
-}
-.b-title {
-  font-size: 28px;
-  font-weight: 900;
-  color: #fff;
-}
-.b-sub {
-  position: relative;
-  background: rgba(13, 25, 50, 0.93);
-  padding: 10px 28px;
-  font-size: 19px;
-  font-weight: 400;
-  color: #8fa0b8;
-  clip-path: inset(0 100% 0 0);
-}
+.b-inner { position: relative; background: #C0392B; padding: 16px 28px; clip-path: inset(0 100% 0 0); }
+.b-small { font-size: 12px; color: rgba(255,255,255,0.65); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 5px; }
+.b-title { font-size: 28px; font-weight: 900; color: #fff; }
+.b-sub { position: relative; background: rgba(13,25,50,0.93); padding: 10px 28px; font-size: 19px; color: #8fa0b8; clip-path: inset(0 100% 0 0); }
 
 /* ── Цитата (правая сторона) ─────────────────────────── */
 .callout {
-  right: 72px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 72px; top: 50%;
   width: 540px;
+  transform: translateX(80px) translateY(-50%);
   background: rgba(13, 25, 50, 0.94);
   border-left: 6px solid #C0392B;
   padding: 28px 30px;
 }
-.c-label {
-  font-size: 12px;
-  color: #C0392B;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-.c-text {
-  font-size: 23px;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.5;
-}
+.c-label { font-size: 12px; color: #C0392B; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 14px; }
+.c-text { font-size: 23px; font-weight: 700; color: #fff; line-height: 1.5; }
 
 /* ── Финальная сводка ────────────────────────────────── */
 .summary {
-  right: 72px;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: right;
-  width: 580px;
+  right: 72px; top: 50%;
+  transform: translateX(80px) translateY(-50%);
+  text-align: right; width: 580px;
 }
-.s-label {
-  font-size: 13px;
-  color: #C0392B;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.s-line {
-  font-size: 36px;
-  font-weight: 900;
-  color: #fff;
-  line-height: 1.25;
-  margin-bottom: 8px;
-  transform: translateX(60px);
-}
-.s-accent {
-  font-size: 24px;
-  color: #C0392B;
-  letter-spacing: 1px;
-  margin-top: 10px;
-  transform: translateX(60px);
-}
+.s-label { font-size: 13px; color: #C0392B; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px; }
+.s-line { font-size: 36px; font-weight: 900; color: #fff; line-height: 1.25; margin-bottom: 8px; }
+.s-accent { font-size: 24px; color: #C0392B; letter-spacing: 1px; margin-top: 10px; }
 </style>
 </head>
 
-<!--
-  data-duration = длительность видео в секундах (измените под ваше видео)
-  Текущее значение: 380 сек = ~6 мин 20 сек
--->
-<body data-composition-id="ot-graphic-overlays" data-duration="380">
+<body>
+<div
+  id="root"
+  data-composition-id="ot-graphic-overlays"
+  data-width="1920"
+  data-height="1080"
+  data-start="0"
+  data-duration="380"
+>
 
-  <!-- ═══ 1. OPENING CALLOUT — правая сторона, 4-14с ═════ -->
-  <div id="c1" class="clip layer callout"
-       data-start="4" data-duration="10" data-track-index="1">
+  <!-- ═══ 1. OPENING CALLOUT — 4-13с ═════════════════════ -->
+  <div id="c1" class="clip callout"
+       data-start="4" data-duration="10" data-track-index="0">
     <div class="c-label">Охрана труда — это</div>
     <div class="c-text">Цель одна: работник каждый день возвращается домой живым и здоровым</div>
   </div>
 
-  <!-- ═══ 2. АЛИБЕК — нижняя треть, ~42-50с ══════════════ -->
-  <div id="c2" class="clip layer lt"
-       data-start="42" data-duration="8" data-track-index="1">
+  <!-- ═══ 2. АЛИБЕК — нижняя треть, ~42-49с ══════════════ -->
+  <div id="c2" class="clip lt"
+       data-start="42" data-duration="8" data-track-index="0">
     <div class="lt-accent"></div>
     <div class="lt-body">
       <div class="lt-name">Алибек</div>
@@ -249,25 +163,25 @@ body {
     </div>
   </div>
 
-  <!-- ═══ 3. ПРИНЦИП-БАННЕР — снизу, ~88-100с ════════════ -->
-  <div id="c3" class="clip layer principle"
-       data-start="88" data-duration="12" data-track-index="1">
+  <!-- ═══ 3. ПРИНЦИП-БАННЕР — снизу, ~88-99с ════════════ -->
+  <div id="c3" class="clip principle"
+       data-start="88" data-duration="12" data-track-index="0">
     <span class="pr-label">Закон</span>
     <div class="pr-divider"></div>
     <span class="pr-text">Здоровье работника важнее результатов работы. Всегда.</span>
   </div>
 
-  <!-- ═══ 4. ГЛАВА: 4 БАРЬЕРА — сверху, ~114-122с ════════ -->
-  <div id="c4" class="clip layer chapter"
-       data-start="114" data-duration="8" data-track-index="1">
+  <!-- ═══ 4. ГЛАВА: 4 БАРЬЕРА — сверху, ~114-121с ════════ -->
+  <div id="c4" class="clip chapter"
+       data-start="114" data-duration="8" data-track-index="0">
     <div class="ch-num">4</div>
     <div class="ch-divider"></div>
     <div class="ch-text">Барьера безопасности</div>
   </div>
 
-  <!-- ═══ 5. БАРЬЕР 1 — слева, ~124-146с ══════════════════ -->
-  <div id="c5" class="clip layer barrier"
-       data-start="124" data-duration="22" data-track-index="1">
+  <!-- ═══ 5. БАРЬЕР 1 — слева, ~124-145с ══════════════════ -->
+  <div id="c5" class="clip barrier"
+       data-start="124" data-duration="22" data-track-index="0">
     <div class="b-ghost">1</div>
     <div class="b-inner">
       <div class="b-small">Барьер 1</div>
@@ -276,9 +190,9 @@ body {
     <div class="b-sub">Законы и обязательные требования государства</div>
   </div>
 
-  <!-- ═══ 6. БАРЬЕР 2 — слева, ~148-170с ══════════════════ -->
-  <div id="c6" class="clip layer barrier"
-       data-start="148" data-duration="22" data-track-index="1">
+  <!-- ═══ 6. БАРЬЕР 2 — слева, ~148-169с ══════════════════ -->
+  <div id="c6" class="clip barrier"
+       data-start="148" data-duration="22" data-track-index="0">
     <div class="b-ghost">2</div>
     <div class="b-inner">
       <div class="b-small">Барьер 2</div>
@@ -287,9 +201,9 @@ body {
     <div class="b-sub">Инструктаж, ограждения, проверка оборудования</div>
   </div>
 
-  <!-- ═══ 7. БАРЬЕР 3 — слева, ~172-194с ══════════════════ -->
-  <div id="c7" class="clip layer barrier"
-       data-start="172" data-duration="22" data-track-index="1">
+  <!-- ═══ 7. БАРЬЕР 3 — слева, ~172-193с ══════════════════ -->
+  <div id="c7" class="clip barrier"
+       data-start="172" data-duration="22" data-track-index="0">
     <div class="b-ghost">3</div>
     <div class="b-inner">
       <div class="b-small">Барьер 3</div>
@@ -298,9 +212,9 @@ body {
     <div class="b-sub">СИЗ: каска, перчатки, спецодежда</div>
   </div>
 
-  <!-- ═══ 8. БАРЬЕР 4 — слева, ~196-220с ══════════════════ -->
-  <div id="c8" class="clip layer barrier"
-       data-start="196" data-duration="24" data-track-index="1">
+  <!-- ═══ 8. БАРЬЕР 4 — слева, ~196-219с ══════════════════ -->
+  <div id="c8" class="clip barrier"
+       data-start="196" data-duration="24" data-track-index="0">
     <div class="b-ghost">4</div>
     <div class="b-inner">
       <div class="b-small">Барьер 4</div>
@@ -309,17 +223,17 @@ body {
     <div class="b-sub">Действуем до инцидента — на опережение</div>
   </div>
 
-  <!-- ═══ 9. ГЛАВА: 3 УРОВНЯ — сверху, ~222-230с ══════════ -->
-  <div id="c9" class="clip layer chapter"
-       data-start="222" data-duration="8" data-track-index="1">
+  <!-- ═══ 9. ГЛАВА: 3 УРОВНЯ — сверху, ~222-229с ══════════ -->
+  <div id="c9" class="clip chapter"
+       data-start="222" data-duration="8" data-track-index="0">
     <div class="ch-num">3</div>
     <div class="ch-divider"></div>
     <div class="ch-text">Уровня ответственности</div>
   </div>
 
-  <!-- ═══ 10. АЙГУЛЬ — нижняя треть, ~276-284с ═══════════ -->
-  <div id="c10" class="clip layer lt"
-       data-start="276" data-duration="8" data-track-index="1">
+  <!-- ═══ 10. АЙГУЛЬ — нижняя треть, ~276-283с ═══════════ -->
+  <div id="c10" class="clip lt"
+       data-start="276" data-duration="8" data-track-index="0">
     <div class="lt-accent"></div>
     <div class="lt-body">
       <div class="lt-name">Айгуль</div>
@@ -327,9 +241,9 @@ body {
     </div>
   </div>
 
-  <!-- ═══ 11. НУРЛАН — нижняя треть, ~302-310с ═══════════ -->
-  <div id="c11" class="clip layer lt"
-       data-start="302" data-duration="8" data-track-index="1">
+  <!-- ═══ 11. НУРЛАН — нижняя треть, ~302-309с ═══════════ -->
+  <div id="c11" class="clip lt"
+       data-start="302" data-duration="8" data-track-index="0">
     <div class="lt-accent"></div>
     <div class="lt-body">
       <div class="lt-name">Нурлан</div>
@@ -337,206 +251,110 @@ body {
     </div>
   </div>
 
-  <!-- ═══ 12. ЦИТАТА — правая сторона, ~326-344с ══════════ -->
-  <div id="c12" class="clip layer callout"
-       data-start="326" data-duration="18" data-track-index="1">
+  <!-- ═══ 12. ЦИТАТА — правая сторона, ~326-343с ══════════ -->
+  <div id="c12" class="clip callout"
+       data-start="326" data-duration="18" data-track-index="0">
     <div class="c-label">Правильный вопрос руководителя</div>
     <div class="c-text">«Есть ли на самом деле исправный поручень на месте?»</div>
   </div>
 
-  <!-- ═══ 13. ИТОГ — правая сторона, ~355-375с ═══════════ -->
-  <div id="c13" class="clip layer summary"
-       data-start="355" data-duration="20" data-track-index="1">
+  <!-- ═══ 13. ИТОГ — правая сторона, ~355-374с ═══════════ -->
+  <div id="c13" class="clip summary"
+       data-start="355" data-duration="20" data-track-index="0">
     <div class="s-label" id="s-label">Итог</div>
     <div class="s-line" id="s-1">3 уровня ответственности</div>
     <div class="s-line" id="s-2">4 вида мер</div>
     <div class="s-accent" id="s-3">Здоровье важнее плана. Всегда.</div>
   </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</div><!-- /#root -->
+
 <script>
-window.__timelines = window.__timelines || [];
+window.__timelines = window.__timelines || {};
 
 // ════════════════════════════════════════════════════════
-// === ТАЙМИНГИ === (все значения в секундах)
-// Измените эти числа под ваше конкретное видео.
-// Запустите "npx hyperframes preview" и отрегулируйте.
+// === ТАЙМИНГИ === (секунды от начала видео)
+// Поменяйте цифры под ваш видеоролик, затем перезапустите
+// "npx hyperframes preview" чтобы проверить.
 // ════════════════════════════════════════════════════════
-const T = {
-  duration:   380,   // << общая длина видео (сек)
-
-  c1_in:        4,   // Opening callout появляется
-  c1_out:      13,
-
-  c2_in:       42,   // Алибек
-  c2_out:      49,
-
-  c3_in:       88,   // Принцип-баннер
-  c3_out:      99,
-
-  c4_in:      114,   // Глава: 4 барьера
-  c4_out:     121,
-
-  c5_in:      124,   // Барьер 1
-  c5_out:     145,
-
-  c6_in:      148,   // Барьер 2
-  c6_out:     169,
-
-  c7_in:      172,   // Барьер 3
-  c7_out:     193,
-
-  c8_in:      196,   // Барьер 4
-  c8_out:     219,
-
-  c9_in:      222,   // Глава: 3 уровня
-  c9_out:     229,
-
-  c10_in:     276,   // Айгуль
-  c10_out:    283,
-
-  c11_in:     302,   // Нурлан
-  c11_out:    309,
-
-  c12_in:     326,   // Цитата-вопрос
-  c12_out:    343,
-
-  c13_in:     355,   // Итог
-  c13_out:    374,
+var T = {
+  c1_in:    4,  c1_out:   13,   // Opening callout
+  c2_in:   42,  c2_out:   49,   // Алибек
+  c3_in:   88,  c3_out:   99,   // Принцип-баннер
+  c4_in:  114,  c4_out:  121,   // Глава: 4 барьера
+  c5_in:  124,  c5_out:  145,   // Барьер 1
+  c6_in:  148,  c6_out:  169,   // Барьер 2
+  c7_in:  172,  c7_out:  193,   // Барьер 3
+  c8_in:  196,  c8_out:  219,   // Барьер 4
+  c9_in:  222,  c9_out:  229,   // Глава: 3 уровня
+  c10_in: 276,  c10_out: 283,   // Айгуль
+  c11_in: 302,  c11_out: 309,   // Нурлан
+  c12_in: 326,  c12_out: 343,   // Цитата-вопрос
+  c13_in: 355,  c13_out: 374,   // Итог
 };
 
-// ════════════════════════════════════════════════════════
-// МАСТЕР-ТАЙМЛАЙН
-// ════════════════════════════════════════════════════════
-const master = gsap.timeline({ paused: true });
+var tl = gsap.timeline({ paused: true });
 
-// ── Helpers ──────────────────────────────────────────────
-function fadeIn(id, at, dur) {
-  master.to(id, { opacity: 1, duration: dur, ease: 'power2.out' }, at);
-}
-function fadeOut(id, at, dur) {
-  master.to(id, { opacity: 0, duration: dur, ease: 'power2.in' }, at);
-}
-function wipe(sel, at) {
-  master.to(sel, { clipPath: 'inset(0 0% 0 0)', duration: 0.42, ease: 'power3.out' }, at);
-}
+// ── 1. Opening callout ───────────────────────────────────
+tl.fromTo('#c1', { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: 0.55, ease: 'power3.out' }, T.c1_in);
+tl.to('#c1', { opacity: 0, x: 80, duration: 0.4, ease: 'power2.in' }, T.c1_out);
 
-// ── Все элементы — изначально невидимы ───────────────────
-master.set(['#c1','#c2','#c3','#c4','#c5','#c6','#c7','#c8',
-            '#c9','#c10','#c11','#c12','#c13',
-            '#s-label','#s-1','#s-2','#s-3'], { opacity: 0 }, 0);
+// ── 2. Алибек — lower-third wipe ────────────────────────
+tl.to('#c2', { opacity: 1, duration: 0 }, T.c2_in);
+tl.to('#c2 .lt-name', { clipPath: 'inset(0 0% 0 0)', duration: 0.42, ease: 'power3.out' }, T.c2_in);
+tl.to('#c2 .lt-role', { clipPath: 'inset(0 0% 0 0)', duration: 0.38, ease: 'power3.out' }, T.c2_in + 0.35);
+tl.to('#c2', { opacity: 0, duration: 0.35, ease: 'power2.in' }, T.c2_out);
 
-// clip-path: нижние трети и бейджи скрыты через CSS (wipe-in)
-master.set([
-  '.lt-name', '.lt-role',
-  '#c5 .b-inner', '#c5 .b-sub',
-  '#c6 .b-inner', '#c6 .b-sub',
-  '#c7 .b-inner', '#c7 .b-sub',
-  '#c8 .b-inner', '#c8 .b-sub',
-], { clipPath: 'inset(0 100% 0 0)' }, 0);
+// ── 3. Принцип-баннер ────────────────────────────────────
+tl.to('#c3', { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, T.c3_in);
+tl.to('#c3', { opacity: 0, y: 120, duration: 0.4, ease: 'power2.in' }, T.c3_out);
 
-// Глава и принцип сдвинуты за экран
-master.set('#c3', { y: 120 }, 0);
-master.set(['#c4', '#c9'], { y: -120 }, 0);
-// Цитата и итог — правее экрана
-master.set(['#c1', '#c12'], { x: 80 }, 0);
-master.set('#c13', { x: 80 }, 0);
-// Барьеры — левее экрана
-master.set(['#c5','#c6','#c7','#c8'], { x: -220 }, 0);
+// ── 4. Глава: 4 барьера ──────────────────────────────────
+tl.to('#c4', { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }, T.c4_in);
+tl.to('#c4', { opacity: 0, y: -120, duration: 0.35, ease: 'power2.in' }, T.c4_out);
 
-// ──────────────────────────────────────────────────────────
-// 1. OPENING CALLOUT
-// ──────────────────────────────────────────────────────────
-master
-  .to('#c1', { opacity: 1, x: 0, duration: 0.55, ease: 'power3.out' }, T.c1_in)
-  .to('#c1', { opacity: 0, x: 80, duration: 0.4, ease: 'power2.in' }, T.c1_out);
-
-// ──────────────────────────────────────────────────────────
-// 2. АЛИБЕК — lower third
-// ──────────────────────────────────────────────────────────
-master
-  .to('#c2', { opacity: 1, duration: 0 }, T.c2_in)
-  .to('#c2 .lt-name', { clipPath: 'inset(0 0% 0 0)', duration: 0.42, ease: 'power3.out' }, T.c2_in)
-  .to('#c2 .lt-role', { clipPath: 'inset(0 0% 0 0)', duration: 0.38, ease: 'power3.out' }, T.c2_in + 0.35)
-  .to('#c2', { opacity: 0, duration: 0.35, ease: 'power2.in' }, T.c2_out);
-
-// ──────────────────────────────────────────────────────────
-// 3. ПРИНЦИП-БАННЕР
-// ──────────────────────────────────────────────────────────
-master
-  .to('#c3', { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, T.c3_in)
-  .to('#c3', { opacity: 0, y: 120, duration: 0.4, ease: 'power2.in' }, T.c3_out);
-
-// ──────────────────────────────────────────────────────────
-// 4. ГЛАВА: 4 БАРЬЕРА
-// ──────────────────────────────────────────────────────────
-master
-  .to('#c4', { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }, T.c4_in)
-  .to('#c4', { opacity: 0, y: -120, duration: 0.35, ease: 'power2.in' }, T.c4_out);
-
-// ──────────────────────────────────────────────────────────
-// 5-8. БАРЬЕРЫ
-// ──────────────────────────────────────────────────────────
+// ── 5-8. Барьеры ─────────────────────────────────────────
 [
-  { id: '#c5', in: T.c5_in, out: T.c5_out },
-  { id: '#c6', in: T.c6_in, out: T.c6_out },
-  { id: '#c7', in: T.c7_in, out: T.c7_out },
-  { id: '#c8', in: T.c8_in, out: T.c8_out },
+  { id: '#c5', i: T.c5_in, o: T.c5_out },
+  { id: '#c6', i: T.c6_in, o: T.c6_out },
+  { id: '#c7', i: T.c7_in, o: T.c7_out },
+  { id: '#c8', i: T.c8_in, o: T.c8_out },
 ].forEach(function(b) {
-  master
-    .to(b.id, { opacity: 1, x: 0, duration: 0.48, ease: 'power3.out' }, b.in)
-    .to(b.id + ' .b-inner', { clipPath: 'inset(0 0% 0 0)', duration: 0.38, ease: 'power2.out' }, b.in + 0.1)
-    .to(b.id + ' .b-sub',   { clipPath: 'inset(0 0% 0 0)', duration: 0.34, ease: 'power2.out' }, b.in + 0.4)
-    .to(b.id, { opacity: 0, x: -220, duration: 0.38, ease: 'power2.in' }, b.out);
+  tl.to(b.id, { opacity: 1, x: 0, duration: 0.48, ease: 'power3.out' }, b.i);
+  tl.to(b.id + ' .b-inner', { clipPath: 'inset(0 0% 0 0)', duration: 0.38, ease: 'power2.out' }, b.i + 0.1);
+  tl.to(b.id + ' .b-sub',   { clipPath: 'inset(0 0% 0 0)', duration: 0.34, ease: 'power2.out' }, b.i + 0.4);
+  tl.to(b.id, { opacity: 0, x: -220, duration: 0.38, ease: 'power2.in' }, b.o);
 });
 
-// ──────────────────────────────────────────────────────────
-// 9. ГЛАВА: 3 УРОВНЯ
-// ──────────────────────────────────────────────────────────
-master
-  .to('#c9', { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }, T.c9_in)
-  .to('#c9', { opacity: 0, y: -120, duration: 0.35, ease: 'power2.in' }, T.c9_out);
+// ── 9. Глава: 3 уровня ───────────────────────────────────
+tl.to('#c9', { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }, T.c9_in);
+tl.to('#c9', { opacity: 0, y: -120, duration: 0.35, ease: 'power2.in' }, T.c9_out);
 
-// ──────────────────────────────────────────────────────────
-// 10. АЙГУЛЬ — lower third
-// ──────────────────────────────────────────────────────────
-master
-  .to('#c10', { opacity: 1, duration: 0 }, T.c10_in)
-  .to('#c10 .lt-name', { clipPath: 'inset(0 0% 0 0)', duration: 0.42, ease: 'power3.out' }, T.c10_in)
-  .to('#c10 .lt-role', { clipPath: 'inset(0 0% 0 0)', duration: 0.38, ease: 'power3.out' }, T.c10_in + 0.35)
-  .to('#c10', { opacity: 0, duration: 0.35, ease: 'power2.in' }, T.c10_out);
+// ── 10. Айгуль ───────────────────────────────────────────
+tl.to('#c10', { opacity: 1, duration: 0 }, T.c10_in);
+tl.to('#c10 .lt-name', { clipPath: 'inset(0 0% 0 0)', duration: 0.42, ease: 'power3.out' }, T.c10_in);
+tl.to('#c10 .lt-role', { clipPath: 'inset(0 0% 0 0)', duration: 0.38, ease: 'power3.out' }, T.c10_in + 0.35);
+tl.to('#c10', { opacity: 0, duration: 0.35, ease: 'power2.in' }, T.c10_out);
 
-// ──────────────────────────────────────────────────────────
-// 11. НУРЛАН — lower third
-// ──────────────────────────────────────────────────────────
-master
-  .to('#c11', { opacity: 1, duration: 0 }, T.c11_in)
-  .to('#c11 .lt-name', { clipPath: 'inset(0 0% 0 0)', duration: 0.42, ease: 'power3.out' }, T.c11_in)
-  .to('#c11 .lt-role', { clipPath: 'inset(0 0% 0 0)', duration: 0.38, ease: 'power3.out' }, T.c11_in + 0.35)
-  .to('#c11', { opacity: 0, duration: 0.35, ease: 'power2.in' }, T.c11_out);
+// ── 11. Нурлан ───────────────────────────────────────────
+tl.to('#c11', { opacity: 1, duration: 0 }, T.c11_in);
+tl.to('#c11 .lt-name', { clipPath: 'inset(0 0% 0 0)', duration: 0.42, ease: 'power3.out' }, T.c11_in);
+tl.to('#c11 .lt-role', { clipPath: 'inset(0 0% 0 0)', duration: 0.38, ease: 'power3.out' }, T.c11_in + 0.35);
+tl.to('#c11', { opacity: 0, duration: 0.35, ease: 'power2.in' }, T.c11_out);
 
-// ──────────────────────────────────────────────────────────
-// 12. ЦИТАТА-ВОПРОС
-// ──────────────────────────────────────────────────────────
-master
-  .to('#c12', { opacity: 1, x: 0, duration: 0.52, ease: 'power3.out' }, T.c12_in)
-  .to('#c12', { opacity: 0, x: 80, duration: 0.4, ease: 'power2.in' }, T.c12_out);
+// ── 12. Цитата-вопрос ────────────────────────────────────
+tl.fromTo('#c12', { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: 0.52, ease: 'power3.out' }, T.c12_in);
+tl.to('#c12', { opacity: 0, x: 80, duration: 0.4, ease: 'power2.in' }, T.c12_out);
 
-// ──────────────────────────────────────────────────────────
-// 13. ФИНАЛЬНАЯ СВОДКА
-// ──────────────────────────────────────────────────────────
-master
-  .to('#c13', { opacity: 1, x: 0, duration: 0 }, T.c13_in)
-  .to('#s-label', { opacity: 1, duration: 0.3 }, T.c13_in)
-  .to('#s-1', { opacity: 1, x: 0, duration: 0.38, ease: 'power2.out' }, T.c13_in + 0.25)
-  .to('#s-2', { opacity: 1, x: 0, duration: 0.38, ease: 'power2.out' }, T.c13_in + 0.55)
-  .to('#s-3', { opacity: 1, x: 0, duration: 0.38, ease: 'power2.out' }, T.c13_in + 0.85)
-  .to('#c13', { opacity: 0, duration: 0.5, ease: 'power2.in' }, T.c13_out);
+// ── 13. Финальная сводка ─────────────────────────────────
+tl.to('#c13', { opacity: 1, duration: 0 }, T.c13_in);
+tl.to('#s-label', { opacity: 1, duration: 0.3 }, T.c13_in);
+tl.fromTo('#s-1', { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.38, ease: 'power2.out' }, T.c13_in + 0.25);
+tl.fromTo('#s-2', { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.38, ease: 'power2.out' }, T.c13_in + 0.55);
+tl.fromTo('#s-3', { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.38, ease: 'power2.out' }, T.c13_in + 0.85);
+tl.to('#c13', { opacity: 0, duration: 0.5, ease: 'power2.in' }, T.c13_out);
 
-// ════════════════════════════════════════════════════════
-// Регистрация — HyperFrames будет seekить этот таймлайн
-// ════════════════════════════════════════════════════════
-window.__timelines.push(master);
+window.__timelines['ot-graphic-overlays'] = tl;
 </script>
 </body>
 </html>
