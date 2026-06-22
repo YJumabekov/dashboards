@@ -28,11 +28,14 @@ Turn a narrator script into a complete set of corporate slides for HeyGen avatar
 
 ## Canva brand template
 
-- **Name**: SENTAL training deck template.pptx
-- **ID**: `EAHNTmfyZ8o`
-- **Brand kit**: `kAGMmKcqsGA`
+- **Template name**: SENTAL training deck template.pptx
+- **Template ID**: `EAHNTmfyZ8o`
+- **Brand kit**: `kAHNTtdfMQk` — "New Sental training deck"
 - **View**: https://www.canva.com/brand/brand-templates/EAHNTmfyZ8o
 - **Autofill fields**: none — used as `source_document` style reference
+
+### Logo rule — CRITICAL
+**Never alter the logo.** The brand kit (`kAHNTtdfMQk`) contains the official logo. Canva applies it automatically from the brand kit. Do not replace, reposition, resize, or describe a different logo in slide descriptions. If a slide description mentions "logo top right" — that is a layout hint only; the actual logo asset comes from the brand kit unchanged.
 
 ---
 
