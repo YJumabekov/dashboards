@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Дисциплинарная ответственность</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1920px; height: 1080px; overflow: hidden; }
+    body { background-color: #F2F2F2; position: relative; }
+    .accent-strip { position: absolute; left: 600px; top: 0; width: 36px; height: 1080px; background-color: #F39C12; }
+    .heading { position: absolute; left: 650px; top: 55px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 22pt; color: #2C3E50; white-space: nowrap; }
+    .underline { position: absolute; left: 650px; top: 96px; width: 320px; height: 3px; background-color: #F39C12; }
+    .row { position: absolute; left: 650px; width: 1220px; display: flex; align-items: flex-start; gap: 16px; }
+    .row-1 { top: 140px; } .row-2 { top: 310px; } .row-3 { top: 480px; }
+    .row .icon { color: #F39C12; font-size: 28px; min-width: 38px; padding-top: 3px; flex-shrink: 0; }
+    .row .label { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 17pt; color: #2C3E50; margin-bottom: 8px; }
+    .row .value { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 400; font-size: 16pt; color: #555555; line-height: 1.55; }
+    .logo { position: absolute; top: 24px; right: 36px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13pt; color: #6AAF3D; }
+  </style>
+</head>
+<body>
+  <div class="accent-strip"></div>
+  <div class="heading">Дисциплинарная ответственность</div>
+  <div class="underline"></div>
+  <div class="row row-1">
+    <i class="ph-fill ph-user-gear icon"></i>
+    <div><div class="label">Кто применяет:</div><div class="value">Работодатель — директор, вышестоящий руководитель</div></div>
+  </div>
+  <div class="row row-2">
+    <i class="ph-fill ph-list icon"></i>
+    <div><div class="label">Виды:</div><div class="value">Замечание · Выговор · Расторжение трудового договора</div></div>
+  </div>
+  <div class="row row-3">
+    <i class="ph-fill ph-lightbulb icon"></i>
+    <div><div class="label">Пример:</div><div class="value">Руководитель участка регулярно допускал работников без инструктажа. Директор объявил выговор.</div></div>
+  </div>
+  <div class="logo">LOGO</div>
+</body>
+</html>
