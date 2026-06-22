@@ -209,7 +209,62 @@ Each row has 4 columns. Extract from columns 3 and 4:
 
 ---
 
-## Generation workflow
+## Canva generation workflow (default)
+
+Use this when the user hasn't specifically asked for HTML files.
+
+### Step 1 — Parse scenes (same as HTML mode)
+Extract scene blocks and build slide outlines array.
+
+### Step 2 — Outline review
+```
+request-outline-review(
+  topic: "[module name]",
+  audience: "educational",
+  style: "modular",
+  length: "balanced",
+  brand_kit_id: "kAGMmKcqsGA",
+  brand_kit_name: "Corporate Brand Kit",
+  pages: [ {title, description} per slide ]
+)
+```
+Wait for user approval in the widget.
+
+### Step 3 — Generate with SENTAL template as source
+```
+generate-design-structured(
+  topic: "[module name]",
+  audience: "[audience]",
+  style: "Corporate training, dark navy #2C3E50, green accent #6AAF3D, avatar zone left 30%",
+  length: "[N] slides",
+  design_type: "presentation",
+  presentation_outlines: [ ... same array ... ],
+  brand_kit_id: "kAGMmKcqsGA",
+  source_document: {
+    document_type: "brand_template",
+    document_id: "EAHNTmfyZ8o"
+  }
+)
+```
+The Canva AI uses the SENTAL template's visual style as a reference.
+
+### Step 4 — Export PNG
+```
+get-export-formats(design_id: "[id]", user_intent: "Check PNG support")
+
+export-design(
+  design_id: "[id]",
+  format: { type: "png", width: 1920, height: 1080, export_quality: "pro" },
+  user_intent: "Export all slides as 1920×1080 PNG for HeyGen"
+)
+```
+Deliver all download URLs.
+
+---
+
+## HTML generation workflow (local, pixel-exact)
+
+Use when user explicitly asks for HTML/local files, or when Canva is unavailable.
 
 When the user provides a narrator script:
 
