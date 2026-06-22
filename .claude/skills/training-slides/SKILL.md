@@ -1,284 +1,299 @@
 ---
 name: training-slides
 description: >
-  Convert narrator scripts (scenario tables) into corporate-style Canva presentation slides
-  ready for HeyGen avatar video backgrounds. Accepts DOCX scenario tables or inline text.
-  Parses scene blocks → maps to slide types (Title / Avatar-overlay / Content / Summary) →
-  generates via Canva MCP → exports 1920×1080 PNG for HeyGen upload.
+  Convert narrator scripts (scenario tables) into corporate-style HTML slide files
+  ready to export as 1920×1080 PNG for HeyGen avatar video backgrounds.
+  Accepts DOCX scenario tables, inline text, or JSON slide data.
+  Parses scene blocks → selects slide template (A-title / A-summary / B-overlay / C-content) →
+  fills placeholders → writes HTML files → optionally renders to PNG via scripts/render.mjs.
   Trigger: "создай слайды", "слайды для HeyGen", "подготовь шаблоны", "обучающие слайды",
   "training slides", "lesson slides", "/training-slides".
   NOT for generic marketing presentations — specifically for HeyGen training video backgrounds
   with a left avatar zone and right content zone.
-metadata: { "tags": "canva, slides, training, heygen, corporate, design, education" }
+metadata: { "tags": "slides, training, heygen, html, design, corporate, education" }
 ---
 
 # training-slides
 
-Turn a narrator script (scenario table) into a complete set of corporate-style Canva slides,
-exported as 1920×1080 PNG files ready to upload as HeyGen avatar video backgrounds.
+Turn a narrator script into a complete set of corporate HTML slides, exported as
+1920×1080 PNG files for direct upload as HeyGen avatar video backgrounds.
+
+**No Canva. No AI layout guessing. Pixel-exact HTML templates.**
 
 ---
 
-## When to trigger
+## Quick start
 
-Invoke this skill when the user:
-- Pastes or attaches a narrator script / scenario table (DOCX or inline text)
-- Says "создай слайды", "сделай шаблоны", "слайды для HeyGen", "подготовь слайды"
-- Says "training slides", "lesson slides", "slides for HeyGen"
-- Types `/training-slides`
+1. User provides a narrator script (DOCX scenario table or inline text)
+2. Claude parses scene blocks and extracts slide data
+3. Claude generates HTML files by filling templates in `templates/`
+4. User renders to PNG: `bun run scripts/render.mjs <html-dir> <png-dir>`
+5. Upload PNGs to HeyGen as slide backgrounds
 
 ---
 
 ## Corporate design system
 
-All slides use this fixed system — do not deviate without explicit user instruction.
+All values are fixed. Do not deviate without explicit user instruction.
 
 ### Canvas
-- Size: **1920 × 1080 px** (16:9)
-- Logo: top-right corner, 45px
+**1920 × 1080 px** (16:9). All templates are pre-sized to this.
 
 ### Colors
-| Token | Hex | Usage |
-|-------|-----|-------|
-| bg-dark | `#2C3E50` | Title/summary/intro backgrounds |
+| Name | Hex | Where |
+|------|-----|-------|
+| bg-dark | `#2C3E50` | Title, summary, intro backgrounds |
 | bg-light | `#F2F2F2` | Content block backgrounds |
-| bg-criminal | `#1A0A0A` | Uголовная ответственность block |
-| accent-green | `#6AAF3D` | Main brand accent, icons, underlines |
+| bg-criminal | `#1A0A0A` | Criminal responsibility block |
+| accent-green | `#6AAF3D` | Brand accent, icons, underlines |
 | text-white | `#FFFFFF` | On dark backgrounds |
-| text-dark | `#2C3E50` | On light backgrounds |
-| text-body | `#555555` | Body/example text on light bg |
-| text-light-gray | `#CCCCCC` | Body text on dark bg |
+| text-dark | `#2C3E50` | Headings on light backgrounds |
+| text-body-light | `#555555` | Body text on light background |
+| text-body-dark | `#CCCCCC` | Body text on dark background |
 
 ### Category accent colors
-| Category | Hex |
-|----------|-----|
-| Дисциплинарная | `#F39C12` (amber) |
-| Административная | `#3498DB` (blue) |
-| Гражданско-правовая | `#9B59B6` (purple) |
-| Уголовная | `#E74C3C` (red) |
-| Summary/General | `#6AAF3D` (green) |
+| Category | Hex | Token |
+|----------|-----|-------|
+| Дисциплинарная | `#F39C12` | amber |
+| Административная | `#3498DB` | blue |
+| Гражданско-правовая | `#9B59B6` | purple |
+| Уголовная | `#E74C3C` | red |
+| Summary / General | `#6AAF3D` | green |
 
 ### Typography
-- **Headings**: Montserrat Bold
-- **Body**: Plus Jakarta Sans
+- **Headings**: Montserrat Bold (700)
+- **Labels**: Montserrat SemiBold (600)
+- **Body / values**: Plus Jakarta Sans Regular (400)
+- Both loaded via Google Fonts CDN in templates
 
 ### Icons
-Phosphor icon library. Common: gavel, user-gear, list, lightbulb, warning, handcuffs, scales, currency-dollar, money.
+Phosphor Icons fill variant via CDN. Key names:
+`gavel`, `user-gear`, `list`, `lightbulb`, `warning`, `handcuffs`, `scales`, `currency-dollar`
 
 ---
 
-## Slide type catalog
+## Template catalog
 
-### Type A — Title / Summary (dark background, centered)
+All templates live in `templates/`. Each uses `{{PLACEHOLDER}}` variables.
 
-**Use for**: Opening slide ("Заставка"), closing summary ("Итог")
+### `slide-a-title.html` — Title / opening slide
 
-Layout on `#2C3E50` background:
-- Logo top-right (45px)
-- Icon: accent-green, 52px, centered
-- Module label: Plus Jakarta Sans 20pt, `#6AAF3D` (e.g. "Модуль 1 · Подтема 1.5")
-- Main title: Montserrat Bold 38pt, white (e.g. "Ответственность руководителя")
-- Subtitle: Montserrat Bold 28pt, white (e.g. "— четыре вида")
+**Slide type A · bg `#2C3E50` · centered layout**
 
-For **summary variant** (Итог):
-- Icon + key 3-word phrase: Montserrat Bold 32pt white
-- Horizontal line: `#6AAF3D` 80px × 3px
-- Body summary text: Plus Jakarta Sans 19pt `#CCCCCC`, max-width 820px, line-height 1.8
-- Navigation footer: "→ Далее: ..." Plus Jakarta Sans 16pt `#6AAF3D`
+| Placeholder | Example |
+|-------------|---------|
+| `{{MODULE_LABEL}}` | `Модуль 1 · Подтема 1.5` |
+| `{{ICON}}` | `gavel` |
+| `{{MAIN_TITLE}}` | `Ответственность руководителя` |
+| `{{SUBTITLE}}` | `— четыре вида` |
+| `{{LOGO_HTML}}` | `<img src="../logo.png" height="45">` or text |
 
-### Type B — Avatar overlay (dark bg, full-screen avatar area)
+**Use for**: Заставка, opening title of any module
 
-**Use for**: "Прямой старт" / intro blocks where avatar dominates
+---
 
-Layout on `#2C3E50` background:
-- Avatar zone: full screen (HeyGen places avatar; slide is the background)
-- Logo top-right
-- Text box bottom-right (x=1470, y=740px): 
-  - Background: `rgba(0,0,0,0.7)`
-  - Border: `#E74C3C` 2px, border-radius 8px, padding 14px, width 420px
-  - Text: Plus Jakarta Sans 17pt white — key sentence from narrator
+### `slide-a-summary.html` — Summary / closing slide
 
-### Type C — Content block (light bg, avatar left / content right)
+**Slide type A (summary variant) · bg `#2C3E50` · centered layout**
 
-**Use for**: All "Блок N — [Name]" segments
+| Placeholder | Example |
+|-------------|---------|
+| `{{ICON}}` | `gavel` |
+| `{{KEY_PHRASE}}` | `Четыре вида. Одновременно. Лично.` |
+| `{{BODY_TEXT}}` | Summary paragraph |
+| `{{NAV_FOOTER}}` | `→ Далее: Практическое задание · Итоговый тест` |
+| `{{LOGO_HTML}}` | logo HTML |
 
-**This is the primary layout for HeyGen** — avatar appears on the left, slide content on the right.
+**Use for**: Итог, Слой 3, closing of any module
 
-Layout on `#F2F2F2` background (or `#1A0A0A` for criminal):
-- **Avatar zone**: x=0–600px, full height — KEEP CLEAN, no text/graphics here
-- **Color strip**: x=600–636px, full height — category accent color (solid)
-- **Content zone**: x=640–1890px
-  - Heading: category name — Montserrat Bold 22pt, `#2C3E50` (white on dark bg), y≈55px
-  - Underline: accent color, 320px × 3px
-  - **Row 1** (y≈130px): icon 30px + "Кто применяет:" Montserrat SemiBold 17pt + value Plus Jakarta Sans 16pt
-  - **Row 2** (y≈235px): icon 30px + "Виды:" + value
-  - **Row 3** (y≈340px): icon 30px + "Пример:" + example text Plus Jakarta Sans 16pt `#555`
-  - Rows fade in staggered (+0.5s per row) in video
+---
+
+### `slide-b-overlay.html` — Avatar full-screen overlay
+
+**Slide type B · bg `#2C3E50` · avatar fills full canvas**
+
+| Placeholder | Example |
+|-------------|---------|
+| `{{TITLE}}` | slide name (for `<title>` only) |
+| `{{KEY_TEXT}}` | `Четыре вида ответственности. Могут наступить одновременно.` |
+| `{{LOGO_HTML}}` | logo HTML |
+
+**Use for**: Прямой старт, any intro scene where avatar is full-screen.
+The key-text box appears bottom-right with dark bg + red border.
+
+---
+
+### `slide-c-content.html` — Content block (THE MAIN TEMPLATE)
+
+**Slide type C · configurable bg · avatar zone left 600px · content right**
+
+This is the workhorse. One slide per "Блок N — [Name]" scene.
+
+| Placeholder | Value options |
+|-------------|--------------|
+| `{{BG_COLOR}}` | `#F2F2F2` (light) or `#1A0A0A` (criminal dark) |
+| `{{ACCENT_COLOR}}` | category color (e.g. `#F39C12`) |
+| `{{HEADING_COLOR}}` | `#2C3E50` (light bg) or `#FFFFFF` (dark bg) |
+| `{{TEXT_COLOR}}` | `#2C3E50` (light) or `#FFFFFF` (dark) |
+| `{{BODY_COLOR}}` | `#555555` (light) or `#CCCCCC` (dark) |
+| `{{HEADING}}` | `Дисциплинарная ответственность` |
+| `{{ICON_1}}` | phosphor icon name, e.g. `user-gear` |
+| `{{LABEL_1}}` | `Кто применяет:` |
+| `{{VALUE_1}}` | `Работодатель — директор, вышестоящий руководитель` |
+| `{{ICON_2}}` | `list` |
+| `{{LABEL_2}}` | `Виды:` |
+| `{{VALUE_2}}` | `Замечание · Выговор · Расторжение трудового договора` |
+| `{{ICON_3}}` | `lightbulb` |
+| `{{LABEL_3}}` | `Пример:` |
+| `{{VALUE_3}}` | example text |
+| `{{LOGO_HTML}}` | logo HTML |
+
+**Dark bg variant** (for Уголовная):
+- `BG_COLOR` = `#1A0A0A`
+- `HEADING_COLOR` = `#FFFFFF`
+- `TEXT_COLOR` = `#FFFFFF`
+- `BODY_COLOR` = `#CCCCCC`
 
 ---
 
 ## Script parsing guide
 
-### Input format: scenario table (from DOCX)
+### Scenario table format (DOCX)
 
-Each row has 4 columns:
-1. **Тайм-код** — time range (e.g. "1:30–2:25")
-2. **Блок / Хронометраж** — block name + duration
-3. **Визуал / Слайд** — full visual specification
-4. **Текст диктора** — narrator script
+Each row has 4 columns. Extract from columns 3 and 4:
 
-### Block → slide type mapping
+**Column 3 — Визуал / Слайд**: contains layout spec
+- `Фон #XXXXXX` → `BG_COLOR`
+- `Заголовок: «...»` → `HEADING` / `MAIN_TITLE`
+- `Строка N — иконка NAME + «Label:» + «Value»` → row data
+- accent color appears as `Полоска-метка #XXXXXX` or repeated in row icons
 
-| Block name pattern | Slide type |
-|--------------------|-----------|
-| Заставка | A — Title |
-| Прямой старт | B — Avatar overlay |
-| Блок N — [Name] | C — Content |
-| Итог, Слой 3, Conclusion | A — Summary |
+**Column 4 — Текст диктора**: contains narrator script (for reference only; not on slides)
 
-### Content extraction from visual spec
+### Block → template mapping
 
-From "Визуал / Слайд" column, extract:
-- **Background color** (Фон #XXXXXX)
-- **Heading text** (Заголовок: «...»)
-- **Row content** (Строка 1/2/3: icon + label + value)
-- **Category** (determines accent color)
+| Pattern in block name | Template | Notes |
+|----------------------|----------|-------|
+| `Заставка` | `slide-a-title.html` | Opening title |
+| `Прямой старт` | `slide-b-overlay.html` | Intro avatar scene |
+| `Блок N — [Name]` | `slide-c-content.html` | One per content block |
+| `Итог`, `Слой 3` | `slide-a-summary.html` | Closing summary |
 
-From "Текст диктора" column, extract:
-- **Key sentence** (for Type B text box overlay)
-- **Summary text** (for Type A closing slide)
+### Default icon mapping
 
----
-
-## Canva MCP workflow
-
-### Step 1 — Check brand kit
-
-```
-list-brand-kits(user_intent="Check for corporate brand kit with #2C3E50 and #6AAF3D colors")
-```
-
-- If brand kit found with matching colors: use its `id` as `brand_kit_id` in Step 3
-- If not found: proceed without — include full color/font specs in slide descriptions
-
-### Step 2 — Build outline and request review
-
-Parse all scene blocks into a `presentation_outlines` array. Then:
-
-```
-request-outline-review(
-  topic: "[Module name]",
-  audience: "...",
-  style: "Corporate dark navy, Montserrat Bold, 1920×1080 HeyGen backgrounds",
-  length: "[N] slides covering [topic]",
-  design_type: "presentation",
-  presentation_outlines: [ ... ]   ← see format below
-)
-```
-
-**Wait for user to approve the outline in the widget before proceeding.**
-
-### Step 3 — Generate presentation
-
-After outline approval:
-
-```
-generate-design-structured(
-  topic: "[Module name]",
-  audience: "[target audience]",
-  style: "Corporate dark navy (#2C3E50) background, green accent (#6AAF3D), Montserrat Bold headings, Plus Jakarta Sans body, 1920×1080 HeyGen avatar video background",
-  length: "[N] slides",
-  design_type: "presentation",
-  presentation_outlines: [ ... same array ],
-  brand_kit_id: "[id if found]",
-  user_intent: "Create HeyGen training video background slides"
-)
-```
-
-### Step 4 — Confirm export formats
-
-```
-get-export-formats(design_id: "[returned id]", user_intent="Check PNG export support")
-```
-
-### Step 5 — Export as PNG
-
-```
-export-design(
-  design_id: "[id]",
-  format: {
-    type: "png",
-    width: 1920,
-    height: 1080,
-    export_quality: "pro"
-  },
-  user_intent: "Export all slides as 1920×1080 PNG for HeyGen"
-)
-```
-
-Deliver all download URLs to user.
+| Content type | Icon name |
+|-------------|-----------|
+| Кто применяет (работодатель) | `user-gear` |
+| Кто применяет (государство) | `gavel` |
+| Кто применяет (суд) | `scales` |
+| Виды (перечень) | `list` |
+| Виды (штраф, деньги) | `currency-dollar` |
+| Виды (лишение свободы) | `handcuffs` |
+| Пример / lightbulb | `lightbulb` |
+| Когда наступает | `warning` |
+| Важно | `warning` |
 
 ---
 
-## Slide description format for presentation_outlines
+## Generation workflow
 
-Each slide object must include a detailed `description` so Canva AI generates the right layout:
+When the user provides a narrator script:
 
-### Type A — Title slide
+### Step 1 — Parse scenes
+
+Extract each scene block. For each, build a slide data object:
+
 ```json
 {
-  "title": "Ответственность руководителя — четыре вида",
-  "description": "TYPE-A TITLE SLIDE. Dark navy background #2C3E50. Centered layout. Logo top-right 45px. Green gavel icon #6AAF3D 52px centered. Module label 'Модуль 1 · Подтема 1.5' Plus Jakarta Sans 20pt #6AAF3D. Main title 'Ответственность руководителя' Montserrat Bold 38pt white. Subtitle '— четыре вида' Montserrat Bold 28pt white. Clean professional corporate look. 1920×1080px."
+  "filename": "slide-03-disciplinary.html",
+  "template": "slide-c-content.html",
+  "vars": {
+    "BG_COLOR": "#F2F2F2",
+    "ACCENT_COLOR": "#F39C12",
+    "HEADING_COLOR": "#2C3E50",
+    "TEXT_COLOR": "#2C3E50",
+    "BODY_COLOR": "#555555",
+    "HEADING": "Дисциплинарная ответственность",
+    "ICON_1": "user-gear",
+    "LABEL_1": "Кто применяет:",
+    "VALUE_1": "Работодатель — директор, вышестоящий руководитель",
+    "ICON_2": "list",
+    "LABEL_2": "Виды:",
+    "VALUE_2": "Замечание · Выговор · Расторжение трудового договора",
+    "ICON_3": "lightbulb",
+    "LABEL_3": "Пример:",
+    "VALUE_3": "Руководитель участка регулярно допускал работников без инструктажа. Директор объявил выговор.",
+    "LOGO_HTML": "<!-- place logo here -->"
+  }
 }
 ```
 
-### Type B — Avatar overlay slide
-```json
-{
-  "title": "Прямой старт — введение",
-  "description": "TYPE-B AVATAR OVERLAY. Dark navy background #2C3E50 full screen — this is a HeyGen avatar background, keep mostly clean. Logo top-right. Text box bottom-right corner (420px wide): semi-transparent dark background rgba(0,0,0,0.7), red border #E74C3C 2px rounded, padding 14px. Text inside: 'Четыре вида ответственности. Могут наступить одновременно.' Plus Jakarta Sans 17pt white."
-}
+### Step 2 — Read template + substitute
+
+For each slide:
+1. Read the corresponding template file from `templates/`
+2. Replace every `{{KEY}}` with `vars[KEY]`
+3. Write result to `<output-dir>/html/slide-NN-name.html`
+
+Name files with zero-padded index: `slide-01-title.html`, `slide-02-intro.html`, etc.
+
+### Step 3 — Render to PNG
+
+```bash
+# Install puppeteer once
+bun add puppeteer
+
+# Render all slides
+bun run scripts/render.mjs ./output/module-X/html ./output/module-X/png
 ```
 
-### Type C — Content block slide
-```json
-{
-  "title": "Дисциплинарная ответственность",
-  "description": "TYPE-C CONTENT SLIDE. Light background #F2F2F2. LEFT 600px (31% of width) = CLEAN AVATAR ZONE — NO TEXT OR GRAPHICS HERE, solid #F2F2F2 only. Narrow vertical accent strip at x=600 (36px wide), full height, color #F39C12 (amber). RIGHT content zone from x=640: Heading 'Дисциплинарная ответственность' Montserrat Bold 22pt #2C3E50. Amber underline 320px. Row 1: person icon #F39C12 + 'Кто применяет:' SemiBold 17pt + 'Работодатель — директор, вышестоящий руководитель' 16pt. Row 2: list icon + 'Виды:' + 'Замечание · Выговор · Расторжение трудового договора'. Row 3: lightbulb icon + 'Пример:' + 'Руководитель участка регулярно допускал работников без инструктажа. Директор объявил выговор.' Plus Jakarta Sans 16pt #555."
-}
+This produces `slide-01-title.png` … `slide-NN-name.png` at 1920×1080.
+
+### Step 4 — Upload to HeyGen
+
+Upload each PNG as a "background" slide in HeyGen. The avatar is layered on top.
+For Type C slides, the avatar should be placed in the **left 600px zone** (clean area).
+
+---
+
+## Logo setup
+
+Place your logo file at `training-slides/logo.png` (height 45px).
+
+In each generated HTML, set `LOGO_HTML` to:
+```html
+<img src="PATH_TO_LOGO/logo.png" height="45" alt="Logo">
 ```
 
-### Type A — Summary slide
-```json
-{
-  "title": "Итог — Четыре вида. Одновременно. Лично.",
-  "description": "TYPE-A SUMMARY SLIDE. Dark navy background #2C3E50. Centered layout. Logo top-right. Green gavel icon #6AAF3D 52px. Key phrase 'Четыре вида. Одновременно. Лично.' Montserrat Bold 32pt white. Green horizontal line #6AAF3D 80px × 3px. Summary body text 'Дисциплинарная, административная, гражданско-правовая, уголовная. Каждая — из разного источника. Каждая — независимо от других.' Plus Jakarta Sans 19pt #CCCCCC, max-width 820px, line-height 1.8. Footer navigation '→ Далее: Практическое задание · Итоговый тест Модуля 1' Plus Jakarta Sans 16pt #6AAF3D."
-}
+Or for text-only fallback:
+```html
+<span style="font-family:Montserrat,sans-serif;font-weight:700;font-size:13pt;color:#6AAF3D;">COMPANY</span>
 ```
 
 ---
 
 ## Hard rules
 
-1. **Never put text or graphics in the avatar zone (left 600px of Type C slides).** HeyGen places the avatar there — any content will be hidden.
-2. **Always export at 1920×1080.** HeyGen requires 16:9 full HD.
-3. **Do not call `generate-design-structured` before the user approves the outline** via the `request-outline-review` widget.
-4. **Keep slide count equal to scene block count.** One slide per HeyGen scene.
-5. **Use exact hex colors from the design system** — do not approximate.
+1. **Left 600px of Type C slides = CLEAN.** No text, no graphics. HeyGen avatar zone.
+2. **Always output at 1920×1080.** Never scale or crop.
+3. **Filename format**: `slide-NN-slug.html` with zero-padded index.
+4. **One file per scene block.** Don't merge blocks.
+5. **Use exact hex values** from the design system. Don't approximate.
+6. **waitUntil: 'networkidle0'** in render.mjs — required for Google Fonts + Phosphor to load.
 
 ---
 
-## Worked example: Module 1.5 "Ответственность руководителя — четыре вида"
+## Worked example — Module 1.5
 
-8 slides from the scenario table:
+8 slides from scenario table "Ответственность руководителя — четыре вида":
 
-| Slide | Block | Type | Accent |
-|-------|-------|------|--------|
-| 1 | Заставка | A — Title | #6AAF3D |
-| 2 | Прямой старт | B — Avatar overlay | #E74C3C |
-| 3 | Блок 1 — Дисциплинарная | C — Content | #F39C12 |
-| 4 | Блок 2 — Административная | C — Content | #3498DB |
-| 5 | Блок 3 — Гражданско-правовая | C — Content | #9B59B6 |
-| 6 | Блок 4 — Уголовная | C — Content (bg #1A0A0A) | #E74C3C |
-| 7 | Блок 5 — Одновременно | C — Content | #6AAF3D |
-| 8 | Итог + Слой 3 | A — Summary | #6AAF3D |
+| File | Template | Accent |
+|------|----------|--------|
+| `slide-01-title.html` | `slide-a-title.html` | — |
+| `slide-02-intro.html` | `slide-b-overlay.html` | — |
+| `slide-03-disciplinary.html` | `slide-c-content.html` | `#F39C12` |
+| `slide-04-administrative.html` | `slide-c-content.html` | `#3498DB` |
+| `slide-05-civil.html` | `slide-c-content.html` | `#9B59B6` |
+| `slide-06-criminal.html` | `slide-c-content.html` | `#E74C3C` bg `#1A0A0A` |
+| `slide-07-concurrent.html` | `slide-c-content.html` | `#6AAF3D` |
+| `slide-08-summary.html` | `slide-a-summary.html` | — |
