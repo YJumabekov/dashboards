@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>{{KEY_PHRASE}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: #2C3E50;
+      position: relative;
+    }
+
+    /* Centered content block */
+    .center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 900px;
+    }
+
+    .icon {
+      font-size: 52px;
+      color: #6AAF3D;
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .key-phrase {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 32pt;
+      color: #FFFFFF;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .divider {
+      width: 80px;
+      height: 3px;
+      background-color: #6AAF3D;
+      margin: 0 auto 28px;
+    }
+
+    .body-text {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      font-size: 19pt;
+      color: #CCCCCC;
+      line-height: 1.8;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    /* Navigation footer */
+    .nav-footer {
+      position: absolute;
+      bottom: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 500;
+      font-size: 16pt;
+      color: #6AAF3D;
+      white-space: nowrap;
+    }
+
+    /* Logo top-right */
+    .logo {
+      position: absolute;
+      top: 24px; right: 36px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13pt;
+      color: #6AAF3D;
+    }
+    .logo img { height: 45px; }
+  </style>
+</head>
+<body>
+
+  <div class="center">
+    <i class="ph-fill ph-{{ICON}} icon"></i>
+    <div class="key-phrase">{{KEY_PHRASE}}</div>
+    <div class="divider"></div>
+    <div class="body-text">{{BODY_TEXT}}</div>
+  </div>
+
+  <div class="nav-footer">{{NAV_FOOTER}}</div>
+
+  <div class="logo">{{LOGO_HTML}}</div>
+
+</body>
+</html>
