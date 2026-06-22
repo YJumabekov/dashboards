@@ -216,52 +216,82 @@ Each row has 4 columns. Extract from columns 3 and 4:
 
 Use this when the user hasn't specifically asked for HTML files.
 
-### Step 1 — Parse scenes (same as HTML mode)
-Extract scene blocks and build slide outlines array.
+### Step 0 — Topic merging (reduce slide count)
 
-### Step 2 — Outline review
+Before building the slide list, check for adjacent topics that can share one slide:
+- Two short related concepts (e.g. two responsibility types with similar structure) → merge into one slide with two compact sections instead of two rows
+- Intro + first content block where intro is ≤ 2 sentences → consider merging into a single B-type slide with key info
+- Do NOT merge if the narrator script for each block is long (> 150 words) or the topics are visually distinct (different accent colors that would conflict)
+
+**Target**: minimize slide count while keeping each slide readable. Prefer 6–8 slides over 10+.
+
+### Step 1 — Parse scenes + plan
+
+Extract scene blocks, apply merging logic, then **output a slide plan to the user as plain text before doing anything else**:
+
+```
+Планируется N слайдов:
+
+№1 · [Title] — [Template type]
+    Ключевой текст: [what will appear on slide, bullet points]
+    Текст диктора: [first ~30 words of narrator script for this slide…]
+
+№2 · [Title] — [Template type]
+    Ключевой текст: …
+    Текст диктора: …
+… (all slides)
+
+Подтверждаете план или есть правки?
+```
+
+Wait for user confirmation before proceeding. If user requests changes, adjust and re-show the plan.
+
+### Step 2 — Outline review (after user confirms)
 ```
 request-outline-review(
   topic: "[module name]",
   audience: "educational",
   style: "modular",
   length: "balanced",
-  brand_kit_id: "kAGMmKcqsGA",
-  brand_kit_name: "Corporate Brand Kit",
+  brand_kit_id: "kAHNTtdfMQk",
+  brand_kit_name: "New Sental training deck",
   pages: [ {title, description} per slide ]
 )
 ```
-Wait for user approval in the widget.
+Wait for widget approval.
 
 ### Step 3 — Generate with SENTAL template as source
 ```
 generate-design-structured(
   topic: "[module name]",
   audience: "[audience]",
-  style: "Corporate training, dark navy #2C3E50, green accent #6AAF3D, avatar zone left 30%",
+  style: "Corporate training SENTAL style: dark navy #2C3E50 for title/summary, light #F2F2F2 for content. Left 30% = clean avatar zone for HeyGen. Vertical accent strip at zone boundary. Montserrat Bold headings, Plus Jakarta Sans body. Green accent #6AAF3D. Logo from brand kit — do not change.",
   length: "[N] slides",
   design_type: "presentation",
   presentation_outlines: [ ... same array ... ],
-  brand_kit_id: "kAGMmKcqsGA",
+  brand_kit_id: "kAHNTtdfMQk",
   source_document: {
     document_type: "brand_template",
     document_id: "EAHNTmfyZ8o"
   }
 )
 ```
-The Canva AI uses the SENTAL template's visual style as a reference.
 
-### Step 4 — Export PNG
+### Step 4 — Add presenter notes (narrator script for HeyGen)
+
+After the design is created (`create-design-from-candidate`), add the narrator text as presenter notes to each slide using `get-presenter-notes` / `perform-editing-operations`. The notes should contain the exact narrator script for that slide block — HeyGen can display them as teleprompter text.
+
+Narrator text per slide comes from **Column 4 "Текст диктора"** of the scenario table (or the corresponding script paragraph).
+
+### Step 5 — Export PNG
 ```
-get-export-formats(design_id: "[id]", user_intent: "Check PNG support")
-
 export-design(
   design_id: "[id]",
   format: { type: "png", width: 1920, height: 1080, export_quality: "pro" },
   user_intent: "Export all slides as 1920×1080 PNG for HeyGen"
 )
 ```
-Deliver all download URLs.
+Deliver all download URLs + Canva edit link.
 
 ---
 
