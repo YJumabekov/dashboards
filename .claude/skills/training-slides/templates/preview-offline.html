@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Превью — Дисциплинарная ответственность</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { background: #888; }
+    body {
+      width: 1920px;
+      height: 1080px;
+      background-color: #F2F2F2;
+      position: relative;
+      overflow: hidden;
+      transform-origin: top left;
+      transform: scale(0.5);
+      font-family: Arial, sans-serif;
+    }
+
+    /* Avatar zone hint */
+    .avatar-zone {
+      position: absolute;
+      left: 0; top: 0;
+      width: 600px; height: 1080px;
+      background: rgba(44,62,80,0.05);
+      border-right: 2px dashed rgba(106,175,61,0.4);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .avatar-zone span {
+      font-size: 22px; color: rgba(44,62,80,0.2);
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      letter-spacing: 6px; font-weight: bold;
+    }
+
+    /* Accent strip */
+    .accent-strip {
+      position: absolute;
+      left: 600px; top: 0;
+      width: 36px; height: 1080px;
+      background-color: #F39C12;
+    }
+
+    /* Heading */
+    .heading {
+      position: absolute;
+      left: 650px; top: 55px;
+      font-size: 42px; font-weight: 900;
+      color: #2C3E50;
+      font-family: Arial Black, Arial, sans-serif;
+    }
+
+    /* Underline */
+    .underline {
+      position: absolute;
+      left: 650px; top: 112px;
+      width: 320px; height: 4px;
+      background: #F39C12;
+    }
+
+    /* Rows */
+    .row {
+      position: absolute;
+      left: 650px; width: 1220px;
+      display: flex; align-items: flex-start; gap: 20px;
+    }
+    .row-1 { top: 140px; }
+    .row-2 { top: 340px; }
+    .row-3 { top: 540px; }
+
+    .icon-circle {
+      width: 54px; height: 54px; border-radius: 50%;
+      background: #F39C12;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 4px;
+      font-size: 26px; color: white;
+    }
+
+    .label {
+      font-size: 34px; font-weight: 700;
+      color: #2C3E50; margin-bottom: 12px;
+      font-family: Arial, sans-serif;
+    }
+
+    .value {
+      font-size: 30px; color: #555;
+      line-height: 1.5; font-family: Arial, sans-serif;
+    }
+
+    /* Logo */
+    .logo {
+      position: absolute; top: 24px; right: 36px;
+      font-size: 26px; font-weight: 900;
+      color: #6AAF3D; font-family: Arial Black, Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="avatar-zone"><span>AVATAR ZONE</span></div>
+  <div class="accent-strip"></div>
+
+  <div class="heading">Дисциплинарная ответственность</div>
+  <div class="underline"></div>
+
+  <div class="row row-1">
+    <div class="icon-circle">👤</div>
+    <div>
+      <div class="label">Кто применяет:</div>
+      <div class="value">Работодатель — директор, вышестоящий руководитель</div>
+    </div>
+  </div>
+
+  <div class="row row-2">
+    <div class="icon-circle">📋</div>
+    <div>
+      <div class="label">Виды:</div>
+      <div class="value">Замечание · Выговор · Расторжение трудового договора</div>
+    </div>
+  </div>
+
+  <div class="row row-3">
+    <div class="icon-circle">💡</div>
+    <div>
+      <div class="label">Пример:</div>
+      <div class="value">Руководитель участка регулярно допускал работников без инструктажа. Директор объявил выговор.</div>
+    </div>
+  </div>
+
+  <div class="logo">LOGO</div>
+
+</body>
+</html>
