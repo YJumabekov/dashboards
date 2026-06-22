@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>{{TITLE}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: #2C3E50;
+      position: relative;
+    }
+
+    /*
+      Full-screen area reserved for HeyGen avatar.
+      This slide is mostly clean — the avatar occupies the whole background.
+      Only elements added are: logo top-right and key-text box bottom-right.
+    */
+
+    /* Key sentence box — bottom-right */
+    .key-box {
+      position: absolute;
+      right: 60px;
+      bottom: 80px;
+      width: 420px;
+      background: rgba(0, 0, 0, 0.70);
+      border: 2px solid #E74C3C;
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+
+    .key-box .text {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      font-size: 17pt;
+      color: #FFFFFF;
+      line-height: 1.55;
+    }
+
+    /* Logo top-right */
+    .logo {
+      position: absolute;
+      top: 24px; right: 36px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13pt;
+      color: #6AAF3D;
+    }
+    .logo img { height: 45px; }
+  </style>
+</head>
+<body>
+
+  <div class="key-box">
+    <div class="text">{{KEY_TEXT}}</div>
+  </div>
+
+  <div class="logo">{{LOGO_HTML}}</div>
+
+</body>
+</html>
