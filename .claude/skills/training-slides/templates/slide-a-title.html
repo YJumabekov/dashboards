@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>{{MAIN_TITLE}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: #2C3E50;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .center {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .module-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 500;
+      font-size: 20pt;
+      color: #6AAF3D;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+    }
+
+    .icon {
+      font-size: 52px;
+      color: #6AAF3D;
+      margin-bottom: 28px;
+    }
+
+    .main-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 38pt;
+      color: #FFFFFF;
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 28pt;
+      color: #FFFFFF;
+      opacity: 0.85;
+    }
+
+    /* Logo top-right */
+    .logo {
+      position: absolute;
+      top: 24px; right: 36px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13pt;
+      color: #6AAF3D;
+    }
+    .logo img { height: 45px; }
+  </style>
+</head>
+<body>
+
+  <div class="center">
+    <div class="module-label">{{MODULE_LABEL}}</div>
+    <i class="ph-fill ph-{{ICON}} icon"></i>
+    <div class="main-title">{{MAIN_TITLE}}</div>
+    <div class="subtitle">{{SUBTITLE}}</div>
+  </div>
+
+  <div class="logo">{{LOGO_HTML}}</div>
+
+</body>
+</html>
