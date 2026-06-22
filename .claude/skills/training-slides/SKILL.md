@@ -1,24 +1,38 @@
 ---
 name: training-slides
 description: >
-  Convert narrator scripts (scenario tables) into corporate-style HTML slide files
-  ready to export as 1920×1080 PNG for HeyGen avatar video backgrounds.
+  Convert narrator scripts (scenario tables) into corporate-style slides for HeyGen avatar
+  video backgrounds. Two modes: (1) Canva mode — uses the "SENTAL training deck" brand template
+  (ID: EAHNTmfyZ8o) via generate-design-structured, exports 1920×1080 PNG from Canva;
+  (2) HTML mode — fills local pixel-exact templates, renders via scripts/render.mjs.
   Accepts DOCX scenario tables, inline text, or JSON slide data.
-  Parses scene blocks → selects slide template (A-title / A-summary / B-overlay / C-content) →
-  fills placeholders → writes HTML files → optionally renders to PNG via scripts/render.mjs.
   Trigger: "создай слайды", "слайды для HeyGen", "подготовь шаблоны", "обучающие слайды",
   "training slides", "lesson slides", "/training-slides".
   NOT for generic marketing presentations — specifically for HeyGen training video backgrounds
   with a left avatar zone and right content zone.
-metadata: { "tags": "slides, training, heygen, html, design, corporate, education" }
+metadata: { "tags": "slides, training, heygen, canva, html, design, corporate, education" }
 ---
 
 # training-slides
 
-Turn a narrator script into a complete set of corporate HTML slides, exported as
-1920×1080 PNG files for direct upload as HeyGen avatar video backgrounds.
+Turn a narrator script into a complete set of corporate slides for HeyGen avatar video backgrounds.
 
-**No Canva. No AI layout guessing. Pixel-exact HTML templates.**
+## Two generation modes
+
+| Mode | When to use | Output |
+|------|-------------|--------|
+| **Canva** (default) | User wants Canva file + export | Canva presentation → PNG export |
+| **HTML** | User wants local files, full pixel control | HTML files → PNG via render.mjs |
+
+**Default: Canva mode** using the "SENTAL training deck" brand template.
+
+## Canva brand template
+
+- **Name**: SENTAL training deck template.pptx
+- **ID**: `EAHNTmfyZ8o`
+- **Brand kit**: `kAGMmKcqsGA`
+- **View**: https://www.canva.com/brand/brand-templates/EAHNTmfyZ8o
+- **Autofill fields**: none — used as `source_document` style reference
 
 ---
 
