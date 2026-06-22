@@ -185,7 +185,7 @@ Each row has 4 columns. Extract from columns 3 and 4:
 - `Строка N — иконка NAME + «Label:» + «Value»` → row data
 - accent color appears as `Полоска-метка #XXXXXX` or repeated in row icons
 
-**Column 4 — Текст диктора**: contains narrator script (for reference only; not on slides)
+**Column 4 — Текст диктора**: narrator script — NOT printed on slides, but stored verbatim as Canva presenter notes for each slide (HeyGen teleprompter)
 
 ### Block → template mapping
 
