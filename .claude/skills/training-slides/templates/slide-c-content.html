@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>{{HEADING}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: {{BG_COLOR}};
+      position: relative;
+    }
+
+    /* ─── LEFT 600px: CLEAN AVATAR ZONE — absolutely no content ─── */
+
+    /* Vertical accent strip x=600–636 */
+    .accent-strip {
+      position: absolute;
+      left: 600px; top: 0;
+      width: 36px; height: 1080px;
+      background-color: {{ACCENT_COLOR}};
+    }
+
+    /* Heading x=650, y=55 */
+    .heading {
+      position: absolute;
+      left: 650px; top: 55px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 22pt;
+      color: {{HEADING_COLOR}};
+      white-space: nowrap;
+    }
+
+    /* Underline below heading */
+    .underline {
+      position: absolute;
+      left: 650px; top: 96px;
+      width: 320px; height: 3px;
+      background-color: {{ACCENT_COLOR}};
+    }
+
+    /* Rows */
+    .row {
+      position: absolute;
+      left: 650px;
+      width: 1220px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .row-1 { top: 140px; }
+    .row-2 { top: 295px; }
+    .row-3 { top: 450px; }
+
+    .row .icon {
+      color: {{ACCENT_COLOR}};
+      font-size: 28px;
+      min-width: 38px;
+      padding-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .row .label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 17pt;
+      color: {{TEXT_COLOR}};
+      margin-bottom: 8px;
+    }
+
+    .row .value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      font-size: 16pt;
+      color: {{BODY_COLOR}};
+      line-height: 1.55;
+    }
+
+    /* Logo top-right */
+    .logo {
+      position: absolute;
+      top: 24px; right: 36px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13pt;
+      color: #6AAF3D;
+      letter-spacing: 0.5px;
+    }
+    .logo img { height: 45px; }
+  </style>
+</head>
+<body>
+
+  <div class="accent-strip"></div>
+
+  <div class="heading">{{HEADING}}</div>
+  <div class="underline"></div>
+
+  <div class="row row-1">
+    <i class="ph-fill ph-{{ICON_1}} icon"></i>
+    <div>
+      <div class="label">{{LABEL_1}}</div>
+      <div class="value">{{VALUE_1}}</div>
+    </div>
+  </div>
+
+  <div class="row row-2">
+    <i class="ph-fill ph-{{ICON_2}} icon"></i>
+    <div>
+      <div class="label">{{LABEL_2}}</div>
+      <div class="value">{{VALUE_2}}</div>
+    </div>
+  </div>
+
+  <div class="row row-3">
+    <i class="ph-fill ph-{{ICON_3}} icon"></i>
+    <div>
+      <div class="label">{{LABEL_3}}</div>
+      <div class="value">{{VALUE_3}}</div>
+    </div>
+  </div>
+
+  <div class="logo">{{LOGO_HTML}}</div>
+
+</body>
+</html>
