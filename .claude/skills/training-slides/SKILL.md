@@ -379,9 +379,12 @@ Or for text-only fallback:
 1. **Left 600px of Type C slides = CLEAN.** No text, no graphics. HeyGen avatar zone.
 2. **Always output at 1920×1080.** Never scale or crop.
 3. **Filename format**: `slide-NN-slug.html` with zero-padded index.
-4. **One file per scene block.** Don't merge blocks.
-5. **Use exact hex values** from the design system. Don't approximate.
-6. **waitUntil: 'networkidle0'** in render.mjs — required for Google Fonts + Phosphor to load.
+4. **Merge related adjacent topics** where possible — don't generate a slide per block if topics fit together. Target minimum necessary slides.
+5. **Always show slide plan to user first** (Step 1 above) and wait for confirmation before calling any Canva tools.
+6. **Narrator script goes in presenter notes** — every slide must have its narrator text attached as Canva presenter notes (for HeyGen teleprompter).
+7. **Never alter the logo** — brand kit `kAHNTtdfMQk` supplies the logo automatically. Don't describe or suggest a different logo in any slide description.
+8. **Use exact hex values** from the design system. Don't approximate.
+9. **waitUntil: 'networkidle0'** in render.mjs — required for Google Fonts + Phosphor to load.
 
 ---
 
