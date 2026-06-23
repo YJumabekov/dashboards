@@ -21,10 +21,11 @@ Turn a narrator script into a complete set of corporate slides for HeyGen avatar
 
 | Mode | When to use | Output |
 |------|-------------|--------|
-| **Canva** (default) | User wants Canva file + export | Canva presentation → PNG export |
-| **HTML** | User wants local files, full pixel control | HTML files → PNG via render.mjs |
+| **Canva → PPTX** (default for KazSafe HSE) | Нужна PPTX со Speaker Notes для монтажёра | Canva presentation → PPTX (слайды + заметки диктора) |
+| **Canva → PNG** | Прямая загрузка PNG-фонов в HeyGen | Canva presentation → PNG 1920×1080 |
+| **HTML** | Локальные файлы, полный пиксельный контроль | HTML files → PNG via render.mjs |
 
-**Default: Canva mode** using the "SENTAL training deck" brand template.
+**Default: Canva → PPTX** для KazSafe HSE workflow. Монтажёр открывает в PowerPoint: слайды = фоны, Speaker Notes = текст диктора для каждой сцены.
 
 ## Canva brand template
 
