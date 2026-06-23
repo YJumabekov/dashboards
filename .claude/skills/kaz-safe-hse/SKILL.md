@@ -30,6 +30,7 @@ metadata: { "tags": "hse, training, sental, kazsafe, heygen, canva, ispring, moo
 | «НПА», «нормативная база», «законы РК» | 05 НПА-маппер | `C:\Users\Public\Documents\SENTAL\11.0 Trainings\0.0 Scripts\SENTAT Training script\05_hse-npa-mapper.md` |
 | «культурная вставка», «цитата», «пословица» | 06 Культурный редактор | `C:\Users\Public\Documents\SENTAL\11.0 Trainings\0.0 Scripts\SENTAT Training script\06_hse-cultural-insert.md` |
 | «DOCX», «экспорт», «сохрани в документ» | 07 DOCX-экспортёр | `C:\Users\Public\Documents\SENTAL\11.0 Trainings\0.0 Scripts\SENTAT Training script\07_hse-docx-exporter.md` |
+| «практическое задание», «TalkMaster», «сценарий диалога», «карточки», «между подтемами» | 04 Тестолог (Часть 10) | `C:\Users\Public\Documents\SENTAL\11.0 Trainings\0.0 Scripts\SENTAT Training script\04_hse-assessment-builder.md` |
 | «рабочая тетрадь», «раздаточный материал» | 10 Тетрадь | `C:\Users\Public\Documents\SENTAL\11.0 Trainings\0.0 Scripts\SENTAT Training script\10_hse-handout-builder.md` |
 
 **Скилл 08 (самопроверка)** — активируется автоматически после каждого скилла. Файл:
