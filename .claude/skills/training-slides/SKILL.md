@@ -284,7 +284,19 @@ After the design is created (`create-design-from-candidate`), add the narrator t
 
 Narrator text per slide comes from **Column 4 "Текст диктора"** of the scenario table (or the corresponding script paragraph).
 
-### Step 5 — Export PNG
+### Step 5 — Export
+
+**Вариант A — PPTX (KazSafe HSE / монтажёр):**
+```
+export-design(
+  design_id: "[id]",
+  format: { type: "pptx" },
+  user_intent: "Export as PPTX with presenter notes for monteur"
+)
+```
+Монтажёр открывает в PowerPoint: слайды = фоны HeyGen, Speaker Notes = текст диктора.
+
+**Вариант B — PNG (прямой HeyGen upload):**
 ```
 export-design(
   design_id: "[id]",
@@ -292,7 +304,10 @@ export-design(
   user_intent: "Export all slides as 1920×1080 PNG for HeyGen"
 )
 ```
-Deliver all download URLs + Canva edit link.
+
+Если пользователь не указал формат — спроси: «PPTX (для монтажёра) или PNG (для прямой загрузки в HeyGen)?»
+
+Deliver download URL + Canva edit link.
 
 ---
 
